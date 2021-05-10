@@ -64,10 +64,10 @@ test_that ("Error if no files found for the specified sites ",{
                "No files found for the specified sites")
 })
 
-test_that ("Error if no files of supported formats found in dir ",{
-  expect_error(import_flowfiles(dir = "data/wiski2" , skip_num = 21, col_order = c(1,2,3)),
-               "No csv, xls, xlsx, all or txt files found in dir")
-})
+#test_that ("Error if no files of supported formats found in dir ",{
+#  expect_error(import_flowfiles(dir = "data/wiski2", skip_num = 21, col_order = c(1,2,3)),
+#               "No csv, xls, xlsx, all or txt files found in dir")
+#})
 
 test_that("warning if files can't be found for some sites",{
   expect_warning(import_flowfiles(sites =c("0130TH", "hello", "hello2"), dir = "data/wiski" , skip_num = 21, col_order = c(1,2,3)),

@@ -222,12 +222,12 @@ test_that("join_he constructs expected output", {
   flowstats_test <- readRDS("flowstats_test.rds")
   mapping_test <- readRDS("mapping_test.rds")
 
-  result <- hetoolkit::join_he(biol_data = biol_all_test,
-                               flow_stats = flowstats_test,
-                               mapping = mapping_test,
-                               lag_vars = c("Q95z", "Q10z"),
-                               LS1 = TRUE,
-                               LS2 = TRUE)
+  result <- join_he(biol_data = biol_all_test,
+                  flow_stats = flowstats_test,
+                  mapping = mapping_test,
+                  lag_vars = c("Q95z", "Q10z"),
+                  LS1 = TRUE,
+                  LS2 = TRUE)
   compared <- join_data_test
   expect_equal(result, compared)
 })

@@ -39,8 +39,4 @@ If a site ID is duplicated in the 'sites' argument, that site is only searched f
 
 # Returns data only for sites that are present in NRFA; see warning messages for missing sites
 # import_nrfa(sites = c("1001", "hello"), start_date = "2010-01-01", end_date = "2010-01-05")
-
-# Returns empty tibble if none of the sites are present in NRFA
-# import_nrfa(sites = c("hello", "hello2"))
-
 }
