@@ -122,7 +122,7 @@ biol_data_excel <- read.csv("data/biol_data_join.csv")
 biol_data_excel <- biol_data_excel %>% dplyr::mutate(biol_site_id = as.character(biol_site_id))
   
 # convert to tibble format
-biol_data_excel <- as.tibble(biol_data_excel)
+biol_data_excel <- as_tibble(biol_data_excel)
 
 # bind datasets
 biol_data_final <- rbind(biol_data2, biol_data_excel)
@@ -169,18 +169,16 @@ First we download zipped shapefiles for our basemap, and load them in as sf obje
 
 ```{r get_data}
 
-# get shapefile for EA areas
-download('https://environment.data.gov.uk/UserDownloads/interactive/d73368b35bb74163a384d3d29e479c0d75644/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', 
-         destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
+## get shapefile for EA areas
+# download('https://environment.data.gov.uk/UserDownloads/interactive/d733# 68b35bb74163a384d3d29e479c0d75644/EA_AdminBoundEAandNEpublicFaceAreas_SH# P_Full.zip', destfile = # 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
 
-# get Wales coastline, just because map looks silly without it
-download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', 
-         destfile = 'Wales_ol_2001.zip')
+## get Wales coastline, just because map looks silly without it
+# download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/pr# ebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
 
-# load in the shapefiles to R objects and remove seaward parts
-EA.areas <- read_sf('/vsizip/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip/data/Administrative_Boundaries_Environment_Agency_and_Natural_England_Public_Face_Areas.shp')
-wales <- read_sf('/vsizip/Wales_ol_2001.zip')
-EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
+## load in the shapefiles to R objects and remove seaward parts
+# EA.areas <- read_sf('/vsizip/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Ful# l.zip/data/Administrative_Boundaries_Environment_Agency_and_Natural_Engl# and_Public_Face_Areas.shp')
+# wales <- read_sf('/vsizip/Wales_ol_2001.zip')
+# EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
 
 ```
 
@@ -190,11 +188,11 @@ We use the environmental base data that we have downloaded from the Ecology and 
 
 ```{r processing}
 
-# translate NGRs to full easting / northing
-temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "BNG") %>% as_tibble()
+## translate NGRs to full easting / northing
+# temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "BNG") # %>% as_tibble()
 
-# make an sf point object to plot with geom_sf but retain the easting and northing column required by geom_text_repel
-env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords = c("easting", "northing"), crs = 27700, remove = FALSE) 
+## make an sf point object to plot with geom_sf but retain the easting and northing column required by geom_text_repel
+# env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords =  c("easting", "northing"), crs = 27700, remove = FALSE) 
 
 ```
 
@@ -203,12 +201,12 @@ env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords = c("easting", "
 Finally we use ggplot with geom_sf() to plot the points and ggrepel::geom_text_repel() to plot the labels. 
 
 ```{r map}
-basemap <- ggplot() + geom_sf(mapping = aes(), data = EA.areas.land) + 
-  geom_sf(mapping = aes(), data = wales) 
+# basemap <- ggplot() + geom_sf(mapping = aes(), data = EA.areas.land) + 
+#   geom_sf(mapping = aes(), data = wales) 
 
-basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
-  geom_text_repel(data = env_sf, aes(x=easting, y=northing, label = biol_site_id), col = "blue") +
-  coord_sf(datum = sf::st_crs(27700)) 
+# basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
+#   geom_text_repel(data = env_sf, aes(x=easting, y=northing, label = biol_site_id), col = "blue") +
+#   coord_sf(datum = sf::st_crs(27700)) 
   
 ```
 
@@ -694,7 +692,7 @@ for(i in mapping$biol_site_id){
          biol_metric = c("LIFE_F_OE"), 
          clr_by = "biol_site_id")
   
-  ggsave(plot = my_hev_plot, device = "png", filename = paste0(sites_list[i],"_hevplot.png"))
+  ggsave(plot = my_hev_plot, device = "png", filename = paste0(biolsites[i],"_hevplot.png"))
   
 }
 
