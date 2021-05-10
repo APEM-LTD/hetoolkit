@@ -30,10 +30,7 @@
 #'
 #' # Returns data only for sites that are present in NRFA; see warning messages for missing sites
 #' # import_nrfa(sites = c("1001", "hello"), start_date = "2010-01-01", end_date = "2010-01-05")
-#'
-#' # Returns empty tibble if none of the sites are present in NRFA
-#' # import_nrfa(sites = c("hello", "hello2"))
-#'
+
 
 
 
@@ -141,8 +138,8 @@ get_nrfa_data <- function(my.site, tidyup) {
       nrfa_file$X3[is.na(nrfa_file$X3)] <- 0
       # identify and exclude metadata rows
       nrfa_file <- nrfa_file %>%
-        mutate(X4 = cumsum(X3)) %>%
-        filter(X4 >= 1)
+        dplyr::mutate(X4 = cumsum(X3)) %>%
+        dplyr::filter(X4 >= 1)
       #drop final metadata row and redundant X3 and X4 columns
       nrfa_file <- nrfa_file[-1, -c(3,4)]
 
@@ -153,7 +150,7 @@ get_nrfa_data <- function(my.site, tidyup) {
 
       # format and name columns
       nrfa_file <- nrfa_file %>%
-        rename("date" = "X1", "flow" = "X2")
+        dplyr::rename("date" = "X1", "flow" = "X2")
 
       nrfa_file$date <- as.Date(nrfa_file$date)
       nrfa_file$flow <- as.numeric(nrfa_file$flow)
