@@ -226,13 +226,13 @@ import_flowfiles <- function(sites = NULL,
     final_data$flow <- suppressWarnings(as.numeric(final_data$flow))
 
   # Filter data set by start and end date
-    final_data <- final_data %>% filter(final_data$date >= start_date & final_data$date <= end_date)
+    final_data <- final_data %>% dplyr::filter(date >= start_date & date <= end_date)
 
   # Create dataset running from start_date to end_date for every site
     full_grid <- expand.grid(flow_site_id = found_sites, date = seq(from = lubridate::date(start_date), to = lubridate::date(end_date),by = 1))
     full_grid <- tibble::as_tibble(full_grid)
 
-    complete_data <- dplyr::left_join(full_grid, final_data, by = c("flow_site_id", "date"), copy = TRUE)
+    complete_data <- full_grid %>% dplyr::left_join(final_data, by = c("flow_site_id", "date"), copy = TRUE)
     complete_data <- complete_data[order(complete_data$flow_site_id,complete_data$date),]
 
   # Format columns
