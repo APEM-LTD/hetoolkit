@@ -9,7 +9,6 @@
 
 The `hetoolkit` package comprises a collection of functions for
 assembling, processing, visualising and modelling hydro-ecological data.
-The package was written by APEM LTD on behalf on the Environment Agency.
 
 ## Installation
 
@@ -19,38 +18,20 @@ To install the latest release of `hetoolkit` use the following code:
 remotes::install_github("APEM-LTD/hetoolkit")
 ```
 
-## Example
+## Reporting Bugs
 
-This is a basic example which shows you how to solve a common problem:
+Please consider reporting bugs and asking questions on the Issues page.
 
-``` r
-library(hetoolkit)
-## basic example code
-```
+## Overview
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+The `hetoolkit` package comprises a collection of functions for
+assembling, processing, visualising and modelling hydro-ecological data.
+The package was developed by APEM LTD on behalf on the Environment
+Agency; any further bug-fixing or modification to the package will be
+overseen by the Environment Agency.
 
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
+## References
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide
+V1.5 (2020) \[Online\] Available at:
+<https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx>
