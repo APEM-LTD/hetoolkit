@@ -18,10 +18,6 @@ To install the latest release of `hetoolkit` use the following code:
 remotes::install_github("APEM-LTD/hetoolkit")
 ```
 
-## Reporting Bugs
-
-Please consider reporting bugs and asking questions on the Issues page.
-
 ## Overview
 
 The `hetoolkit` package comprises a collection of functions for
@@ -29,6 +25,15 @@ assembling, processing, visualising and modelling hydro-ecological data.
 The package was developed by APEM LTD on behalf on the Environment
 Agency; any further bug-fixing or modification to the package will be
 overseen by the Environment Agency.
+
+## Examples
+
+Further information on the functions contained within the package,
+including examples, can be found in the `HE Toolkit - Vingette`.
+
+## Reporting Bugs
+
+Please consider reporting bugs and asking questions on the Issues page.
 
 ## References
 
