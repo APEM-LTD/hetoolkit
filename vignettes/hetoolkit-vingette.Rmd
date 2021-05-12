@@ -1,15 +1,17 @@
 ---
 title: "HETOOLKIT Vingette"
 output: 
-  rmarkdown::html_vignette:
+  prettydoc::html_pretty:
+    theme: architect
     df_print: "paged"
     toc: true
+    keep_md: true
 vignette: >
   %\VignetteIndexEntry{HETOOLKIT Vingette}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 author: "APEM Ltd"
-date: "01/04/2021"
+date: "12/05/2021"
 editor_options: 
   chunk_output_type: console
 ---
