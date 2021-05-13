@@ -1,11 +1,8 @@
 ---
 title: "HETOOLKIT Vingette"
 output: 
-  prettydoc::html_pretty:
-    theme: architect
-    df_print: "paged"
+  rmarkdown::html_vignette:
     toc: true
-    keep_md: true
 vignette: >
   %\VignetteIndexEntry{HETOOLKIT Vingette}
   %\VignetteEncoding{UTF-8}
@@ -59,7 +56,7 @@ master_file$biol_site_id <- as.character(master_file$biol_site_id)
 master_file$rhs_survey_id <- as.character(master_file$rhs_survey_id)
 
 # filter master file for selected sites of interest
-master_data <- master_file %>% filter(biol_site_id %in% c("34310", "34343", "34352", "52504", "53819", "10708", "10752", "10784", "10707", "8314", "10992", "77599", "100582", "42760", "77216", "48210", "55824", "54017", "51122", "77216", "52828"))
+master_data <- master_file %>% filter(biol_site_id %in% c("34310", "34343", "34352", "55287", "55395", "55417", "55673", "55824", "55897", "56065", "56226", "54637", "54769", "54801", "54962", "80998", "56491", "54827"))
 
 # view data
 master_data
@@ -672,7 +669,7 @@ Using this new `hev_data` dataset, the following example uses `multiplot = TRUE`
 
 ```{r hevplot1, message=FALSE, warning=FALSE}
 
-plot_hev(data = subset(hev_data, biol_site_id == "100582"), 
+plot_hev(data = subset(hev_data, biol_site_id == "34352"), 
          date_col = "SAMPLE_DATE", 
          flow_stat = c("Q95z", "Q10z"), 
          biol_metric = c("LIFE_F_OE"), 
