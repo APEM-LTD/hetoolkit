@@ -167,8 +167,8 @@ calc_flowstats <- function(data,
   dfos_output_1 <- c(mget(ls(pattern = "_dfos_output_1")))
   dfos_output_2 <- c(mget(ls(pattern = "_dfos_output_2")))
 
-  merge_dfos_output_1 <- purrr::Reduce('rbind', dfos_output_1)
-  merge_dfos_output_2 <- purrr::Reduce('rbind', dfos_output_2)
+  merge_dfos_output_1 <- Reduce('rbind', dfos_output_1)
+  merge_dfos_output_2 <- Reduce('rbind', dfos_output_2)
 
   # if required, process ref_col flows
   # repeats the process above, but using ref_col as the 'Flow' column
@@ -204,8 +204,8 @@ calc_flowstats <- function(data,
     dfos_output_1_ref <- c(mget(ls(pattern = "dfos_output_1_ref")))
     dfos_output_2_ref <- c(mget(ls(pattern = "dfos_output_2_ref")))
 
-    merge_dfos_output_1_ref <- purrr::Reduce('rbind', dfos_output_1_ref)
-    merge_dfos_output_2_ref <- purrr::Reduce('rbind', dfos_output_2_ref)
+    merge_dfos_output_1_ref <- Reduce('rbind', dfos_output_1_ref)
+    merge_dfos_output_2_ref <- Reduce('rbind', dfos_output_2_ref)
 
 
     # Get Q10z_adj
