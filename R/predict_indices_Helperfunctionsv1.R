@@ -357,7 +357,7 @@ getLatLong <- function (nat_grid_ref, easting, northing,coordsys_latlon) {
 getLatLong_AZURE <- function (nat_grid_ref, easting, northing,coordsys_latlon) {
   lat_long    <- NA
   concat_bng  <- paste(nat_grid_ref, substr(easting,1,3), substr(northing,1,3), sep="")
-  lat_long    <- osg_parse (concat_bng, CoordSystem = coordsys_latlon)
+  lat_long    <- osg_parse (concat_bng, coord_system = coordsys_latlon)
   return (lat_long)
 }
 
@@ -399,7 +399,7 @@ getLatLongNI <- function (nat_grid_ref, easting, northing,coordsys_latlon) {
   concat_bng  <- paste(nat_grid_ref, substr(easting,1,3), substr(northing,1,3), sep="")
   print(concat_bng)
   # Add "I" for NOrthern Ireland
-  lat_long    <- osg_parse (paste0("I",concat_bng), CoordSystem = coordsys_latlon)
+  lat_long    <- osg_parse (paste0("I",concat_bng), coord_system = coordsys_latlon)
   #print(lat_long)
   return (lat_long)
 }
@@ -430,7 +430,7 @@ getBNG <- function (nat_grid_ref, easting, northing,coordsys_bng) {
 getBNG_AZURE <- function (nat_grid_ref, easting, northing,coordsys_bng) {
   lat_long    <- NA
   concat_bng  <- paste(nat_grid_ref, substr(easting,1,3), substr(northing,1,3), sep="")
-  new_bng    <- osg_parse (concat_bng, CoordSystem = coordsys_bng)
+  new_bng    <- osg_parse (concat_bng, coord_system = coordsys_bng)
   return (new_bng)
 }
 # 12. sPECIAL CASE OF discharge from VELOCITY
