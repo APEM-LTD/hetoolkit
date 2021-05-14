@@ -22,6 +22,8 @@
 #'
 #' @return Launches a shiny app containing an interactive time series plot of biology and flow data.
 #'
+#' @export
+#'
 #' @examples
 #' ## Generate a shiny multi-panel plot, with the option to toggle between three biology metrics:
 #' # plot_shiny(data = data,

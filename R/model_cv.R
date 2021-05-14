@@ -27,6 +27,8 @@
 #'
 #' @return A list of two elements: (i) the RMSE, and (ii) a data frame or tibble containing the input dataset plus r additional columns containing the cross-validation predicted values (named pred_cv#).
 #'
+#' @export
+#'
 #' @examples
 #' library(lme4)
 #' library(mgcv)

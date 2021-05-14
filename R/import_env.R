@@ -23,6 +23,8 @@
 #'
 #' @return Tibble containing environmental data
 #'
+#' @export
+#'
 #' @examples
 #' # Download data for all sites and save as .rds file for future use:
 #'   # import_env(save_dwnld = TRUE, save_dir = "mydata")

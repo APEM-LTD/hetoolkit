@@ -20,6 +20,8 @@
 #'
 #' @return Tibble containing RHS data.
 #'
+#' @export
+#'
 #' @examples
 #' # Download data for all surveys and save as .rds file for future use:
 #' # import_rhs(save_dwnld = TRUE, save_dir = "mydata")

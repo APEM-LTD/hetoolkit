@@ -13,6 +13,8 @@
 #'
 #' @return A single ggplot2 or plotly object.
 #'
+#' @export
+#'
 #' @examples
 #' ## Example 1: Produce a single plotly plot, combining data for all sites
 #' # plot_rngflows(data = all_data,

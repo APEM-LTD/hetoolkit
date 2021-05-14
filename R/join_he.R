@@ -32,6 +32,8 @@
 #'
 #' @return join_he returns a tibble containing processed biology data linked to processed flow statistics.
 #'
+#' @export
+#'
 #' @examples
 #' ## Join processed biology data and processed flow statistics - no mapping specified because paired flow and biology sites have identical ids. Do not lag flow statistics.
 #' # join_he(biol_data = biol_all,

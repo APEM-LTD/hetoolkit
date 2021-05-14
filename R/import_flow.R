@@ -24,6 +24,7 @@
 #'
 #' @return A tibble containing daily flow data for the specified sites, with the following columns: input ("HDE", "NRFA" or "FLOWFILES"), flow-site_id, date, flow and quality.
 #'
+#' @export
 #'
 #' @examples
 #' # Import data for selected sites and dates

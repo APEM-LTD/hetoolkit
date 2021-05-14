@@ -73,6 +73,8 @@
 #' - parameter (base flow index (bfi), flow duration curve percentiles (p1 to p99), and seasonal means and standard deviations for Q10, Q30, Q50, Q75 and Q95).
 #' - value (calculated statistic)
 #'
+#' @export
+#'
 #' @examples
 #' ## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col:
 #' # calc_flowstats(data = flow_data,

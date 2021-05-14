@@ -17,6 +17,8 @@
 #'
 #' @return The function returns a single ggplot object.
 #'
+#' @export
+#'
 #' @examples
 #' # Generate a plot of predictions from a hydro-ecological model, alongside observed biology and flow data, and save a png file to a sub-folder of the working directory called 'outputs'.
 #' # plot_predictions(data = autumn_data,

@@ -20,6 +20,8 @@
 #' @references
 #' FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide V1.5 (2020) [Online] Available at https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx
 #'
+#' @export
+#'
 #' @examples
 #' # Generate expected scores for macroinvertebrate indices, using environmental data for site(s) of interest.
 #' # Save generated dataset as .RDS file.

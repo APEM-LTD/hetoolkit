@@ -26,6 +26,8 @@
 #'
 #' @return A list of five ggplot objects. These objects can optionally be saved as five separate png files.
 #'
+#' @export
+#'
 #' @examples
 #' ## Example 1
 #' # create example dataset (sleepstudy is an example dataset from the lme4 package)

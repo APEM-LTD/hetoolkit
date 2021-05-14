@@ -34,6 +34,8 @@
 #' [[2]] A tibble summary of data completeness for each value or level of x: number and proportion of missing observations, and total number of observations.
 #' [[3]] A tibble summary of data completeness for each value or level of y: number and proportion of missing observations, total observations, the number of gaps (sequences of missing time steps) in the dataset, and what the shortest and longest run of missing time steps are. The later three will be NA if there are no missing time steps.
 #'
+#' @export
+#'
 #' @examples
 #'
 #' # read in example mean daily flow dataset

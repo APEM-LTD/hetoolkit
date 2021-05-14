@@ -22,6 +22,10 @@
 #'
 #' @return Depending on the 'plotly' argument, either a ggplot or plotly plot displaying the   sites in 2D space to show site similarity and identify potential outliers.
 #'
+#' @export
+#'
+#' @export
+#'
 #' @examples
 #' # df = read.csv("INV_OPEN_DATA_SITE.csv")
 #'

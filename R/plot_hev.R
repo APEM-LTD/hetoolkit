@@ -24,6 +24,8 @@
 #' @return Depending on the multiplot argument, the function returns either a single ggplot
 #' object, or a list of ggplot objects.
 #'
+#' @export
+#'
 #' @examples
 #' ## Generate hev plots for three biology metrics at one site of interest
 #' # plot_hev(data = subset(all_data, biol_site_id = "100582"),

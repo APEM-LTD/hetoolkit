@@ -47,6 +47,8 @@
 #' @return A tibble containing the processed flow statistics for every combination of site
 #' and water year.
 #'
+#' @export
+#'
 #' @examples
 #' # Example of altering date format to the required yyyy-mm-dd format
 #' x <- c("09-01-2001", "09-01-2002", "09-01-2003")
