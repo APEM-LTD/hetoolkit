@@ -167,8 +167,8 @@ calc_flowstats <- function(data,
   dfos_output_1 <- c(mget(ls(pattern = "_dfos_output_1")))
   dfos_output_2 <- c(mget(ls(pattern = "_dfos_output_2")))
 
-  merge_dfos_output_1 <- Reduce('rbind', dfos_output_1)
-  merge_dfos_output_2 <- Reduce('rbind', dfos_output_2)
+  merge_dfos_output_1 <- purrr::Reduce('rbind', dfos_output_1)
+  merge_dfos_output_2 <- purrr::Reduce('rbind', dfos_output_2)
 
   # if required, process ref_col flows
   # repeats the process above, but using ref_col as the 'Flow' column
@@ -183,7 +183,7 @@ calc_flowstats <- function(data,
       data_ref$Date <- dplyr::pull(data_ref, date_col)
       data_ref$Flow <- dplyr::pull(data_ref, ref_col)
 
-      dfos_data_ref <- dplyr::select(data_ref, Date, Flow)
+      dfos_data_ref <- data_ref %>% dplyr::select(Date, Flow)
 
       dfos_output_ref <- hetoolkit::doForOneStation(dfos_data_ref)
 
