@@ -142,9 +142,9 @@ calc_flowstats <- function(data,
 
   # run doForOneStation on Date & Flow Cols
 
-  dfos_data <- dplyr::select(data_f, Date, Flow)
+  dfos_data <- data_f %>% dplyr::select(Date, Flow)
 
-  dfos_output <- doForOneStation(dfos_data)
+  dfos_output <- hetoolkit::doForOneStation(dfos_data)
 
   # Select outputs and match with flow_site_id
 
@@ -185,7 +185,7 @@ calc_flowstats <- function(data,
 
       dfos_data_ref <- dplyr::select(data_ref, Date, Flow)
 
-      dfos_output_ref <- doForOneStation(dfos_data_ref)
+      dfos_output_ref <- hetoolkit::doForOneStation(dfos_data_ref)
 
       dfos_output_a_ref <- as.data.frame(dfos_output_ref[[1]])
 
@@ -204,20 +204,16 @@ calc_flowstats <- function(data,
     dfos_output_1_ref <- c(mget(ls(pattern = "dfos_output_1_ref")))
     dfos_output_2_ref <- c(mget(ls(pattern = "dfos_output_2_ref")))
 
-    merge_dfos_output_1_ref <- Reduce('rbind', dfos_output_1_ref)
-    merge_dfos_output_2_ref <- Reduce('rbind', dfos_output_2_ref)
+    merge_dfos_output_1_ref <- purrr::Reduce('rbind', dfos_output_1_ref)
+    merge_dfos_output_2_ref <- purrr::Reduce('rbind', dfos_output_2_ref)
 
 
     # Get Q10z_adj
 
     # select the data we need from _ref dataset
 
-    ref_data <- dplyr::select(merge_dfos_output_1_ref, flow_site_id, water.year, season,
-                       Q10mean, Q10sd,
-                       Q30mean, Q30sd,
-                       Q50mean, Q50sd,
-                       Q70mean, Q70sd,
-                       Q95mean, Q95sd)
+    ref_data <- merge_dfos_output_1_ref %>%
+                dplyr::select(flow_site_id, water.year, season, Q10mean, Q10sd, Q30mean, Q30sd, Q50mean, Q50sd, Q70mean, Q70sd, Q95mean, Q95sd)
 
     ref_data <-  ref_data %>% dplyr::rename(Q10mean_ref = Q10mean,
                                       Q10sd_ref = Q10sd,
