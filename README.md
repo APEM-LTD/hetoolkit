@@ -15,7 +15,6 @@ To install the latest release of `hetoolkit` use the following code:
 
 ``` r
 remotes::install_github("APEM-LTD/hetoolkit")
-devtools::build_vignettes()
 ```
 
 ## Overview
@@ -29,11 +28,8 @@ overseen by the Environment Agency.
 ## Examples
 
 Further information on the functions contained within the package,
-including examples, can be found in the `HE Toolkit - Vingette`.
-
-``` r
-browseVignettes(package = "hetoolkit")
-```
+including examples, can be found in the `HE Toolkit - Vingette` at
+<https://apem-ltd.github.io/hetoolkit/>.
 
 ## Reporting Bugs
 
