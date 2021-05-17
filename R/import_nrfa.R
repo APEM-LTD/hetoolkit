@@ -21,6 +21,8 @@
 #'
 #' @return A tibble containing daily flow data for the specified sites, with the following columns: flow-site_id, date, and flow (in m3/s). (The NRFA database does not contain information about the quality of the flow data.)
 #'
+#' @export
+#'
 #' @examples
 #' # Import data for selected sites and dates (and keep downloaded CSV files for inspection)
 #' # import_nrfa(sites = c("1001", "2001"), start_date = "2000-01-01", end_date = "2019-12-31", tidyup = FALSE)

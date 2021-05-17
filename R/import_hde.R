@@ -23,6 +23,8 @@
 #'
 #' @return A tibble containing daily flow data for the specified sites, with the following columns: flow_site_id, date, flow (in m3/s) and quality.
 #'
+#' @export
+#'
 #' @examples
 #' # Import data for selected sites and dates
 #' # import_hde(sites = c("F1707", "030028"), start_date = "2000-01-01", end_date = "2019-12-31")

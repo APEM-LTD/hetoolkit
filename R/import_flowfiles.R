@@ -33,6 +33,8 @@
 #'
 #' @return A tibble containing flow data for the specified sites/files, with the following columns: flow-site_id, date, flow and (if available) quality.
 #'
+#' @export
+#'
 #' @examples
 #' # Import data for selected sites and dates
 #' # import_flowfiles(sites = c("0130TH", "033006"), dir = "data/wiski", col_order = c(1,2,3), skip_num = 21, date_format = "dmy_hms", start_date = "2010-01-01", end_date = "2010-01-05")
