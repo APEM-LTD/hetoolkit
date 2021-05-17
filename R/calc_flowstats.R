@@ -768,23 +768,3 @@ find_events <- function(x,threshold,type="high") {
 
 
 
-#####################################################################################
-
-# calc_flowstats wraps doForOneStation
-
-# doForOneStation calls the following functions and subfunctions:
-# APPLYFLOWSTATS
-# DataProcessing
-# CreateLongData
-# calc_bfi
-# calc_longterm_percentile (fasstr)
-# CreateFlowStats
-# find_eventDuration
-# find_events
-# CALCFLOWSTATS
-#riisbiggs2
-
-# Do doForOneStation requires at least 26 flow records
-# Reduced to 1
-
-######################################################################################
