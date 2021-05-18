@@ -609,7 +609,7 @@ plot_sitepca(data = env_data, vars = c("ALTITUDE", "SLOPE", "WIDTH", "DEPTH", "B
 
 In this example, the first component (x-axis) can be interpreted a gradient in substrate composition from finer pebbles/gravels to coarser boulder/cobbles, and the second component (y-axis) can be interpreted as a longitudinal gradient from wider, deeper rivers (bottom) to smaller, steeper streams (top). On the basis of these results, we may wish to consider whether sites 77599 and 77216 are suitable for inclusion in the model, or whether they are sufficiently different to warrant being excluded.
 
-## Assess coverage of hisotrical flow conditons
+## Assess coverage of historical flow conditions
 
 A hydro-ecological model has a greater chance of revealing relationships between biology metrics and flow variables of the biology samples span a wide range of flow conditions. Good coverage of historical flow conditions by the biology sample data also means that the calibrated model is likely to be better at predicting biological repsones under high and low flow scenarios.
 
