@@ -40,3 +40,13 @@ Please consider reporting bugs and asking questions on the Issues page.
 FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide
 V1.5 (2020) \[Online\] Available at:
 <https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx>
+
+## Disclaimer
+
+The R-Code included within the Hydro-Ecology Toolkit package is licensed
+under `GPL-V3`.
+
+The Hydro-Ecology Toolkit package contains public sector information
+licensed under the Open Government Licence v3.0. Licence information is
+available at:
+<https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/>
