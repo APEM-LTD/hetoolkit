@@ -606,7 +606,7 @@ plot_sitepca(data = env_data, vars = c("ALTITUDE", "SLOPE", "WIDTH", "DEPTH", "B
 
 In this example, the first component (x-axis) can be interpreted a gradient in substrate composition from finer pebbles/gravels to coarser boulder/cobbles, and the second component (y-axis) can be interpreted as a longitudinal gradient from wider, deeper rivers (bottom) to smaller, steeper streams (top). On the basis of these results, we may wish to consider whether sites 77599 and 77216 are suitable for inclusion in the model, or whether they are sufficiently different to warrant being excluded.
 
-## Assess coverage of hisotrical flow conditons
+## Assess coverage of historical flow conditions
 
 A hydro-ecological model has a greater chance of revealing relationships between biology metrics and flow variables of the biology samples span a wide range of flow conditions. Good coverage of historical flow conditions by the biology sample data also means that the calibrated model is likely to be better at predicting biological repsones under high and low flow scenarios.
 
@@ -669,14 +669,14 @@ Using this new `hev_data` dataset, the following example uses `multiplot = TRUE`
 plot_hev(data = subset(hev_data, biol_site_id == "34352"), 
          date_col = "SAMPLE_DATE", 
          flow_stat = c("Q95z", "Q10z"), 
-         biol_metric = c("LIFE_F_OE"), 
-         clr_by = "biol_site_id")
+         biol_metric = c("LIFE_F_OE", "WHPT_ASPT_OE", "WHPT_NTAXA_OE", "PSI_OE"), 
+         multiplot = TRUE)
 
 ```
 
 The `save` argument can be used to export the HEV plot as a png file. The name of the png file is fixed, however, so to generate a separate png file for each site requires a loop.
 
-```{r hevplot2, echo=TRUE, message=FALSE, warning=FALSE}
+```{r hevplot2, message=FALSE, warning=FALSE, include=FALSE}
 
 for(i in mapping$biol_site_id){
   
@@ -729,7 +729,7 @@ To aid model selection, the `hetoolkit` package includes two functions for perfo
 
 `model_cv` and `model_logocv` measure the performance of the model under different situations, and so will not necessarily agree which is the best model. If the priority is to be able to predict the response at sites in the calibration dataset, then use `model_cv`; if the priority is to be able to predict the response at sites not in the calibration dataset, then use `model_logocv`.
 
-In the following example, the process of simplifying the full model is guided by `model_cv`, which measures predictive performance using the Root Mean Square Error (RMSE); lower values indicate better predictions. `r` is set at 20 to give stable RMSE estimates and `control` is used to help prevent model convergence issues. Backward elimination of random-effect terms is followed by backward elimination of fixed-effect terms, until the RMSE cannot be reduced any further. `model_2` is the final, preferred model.
+In the following example, the process of simplifying the full model is guided by `model_cv`, which measures predictive performance using the Root Mean Square Error (RMSE); lower values indicate better predictions. `r` is set at 20 to give stable RMSE estimates and `control` is used to help prevent model convergence issues. Backward elimination of random-effect terms is followed by backward elimination of fixed-effect terms, until the RMSE cannot be reduced any further. `model_3` is the final, preferred model.
 
 ```{r cv1, message=FALSE, warning=FALSE, include=FALSE, results = 'hide'}
 
@@ -758,7 +758,7 @@ cv_1 <- model_cv(model = model_1, data = autumn_data, group = "biol_site_id", k 
 
 ```{r}
 
-# RMSE higher than for model_full, so keep Q95z slope
+# model_1 has higher RMSE than model_full, so keep Q95z slope
 cv_1[1]
 
 ```
@@ -774,7 +774,7 @@ cv_2 <- model_cv(model = model_2, data = autumn_data, group = "biol_site_id", k 
 
 ```{r}
 
-# RMSE lower than for model_full, so drop Q95zLS1
+# model_2 has lower RMSE than model_full, so drop Q95zLS1
 cv_2[1]
 
 ```
@@ -790,10 +790,10 @@ cv_3 <- model_cv(model = model_3, data = autumn_data, group = "biol_site_id", k 
 
 ```{r}
 
-# RMSE higher than for model_2, so keep Q10z
+# model_3 has lower RMSE than model_2, so drop Q10z
 cv_3[1]
 
-# no further model simplification possible
+# no further model simplification possible; model_3 is the final model.
 
 ```
 
@@ -805,7 +805,7 @@ The `diag_lmer` function produces a variety of diagnostic plots for a mixed-effe
 ```{r message=FALSE, warning=FALSE}
 
 # generate diagnostic plots
-diag_plots <- diag_lmer(model = model_2, data = autumn_data, facet_by = NULL)
+diag_plots <- diag_lmer(model = model_3, data = autumn_data, facet_by = NULL)
 
 ```
 
