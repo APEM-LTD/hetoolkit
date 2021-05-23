@@ -32,13 +32,35 @@ devtools::load_all()
 
 # Introduction
 
-The `hetoolkit` package comprises a collection of functions for assembling, processing, visualising and modelling hydro-ecological data. This vignette illustrates a typical workflow using a selection of 20 macroinvertebrate sampling sites from the Environment Agency's National Drought Monitoring Network (NDMN).
+The `hetoolkit` package comprises a collection of 20 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:
+
+* `import_nrfa` for importing flow data from the National River Flow Archive (NRFA);
+* `import_hde` for importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE);
+* `import_flowfiles` for importing flow data from local files;
+* `import_flow` for importing flow data from a mix of the above sources; 
+* `import_inv` for importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer;
+* `import_env` for importing environmental base data from the EA Ecology and Fish Data Explorer;
+* `import_rhs` for importing River Habitat Survey (RHS) data from the EA's Open Data portal;
+* `predict_indices` for calculating expected scores for macroinvertebrate indices using the RICT model (FBA 2020);
+* `calc_flowstats` and `calc_rfrstats` for calculating summary statistics describing historical flow conditions;
+* `join_he` for joining the above datasets;
+* `plot_heatmap` for visualising and summarising gaps in time series data;
+* `plot_hev` and `shiny_hev` for producing time series plots of biology and flow data;
+* `plot_sitepca` for summarising environmental characteristics of biological sampling sites;
+* `plot_rngflows` for Visualising the range of flow conditions experienced historically at a site;
+* `model_cv` and `model_logocv` for performing cross-validation on linear mixed-effects models and hierarchical generalized additive models;
+* `diag_lmer` for generating a variety of diagnostic plots for a mixed-effects regression (lmer) model; and
+* `plot_predictions` for visualising the time series predictions from a hydro-ecological model.
+
+This vignette illustrates a typical workflow using a selection of 20 macroinvertebrate sampling sites from the Environment Agency's National Drought Monitoring Network (NDMN). 
+
+Although the package has been developed with macroinvertebrate data in mind, the functions can be used with any kind of biological sampling data.
 
 # Meta-data file
 
 To link together disparate datasets requires a look-up table of site ids. In this example, we load a table with four columns:
 
-* *biol_site_id* = id of macroinvertebrate sampling site.
+* *biol_site_id* = id of biology (in this case macroinvertebrate) sampling site.
 * *flow_site_id* = id of paired flow gauging station.
 * *flow_input* = vector specifying where to source the flow data for station (either National River Flow Archive "NRFA", Hydrology Data Explorer "HDE", or local files "FLOWFILES").
 * *rhs_survey_id* = id of paired River Habitat Survey (RHS) (survey id, not not site id, in case multiple surveys have been undertaken at a site).
@@ -68,7 +90,7 @@ rhssurveys <- master_data$rhs_survey_id
 
 ## Standardised Column Names
 
-A number of standardise column names are used throughout the `hetoolkit` package, and throughout this vingette and its associated datasets.  These include:
+A number of standardised column names are used throughout the `hetoolkit` package, and throughout this vignette and its associated datasets.  These include:
 
 * *biol_site_id* = macroinvertebrate sampling site ids.
 * *flow_site_id* = flow gauging station ids.
@@ -83,7 +105,7 @@ The `import_inv` function imports macroinvertebrate sampling data from the Envir
 
 Below, we use our list `biolsites` to filter the data from EDE.  
 
-```{r bio, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r bio, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # Import biology data from EDE
 biol_data <- import_inv(sites = biolsites, start_date = "2010-01-01", end_date = "2020-12-31")
@@ -101,7 +123,7 @@ biol_data
 
 If the user has additional biology data in a separate Excel file, it is possible to append this to the EDE download. The additional data must have the same column names as the EDE download file.
 
-```{r biol_drops, message=FALSE, warning=FALSE, results='hide', tidy=TRUE}
+```{r biol_drops, message=FALSE, warning=FALSE, results=FALSE, tidy=TRUE}
 
 # bind 2 biology data sets - one from EDE and one local file
 
@@ -143,7 +165,7 @@ If saving prior to filtering, the name of the filtered rds file is hard-wired to
 
 Below, we use our list `biolsites` to filter the data from EDE.
 
-```{r env, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r env, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # Import biology data from EDE
 env_data <- import_env(sites = biolsites)
@@ -210,7 +232,7 @@ Finally we use ggplot with geom_sf() to plot the points and ggrepel::geom_text_r
 
 Any additional environmental data in a separate Excel file can be appended to the EDE download. The additional data must have the same column names as the EDE download file. 
 
-```{r env_drops, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r env_drops, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # bind 2 env data sets - one from EDE and one local file
 
@@ -242,7 +264,7 @@ env_data_final <- rbind(env_data, env_data_excel)
 
 ## Import RHS data
 
-The `import_rhs` function allows the user to download RHS Data from Open Data.
+The `import_rhs` function allows the user to download River Habitat Survey (RHS) data from Open Data.
 
 The function either: 
 
@@ -258,7 +280,7 @@ Below, we use our list `rhssurveys` to filter the downloaded data.
 
 To enable the RHS data to be joined to the biology and flow data at a later stage, it is necessary to rename the `Survey ID` column to `rhs_survey_id`.
 
-```{r rhs, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r rhs, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # import RHS data from Open Data
 rhs_data <- import_rhs(surveys =  rhssurveys)
@@ -270,7 +292,7 @@ rhs_data <- rhs_data %>% dplyr::rename(rhs_survey_id = Survey.ID)
 
 If required, unwanted variables can be dropped from the dataset.
 
-```{r rhs_drops, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r rhs_drops, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # select Columns to keep
 rhs_keep <- c("rhs_survey_id", "Hms.Poaching.Sub.Score", "Hms.Rsctned.Bnk.Bed.Sub.Score", "HMS.Score")
@@ -336,7 +358,7 @@ predict_data <- predict_data[ , (names(predict_data) %in% keeps)]
 
 Prior to joining the biology data with other datasets, it is advisable to remove or average out any replicate or duplicate samples collected from a site within the same year and season.
 
-```{r join bio, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r join bio, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # average out any replicate or duplicate biology samples
 biol_data <- biol_data %>%
@@ -365,7 +387,7 @@ biol_all2 <- merge(biol_data, predict_data)
 
 Next the environmental base data are joined using the common field `biol_site_id`.
 
-```{r join bio_2, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r join bio_2, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # join ENV data, by biol_site_id
  biol_all <- dplyr::left_join(biol_all, env_data, by = "biol_site_id")
@@ -375,9 +397,9 @@ Next the environmental base data are joined using the common field `biol_site_id
 
 ## Calculate O/E ratios
 
-Now that the observed and expected biology metric scores are joined into a single data frame,  O:E (Observed/Expected) ratios can be calculated.
+Now that the observed and expected biology metric scores are joined into a single data frame, O:E (Observed/Expected) ratios can be calculated.
 
-```{r OE ratios, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r OE ratios, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # WHPT-ASPT
 biol_all <- biol_all %>%
@@ -406,7 +428,7 @@ The data frame nrfa.hde provides a joined dataset which illustrates which statio
 
 ```{r flow_source, warning=FALSE, message=FALSE, tidy=TRUE}
 
-# vew nrfa.hde
+# view nrfa.hde
 nrfa.hde
 
 ```
@@ -418,7 +440,7 @@ nrfa.hde
 
 Below, we use the lists `flowsites` and `flowinputs` to specify sites for import.
 
-```{r import flow, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r import flow, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 flow_data <- import_flow(sites = flowsites,
                 inputs = flowinputs,
@@ -486,7 +508,7 @@ It is primarily designed to work with mean daily flows (e.g. as produced by impo
 
 Regardless, the data should be regularly spaced and the same time step should be used for all sites.
 
-```{r calculate flow stats, warning=FALSE, message=FALSE, results='hide', tidy=TRUE}
+```{r calculate flow stats, warning=FALSE, message=FALSE, results=FALSE, tidy=TRUE}
 
 # uses flow_data, as produced using import_flow()
 
@@ -511,10 +533,11 @@ flow_stats[[1]]
 ```
 
 The second data table contains long-term flow statistics. The data are arranged in long format, with the following columns:
-* flow_site_id (a unique site id)
-* season (S = summer, W = winter, A = all)
-* parameter (base flow index (bfi), flow duration curve percentiles (p1 to p99), and seasonal means and standard deviations for Q10, Q30, Q50, Q75 and Q95).
-* value (calculated statistic)
+
+* flow_site_id (a unique site id);
+* season (S = summer, W = winter, A = all);
+* parameter (base flow index (bfi), flow duration curve percentiles (p1 to p99), and seasonal means and standard deviations for Q10, Q30, Q50, Q75 and Q95); and
+* value (calculated statistic).
 
 ```{r calculate flow stats_print2, warning=FALSE, message=FALSE, tidy=TRUE}
 
@@ -550,7 +573,7 @@ join_data
 
 If required, the RHS data can also be joined manually to the combined biology and flow dataset.
 
-```{r join RHS, warning=FALSE, message=FALSE, tidy=TRUE, results='hide'}
+```{r join RHS, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # create mapping
 #rhs_survey_id <- as.character(rhssurveys)
@@ -604,11 +627,11 @@ plot_sitepca(data = env_data, vars = c("ALTITUDE", "SLOPE", "WIDTH", "DEPTH", "B
 
 ```
 
-In this example, the first component (x-axis) can be interpreted a gradient in substrate composition from finer pebbles/gravels to coarser boulder/cobbles, and the second component (y-axis) can be interpreted as a longitudinal gradient from wider, deeper rivers (bottom) to smaller, steeper streams (top). On the basis of these results, we may wish to consider whether sites 77599 and 77216 are suitable for inclusion in the model, or whether they are sufficiently different to warrant being excluded.
+In this example, the first component (x-axis) can be interpreted as a longitudinal gradient from wider, deeper rivers (left) to smaller, steeper streams (right), and the second component (y-axis) can be interpreted a gradient in substrate composition from finer pebbles/gravels (top) to coarser boulder/cobbles (bottom). On the basis of these results, we may wish to consider whether sites such as 77216 and 55824 are suitable for inclusion in the model, or whether they are sufficiently different to warrant being excluded.
 
 ## Assess coverage of historical flow conditions
 
-A hydro-ecological model has a greater chance of revealing relationships between biology metrics and flow variables of the biology samples span a wide range of flow conditions. Good coverage of historical flow conditions by the biology sample data also means that the calibrated model is likely to be better at predicting biological repsones under high and low flow scenarios.
+A hydro-ecological model has a greater chance of revealing relationships between biology metrics and flow variables of the biology samples span a wide range of flow conditions. Good coverage of historical flow conditions by the biology sample data also means that the calibrated model is likely to be better at predicting biological responses under high and low flow scenarios.
 
 The `plot_rngflows` function generates a scatterplot for two flow variables and overlays two convex hulls: one showing the full range of flow conditions experienced historically, and a second convex hull showing the range of flow conditions with associated biology samples. This visualisation helps identify to what extent the available biology data span the full range of full range of flow conditions experienced historically. 
 
@@ -674,9 +697,9 @@ plot_hev(data = subset(hev_data, biol_site_id == "34352"),
 
 ```
 
-The `save` argument can be used to export the HEV plot as a png file. The name of the png file is fixed, however, so to generate a separate png file for each site requires a loop.
+The `save` argument can be used to export the HEV plot as a .png file. The name of the png file is fixed, however, so to generate a separate png file for each site requires a loop.
 
-```{r hevplot2, message=FALSE, warning=FALSE, include=FALSE}
+```{r hevplot2, echo=TRUE, message=FALSE, warning=FALSE, fig.show=FALSE, results=FALSE}
 
 for(i in mapping$biol_site_id){
   
@@ -703,7 +726,7 @@ To interactively examine time series relationships for different metrics and sit
 
 Once the biology and flow data has been assembled and explored, spatial and temporal variation in a biological metric of interest can be modelled as a function of one or more flow summary statistics to reveal potential hydro-ecological relationships. For datasets comprising multiple sites, linear mixed-effects models have the ability to describe a 'global' relationship that applies across all sites, whilst also quantifying the degree of variability in this relationship from site to site. 
 
-The following example illustrates a mixed-effects model fitted to autumn macroinvertebrate data using the `lmer` function from the `lme4` package. The model includes three variables representing high and low flows in different antecedent periods, and two of these (Q95z and Q10z) are allowed to have site-specific (random) slopes.
+The following example illustrates a mixed-effects model fitted to autumn macroinvertebrate data using the `lmer` function from the `lme4` package. The model includes three variables representing high and low flows in different antecedent periods (Q95z, Q10z and Q95zLS1), and Q95z also has a site-specific (random) slope.
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -731,7 +754,7 @@ To aid model selection, the `hetoolkit` package includes two functions for perfo
 
 In the following example, the process of simplifying the full model is guided by `model_cv`, which measures predictive performance using the Root Mean Square Error (RMSE); lower values indicate better predictions. `r` is set at 20 to give stable RMSE estimates and `control` is used to help prevent model convergence issues. Backward elimination of random-effect terms is followed by backward elimination of fixed-effect terms, until the RMSE cannot be reduced any further. `model_3` is the final, preferred model.
 
-```{r cv1, message=FALSE, warning=FALSE, include=FALSE, results = 'hide'}
+```{r cv1, message=FALSE, warning=FALSE, include=FALSE, results=FALSE}
 
 my_control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000))
 
@@ -742,12 +765,12 @@ cv_full <- model_cv(model = model_full, data = autumn_data, group = "biol_site_i
 
 ```{r}
 
-#get RMSE estimate
+# get RMSE estimate
 cv_full[1]
 
 ```
 
-```{r cv2, message=FALSE, warning=FALSE, include=FALSE, results = 'hide'}
+```{r cv2, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop random slope
 model_1 <- model_full <- lmer(LIFE_F_OE ~ Q95z + Q10z + Q95zLS1 + (1 | biol_site_id), data = autumn_data, REML = FALSE)
@@ -758,12 +781,12 @@ cv_1 <- model_cv(model = model_1, data = autumn_data, group = "biol_site_id", k 
 
 ```{r}
 
-# model_1 has higher RMSE than model_full, so keep Q95z slope
+# model_1 has a higher RMSE than model_full, so keep Q95z slope
 cv_1[1]
 
 ```
 
-```{r cv3, message=FALSE, warning=FALSE, include=FALSE, results = 'hide'}
+```{r cv3, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop Q95zLS1 term
 model_2 <- model_full <- lmer(LIFE_F_OE ~ Q95z + Q10z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
@@ -774,12 +797,12 @@ cv_2 <- model_cv(model = model_2, data = autumn_data, group = "biol_site_id", k 
 
 ```{r}
 
-# model_2 has lower RMSE than model_full, so drop Q95zLS1
+# model_2 has a lower RMSE than model_full, so drop Q95zLS1
 cv_2[1]
 
 ```
 
-```{r cv4, message=FALSE, warning=FALSE, include=FALSE, results = 'hide'}
+```{r cv4, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop Q10z term
 model_3 <- model_full <- lmer(LIFE_F_OE ~ Q95z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
@@ -790,7 +813,7 @@ cv_3 <- model_cv(model = model_3, data = autumn_data, group = "biol_site_id", k 
 
 ```{r}
 
-# model_3 has lower RMSE than model_2, so drop Q10z
+# model_3 has a lower RMSE than model_2, so drop Q10z
 cv_3[1]
 
 # no further model simplification possible; model_3 is the final model.
@@ -853,10 +876,16 @@ diag_plots[[5]]
 
 Alternatively, the plots can be faceted by site, to explore model fit and residuals site-by-site. In this example, the sites are arranged in descending order by the mean of the fitted values.
 
-```{r message=FALSE, warning=FALSE, results = 'hide'}
+```{r message=FALSE, warning=FALSE, results=FALSE}
 
 # generate diagnostic plots
-diag_plots2 <- diag_lmer(model = model_2, data = autumn_data, facet_by = "biol_site_id", order_by = "mean", order = "descending", ncol = 4, scales = "fixed")
+diag_plots2 <- diag_lmer(model = model_3, 
+                         data = autumn_data, 
+                         facet_by = "biol_site_id", 
+                         order_by = "mean", 
+                         order = "descending", 
+                         ncol = 4, 
+                         scales = "fixed")
 
 diag_plots2[[1]]
 diag_plots2[[2]]
@@ -874,7 +903,13 @@ Other useful diagnostic plots for `lmer` models include:
 
 ```{r message=FALSE, warning=FALSE}
 
-sjPlot::plot_model(model = model_2, type = "re", facet.grid = FALSE, free.scale = FALSE, title = NULL, vline.color = "darkgrey") + ylim(-0.2,0.2)
+sjPlot::plot_model(model = model_3, 
+                   type = "re", 
+                   facet.grid = FALSE, 
+                   free.scale = FALSE, 
+                   title = NULL, 
+                   vline.color = "darkgrey") + 
+  ylim(-0.2,0.2)
 
 ```
 
@@ -882,7 +917,7 @@ sjPlot::plot_model(model = model_2, type = "re", facet.grid = FALSE, free.scale 
 
 ```{r message=FALSE, warning=FALSE}
 
-visreg::visreg(model_2, "Q95z", ylab = "LIFE_F_OE")
+visreg::visreg(model_3, "Q95z", ylab = "LIFE_F_OE")
        
 ```
 
@@ -890,7 +925,7 @@ visreg::visreg(model_2, "Q95z", ylab = "LIFE_F_OE")
 
 ```{r message=FALSE, warning=FALSE}
 
-visreg::visreg(model_2, "Q95z", by="biol_site_id", ylab = "LIFE_F_OE")
+visreg::visreg(model_2, "Q95z", by = "biol_site_id", ylab = "LIFE_F_OE")
 
 ```
 
@@ -901,9 +936,12 @@ The `plot_predictions` function produces a time series plot of predictions from 
 ```{r  message=FALSE, warning=FALSE}
 
 # Generate prediction intervals
-pi <- merTools::predictInterval(merMod = model_2, level = 0.95, n.sims = 1000,
-                        stat = "mean", type="linear.prediction",
-                        include.resid.var = TRUE)
+pi <- merTools::predictInterval(merMod = model_3, 
+                                level = 0.95, 
+                                n.sims = 1000,
+                                stat = "mean",
+                                type="linear.prediction",
+                                include.resid.var = TRUE)
 
 # bind to model calibration dataset
 autumn_data <- cbind(autumn_data, pi)
