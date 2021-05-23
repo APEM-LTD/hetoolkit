@@ -352,10 +352,6 @@ plot_predictions <- function(data,
 
     }
 
-  # print
-
-  print(plot_1)
-
   # option to save
 
   if(save == TRUE){
