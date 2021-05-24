@@ -185,18 +185,17 @@ env_data
 
 First we download zipped shapefiles for our basemap, and load them in as sf objects. The zipped shapefiles are left in the users project / working directory. The England map is of EA public facing area boundaries. The additional map covering the Wales coastline comes from the ESRC UK Data Service.
 
-```{r get_data}
+```{r get_data, message=FALSE, warning=FALSE}
 
-## get shapefile for EA areas
-# download('https://environment.data.gov.uk/UserDownloads/interactive/d733# 68b35bb74163a384d3d29e479c0d75644/EA_AdminBoundEAandNEpublicFaceAreas_SH# P_Full.zip', destfile = # 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
+download('https://environment.data.gov.uk/UserDownloads/interactive/ace9952e373440e684e984984721a91d78904/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
 
 ## get Wales coastline, just because map looks silly without it
-# download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/pr# ebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
+download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
 
 ## load in the shapefiles to R objects and remove seaward parts
-# EA.areas <- read_sf('/vsizip/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Ful# l.zip/data/Administrative_Boundaries_Environment_Agency_and_Natural_Engl# and_Public_Face_Areas.shp')
-# wales <- read_sf('/vsizip/Wales_ol_2001.zip')
-# EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
+EA.areas <- read_sf('/vsizip/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip/data/Administrative_Boundaries_Environment_Agency_and_Natural_England_Public_Face_Areas.shp')
+wales <- read_sf('/vsizip/Wales_ol_2001.zip')
+EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
 
 ```
 
@@ -204,13 +203,13 @@ First we download zipped shapefiles for our basemap, and load them in as sf obje
 
 We use the environmental base data that we have downloaded from the Ecology and Fish Data Explorer using `import_env`, this gives us their NGRs. We translate the NGRs to full eastings / northings and use this to turn the base data frame into a sf point object for plotting. 
 
-```{r processing}
+```{r processing, message=FALSE, warning=FALSE}
 
 ## translate NGRs to full easting / northing
-# temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "BNG") # %>% as_tibble()
+temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "BNG") %>% as_tibble()
 
 ## make an sf point object to plot with geom_sf but retain the easting and northing column required by geom_text_repel
-# env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords =  c("easting", "northing"), crs = 27700, remove = FALSE) 
+env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords =  c("easting", "northing"), crs = 27700, remove = FALSE) 
 
 ```
 
@@ -218,13 +217,13 @@ We use the environmental base data that we have downloaded from the Ecology and 
 
 Finally we use ggplot with geom_sf() to plot the points and ggrepel::geom_text_repel() to plot the labels. 
 
-```{r map}
-# basemap <- ggplot() + geom_sf(mapping = aes(), data = EA.areas.land) + 
-#   geom_sf(mapping = aes(), data = wales) 
+```{r map, message=FALSE, warning=FALSE}
+basemap <- ggplot() + geom_sf(mapping = aes(), data = EA.areas.land) + 
+  geom_sf(mapping = aes(), data = wales) 
 
-# basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
-#   geom_text_repel(data = env_sf, aes(x=easting, y=northing, label = biol_site_id), col = "blue") +
-#   coord_sf(datum = sf::st_crs(27700)) 
+basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
+  geom_text_repel(data = env_sf, aes(x=easting, y=northing, label = biol_site_id), col = "blue") +
+  coord_sf(datum = sf::st_crs(27700)) 
   
 ```
 
