@@ -726,7 +726,7 @@ To interactively examine time series relationships for different metrics and sit
 
 Once the biology and flow data has been assembled and explored, spatial and temporal variation in a biological metric of interest can be modelled as a function of one or more flow summary statistics to reveal potential hydro-ecological relationships. For datasets comprising multiple sites, linear mixed-effects models have the ability to describe a 'global' relationship that applies across all sites, whilst also quantifying the degree of variability in this relationship from site to site. 
 
-The following example illustrates a mixed-effects model fitted to autumn macroinvertebrate data using the `lmer` function from the `lme4` package. The model includes three variables representing high and low flows in different antecedent periods (Q95z, Q10z and Q95zLS1), and Q95z also has a site-specific (random) slope.
+The following example illustrates a mixed-effects model fitted to autumn macroinvertebrate data using the `lmer` function from the `lme4` package. The model includes three variables representing high and low flows in different antecedent periods (Q95z, Q10z and Q95zLS1), and Q95z also has a random (site-specific) slope.
 
 ```{r message=FALSE, warning=FALSE}
 
