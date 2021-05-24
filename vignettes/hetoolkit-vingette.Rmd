@@ -650,7 +650,7 @@ plot_rngflows(data = all_data, flow_stats = c("Q95z", "Q10z"), biol_metric = "LI
 
 The `plot_hev` function generates, for one site of interest, a time series plot of biology sample data and flow summary statistics, often referred to by the EA as a hydro-ecological validation (HEV) plot. HEV plots provide a visual assessment of trends in the historical data, and an initial guide to possible relationships that could be explored and quantified within a hydro-ecological model.
 
-Whilst the dataset outputted by the `join_he` function can be used to produce a HEV plot, but a better solution is achieved by manually joining the biology and flow datasets as described below. 
+Whilst the dataset outputted by the `join_he` function can be used to produce a HEV plot, a better solution is achieved by manually joining the biology and flow datasets as described below. 
 
 
 ```{r hevdata, message=FALSE, warning=FALSE}
@@ -674,7 +674,7 @@ hev_data <- expand.grid(
 # create season and water_year columns on which to join the six-monthly flow statistics
 hev_data$Month <- month(hev_data$SAMPLE_DATE)
 hev_data$Year <- year(hev_data$SAMPLE_DATE)
-hev_data$flow_season <- ifelse((hev_data$Month >= 4) && (hev_data$Month <= 9), "Summer","Winter")
+hev_data$flow_season <- ifelse((hev_data$Month >= 4) & (hev_data$Month <= 9), "Summer", "Winter")
 hev_data$water_year <- ifelse(hev_data$Month <= 9, hev_data$Year - 1, hev_data$Year)
 
 # join biology and flow data
