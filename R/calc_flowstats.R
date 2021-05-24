@@ -5,7 +5,7 @@
 #' @usage calc_flowstats(data = data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", ref_col = NULL)
 #'
 #' @param data Name of data frame or tibble containing the flow data to be processed.
-#'  Must be in long format and contain columns named "flow_site_id", "Date" and "Flow" (see output from import_flows).
+#'  Must be in long format and contain columns for flow site id, date and flow (see output from import_flows).
 #' @param sites_col Name of column in 'data' containing unique flow site id. Default = "flow_site_id".
 #' @param date_col Name of column in 'data' containing date of flow record.  Default = "date".
 #' @param flow_col Name of column in 'data' containing flow data for processing. Default = "flow".
@@ -77,17 +77,17 @@
 #'
 #' @examples
 #' ## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col:
-#' # calc_flowstats(data = flow_data,
-#'                 #site_col = "flow_site_id",
-#'                 #date_col = "date",
-#'                 #flow_col = "flow")
+#' calc_flowstats(data = flow_data,
+#'                 site_col = "flow_site_id",
+#'                 date_col = "date",
+#'                 flow_col = "flow")
 #'
 #' ## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col, and standardise QXX flow statistics using flow data specified in ref_col:
-#' # calc_flowstats(data = data,
-#'                # site_col = "flow_site_id",
-#'                # date_col = "date",
-#'                # flow_col = "HistoricalFlow",
-#'                # ref_col = "NaturalisedFlow")
+#' calc_flowstats(data = data,
+#'                site_col = "flow_site_id",
+#'                date_col = "date",
+#'                flow_col = "HistoricalFlow",
+#'                ref_col = "NaturalisedFlow")
 
 
 calc_flowstats <- function(data,
