@@ -59,7 +59,7 @@ remotes::install_github("APEM-LTD/hetoolkit")
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
 Environment Agency. Version 1.0.0 was released in May 2021. For further
-information please contact <mike.dunbar@environment-agency.gov.uk>.
+information please contact Mike Dunbar at the Environment Agency.
 
 ## Examples
 
