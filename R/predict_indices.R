@@ -200,6 +200,7 @@ predict_indices <- function(env_data,
   # concatenatedNGR <- with(raw.input.data, paste(NGR, substr(Easting,1,3), substr(Northing,1,3), sep=""))
   #head(concatenatedNGR)
 
+  # RB - Changes March 2021: Line 209 commented-out; instead, lines 207 & 208 are included.
   # #Use function getLatLong()
   #coord_system = c("BNG", "WGS84")
   #coordsystem = "WGS84"
