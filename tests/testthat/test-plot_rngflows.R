@@ -1,5 +1,4 @@
 # Test Error Messages
-library(testthat, ggplot2)
 
 test_that("data is specified", {
   expect_error(plot_rngflows(flow_stats = c("Q95z", "Q10z"), biol_metric = "LIFE_F_OE", label = "SAMPLE_DATE", plotly = FALSE),
