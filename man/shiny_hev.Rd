@@ -34,11 +34,12 @@ The shiny_hev function launches a shiny app of:
 }
 }
 \examples{
-## Generate a shiny multi-panel plot, with the option to toggle between three biology metrics:
-# plot_shiny(data = data,
-#            sites_col = "Site_Code",
+## Multi-panel plot
+
+# shiny_hev(data = all_data,
+#            sites_col = "biol_site_id",
 #            date_col = "Year",
-#            flow_stat = c("PRQ75", "PRQ10"),
-#            biol_metric = c("ASPT OE", "LIFE F OE", "NTAXA OE"),
+#            flow_stat = c("Q10z", "Q95z"),
+#            biol_metric = c("WHPT_ASPT_OE", "LIFE_F_OE"),
 #            multiplot = TRUE)
 }
