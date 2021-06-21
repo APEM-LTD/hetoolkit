@@ -127,7 +127,7 @@ test_that("duplicate dates...", {
 #  calc_test <- readRDS("calc_test.rds")
 #
 #
-#  result_1 <- hetoolkit::calc_flowstats(data = flowdata_test,
+#  result_1 <- calc_flowstats(data = flowdata_test,
 #                                      site_col = "flow_site_id",
 #                                      date_col = "date",
 #                                      flow_col = "flow")
