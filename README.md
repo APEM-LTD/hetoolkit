@@ -52,7 +52,10 @@ These are:
 To install the latest release of `hetoolkit` use the following code:
 
 ``` r
-remotes::install_github("APEM-LTD/hetoolkit")
+install.packages("devtools")
+library(devtools)
+install_github("APEM-LTD/hetoolkit")
+library(hetoolkit)
 ```
 
 ## Development
