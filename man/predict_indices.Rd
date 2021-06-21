@@ -4,7 +4,7 @@
 \alias{predict_indices}
 \title{Predict expected scores for macroinvertebrate indices}
 \usage{
-predict_indices(env_data, save = FALSE, save_dir = getwd())
+predict_indices(env_data = x, save = FALSE, save_dir = getwd())
 }
 \arguments{
 \item{env_data}{A data frame or tibble containing site-level environmental data in Environment Agency Ecology Data Explorer format (as produced by the import_env function).}
@@ -18,9 +18,6 @@ Tibble containing expected scores for macroinvertebrate indices plus end-group p
 }
 \description{
 The \code{predict_indices} function mirrors the functionality of the RICT model available on the MS Azure platform (https://gallery.azure.ai/Experiment/RICT-package-2). Specifically, it uses  environmental (ENV) data from Ecology Data Explorer to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. No classification is undertaken.
-
-#' @usage
-predict_indices(env_data = x, save = FALSE, save_dir = getwd())
 }
 \details{
 All data validation and transformation (conversion) are done in this function using functions predefined in HelperFunctionsv1.R. Predictions are made using PredictionfunctionsV2.R.
