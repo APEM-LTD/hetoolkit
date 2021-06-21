@@ -13,7 +13,6 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
-    dplyr (>= 1.0.4),
     readr (>= 1.4.0),
     tictoc (>= 1.0),
     tibbletime (>= 0.1.6),
@@ -48,6 +47,7 @@ Imports:
     grid (>= 4.0.4),
     tidyr (>= 1.1.2)
 Depends: 
+    dplyr (>= 1.0.4),
     R (>= 3.5.0)
 Suggests: 
     testthat (>= 3.0.0),
