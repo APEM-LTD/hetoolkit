@@ -3,6 +3,7 @@
 export(calc_flowstats)
 export(calc_rfrstats)
 export(diag_lmer)
+export(doForOneStation)
 export(import_env)
 export(import_flow)
 export(import_flowfiles)

@@ -146,7 +146,7 @@ calc_flowstats <- function(data,
 
   dfos_data <- data_f %>% dplyr::select(Date, Flow)
 
-  dfos_output <- hetoolkit::doForOneStation(dfos_data)
+  dfos_output <- doForOneStation(dfos_data)
 
   # Select outputs and match with flow_site_id
 
@@ -187,7 +187,7 @@ calc_flowstats <- function(data,
 
       dfos_data_ref <- data_ref %>% dplyr::select(Date, Flow)
 
-      dfos_output_ref <- hetoolkit::doForOneStation(dfos_data_ref)
+      dfos_output_ref <- doForOneStation(dfos_data_ref)
 
       dfos_output_a_ref <- as.data.frame(dfos_output_ref[[1]])
 
@@ -310,6 +310,9 @@ calc_flowstats <- function(data,
 }
 
 ################################################################################################################
+
+#' @export
+#'
 
 doForOneStation <- function(test.flow.rec) {
 # Function is only passed a flow series at this point
