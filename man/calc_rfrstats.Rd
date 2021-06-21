@@ -62,15 +62,12 @@ records (NAs) are ignored when calculating summary statistics. The user should c
 n and n_ref to identify any water years with incomplete data coverage.
 }
 \examples{
-# Example of altering date format to the required yyyy-mm-dd format
-x <- c("09-01-2001", "09-01-2002", "09-01-2003")
-as.Date(x,format="\%d-\%m-\%Y")
 
 # Example 1
 # load site model flow data
-site.model.flow<-data(site.model.flow,package="hetoolkit")
+site.model.flow <- data(site.model.flow, package="hetoolkit")
 
-# run
+
 # calc_rfrstats(data = site.model.flow,
 #              site_col = "SITE_ID",
 #              date_col = "Date_end",

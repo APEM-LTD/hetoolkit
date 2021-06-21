@@ -37,11 +37,10 @@ The function generates a ggplot object, that is optionally saved as a .png file.
 If multiplot = TRUE, the png file is named "Multi_Plot.png". If multiplot = FALSE, a separate png file is produced for each biology metric, named "biolmetric_Plot.png".
 }
 \examples{
-## Generate hev plots for three biology metrics at one site of interest
+## Generate hev plots for four biology metrics at one site of interest
 # plot_hev(data = subset(all_data, biol_site_id = "100582"),
-#            date_col = "Year",
-#            flow_stat = c("PRQ75", "PRQ10"),
-#            biol_metric = "LIFE_F_OE",,
-#            multiplot = TRUE,
-#            clr_by = Season))
+#            date_col = "SAMPLE_DATE",
+#            flow_stat = c("Q95z", "Q10z"),
+#            biol_metric = c("LIFE_F_OE", "WHPT_ASPT_OE", "WHPT_NTAXA_OE", "PSI_OE"),
+#            multiplot = TRUE)
 }
