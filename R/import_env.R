@@ -149,7 +149,10 @@ import_env <- function(env_dir = NULL,
   # save copy to disk in rds format if needed
   if(save == TRUE){saveRDS(inv_sites_1, paste0(save_dir, '/INV_OPEN_DATA_SITE_F.rds'))}
 
-  file.remove("INV_OPEN_DATA_SITE.csv.gz")
+  # remove zip file, if downloaded
+  if(is.null(env_dir)==TRUE){
+      file.remove("INV_OPEN_DATA_SITE.csv.gz")
+  }
 
   inv_sites_1 <- inv_sites_1 %>% dplyr::rename(biol_site_id = SITE_ID)
 
