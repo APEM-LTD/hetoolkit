@@ -45,7 +45,8 @@ Imports:
     shiny (>= 1.6.0),
     stringr (>= 1.4.0),
     grid (>= 4.0.4),
-    tidyr (>= 1.1.2)
+    tidyr (>= 1.1.2),
+    sp (>= 1.4-5)
 Depends: 
     dplyr (>= 1.0.4),
     R (>= 3.5.0)
