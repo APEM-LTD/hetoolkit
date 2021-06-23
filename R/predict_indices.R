@@ -18,7 +18,7 @@
 #' @return Tibble containing expected scores for macroinvertebrate indices plus end-group probabilities.  The RICT Technical Spefication and the RIVPACS IV End Group Descriptions are available at https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx
 #'
 #' @references
-#' FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide V1.5 (2020) [Online] Available at https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx
+#' FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide V1.5 (2020) Available at: \url{https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx}
 #'
 #' @export
 #'
