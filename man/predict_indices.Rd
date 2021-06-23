@@ -31,5 +31,5 @@ The function will modify the standard RICT output, renaiming "SITE" as "biol_sit
 #                 save = TRUE)
 }
 \references{
-FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide V1.5 (2020) \link{Online} Available at https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User\%20Guides.aspx
+FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide V1.5 (2020) Available at: \url{https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User\%20Guides.aspx}
 }
