@@ -1,7 +1,7 @@
 #' Predict expected scores for macroinvertebrate indices
 #'
 #' @description
-#' The `predict_indices` function mirrors the functionality of the RICT model available on the MS Azure platform (https://gallery.azure.ai/Experiment/RICT-package-2). Specifically, it uses  environmental (ENV) data from Ecology Data Explorer to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. No classification is undertaken.
+#' The `predict_indices` function mirrors the functionality of the RICT model available on the MS Azure platform (\url{https://gallery.azure.ai/Experiment/RICT-package-2}). Specifically, it uses  environmental (ENV) data from Ecology Data Explorer to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. No classification is undertaken.
 #'
 #' @usage
 #' predict_indices(env_data = x, save = FALSE, save_dir = getwd())
@@ -13,9 +13,9 @@
 #' @details
 #' All data validation and transformation (conversion) are done in this function using functions predefined in HelperFunctionsv1.R. Predictions are made using PredictionfunctionsV2.R.
 #'
-#' The function will modify the standard RICT output, renaiming "SITE" as "biol_site_id" (standardised column header for biology sites).
+#' The function will modify the standard RICT output, renaming "SITE" as "biol_site_id" (standardised column header for biology sites).
 #'
-#' @return Tibble containing expected scores for macroinvertebrate indices plus end-group probabilities.  The RICT Technical Spefication and the RIVPACS IV End Group Descriptions are available at https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx
+#' @return Tibble containing expected scores for macroinvertebrate indices plus end-group probabilities. The RICT Technical Specification and the RIVPACS IV End Group Descriptions are available at \url{https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx}
 #'
 #' @references
 #' FBA, 2020. River Invertebrate Classification Tool (RICT2) User Guide V1.5 (2020) Available at: \url{https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx}
