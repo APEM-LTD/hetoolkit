@@ -35,7 +35,6 @@ Imports:
     naniar (>= 0.6.0),
     viridis (>= 0.5.1),
     purrr (>= 0.3.4),
-    ggfortify (>= 0.4.11),
     plyr (>= 1.8.6),
     forcats (>= 0.5.1),
     formatR (>= 1.9),
@@ -49,6 +48,7 @@ Imports:
     sp (>= 1.4-5),
     plotly
 Depends: 
+    ggfortify (>= 0.4.11),
     dplyr (>= 1.0.2),
     R (>= 3.5.0)
 Suggests: 
