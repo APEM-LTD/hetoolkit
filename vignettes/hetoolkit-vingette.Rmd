@@ -671,8 +671,8 @@ hev_data <- expand.grid(
   stringsAsFactors = FALSE)
 
 # create season and water_year columns on which to join the six-monthly flow statistics
-hev_data$Month <- month(hev_data$SAMPLE_DATE)
-hev_data$Year <- year(hev_data$SAMPLE_DATE)
+hev_data$Month <- lubridate::month(hev_data$SAMPLE_DATE)
+hev_data$Year <- lubridate::year(hev_data$SAMPLE_DATE)
 hev_data$flow_season <- ifelse((hev_data$Month >= 4) & (hev_data$Month <= 9), "Summer", "Winter")
 hev_data$water_year <- ifelse(hev_data$Month <= 9, hev_data$Year - 1, hev_data$Year)
 
