@@ -610,9 +610,9 @@ Similarly, a `ggpairs` plot can also be used to visualise relationships between 
 ```{r ggpairs2, message=FALSE, warning=FALSE}
 
 GGally::ggpairs(all_data, columns=c("LIFE_F_OE", "Q95z", "Q10z", "Q95zLS1", "Q10zLS1"), 
-                         upper = list(continuous = wrap("cor")),
+                         upper = list(continuous = GGally::wrap("cor")),
                          diag = list(continuous = "densityDiag"),
-                         lower = list(continuous = wrap("points")))
+                         lower = list(continuous = GGally::wrap("points")))
 
 ```
 
