@@ -599,9 +599,9 @@ Plotting pairwise correlations among alternative biological metrics can be usefu
 ```{r ggpairs1, message=FALSE, warning=FALSE}
 
 GGally::ggpairs(all_data, columns=c("LIFE_F_OE", "WHPT_ASPT_OE", "WHPT_NTAXA_OE", "PSI_OE"), 
-                         upper = list(continuous = wrap("cor")),
+                         upper = list(continuous = GGally::wrap("cor")),
                          diag = list(continuous = "densityDiag"),
-                         lower = list(continuous = wrap("points")))
+                         lower = list(continuous = GGally::wrap("points")))
 
 ```
 
