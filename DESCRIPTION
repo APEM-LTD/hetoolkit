@@ -19,7 +19,6 @@ Imports:
     downloader (>= 0.4),
     lubridate (>= 1.7.9.2),
     tibble (>= 3.0.6),
-    devtools (>= 2.3.2),
     roxygen2 (>= 7.1.1),
     magrittr (>= 2.0.1),
     gridExtra (>= 2.3),
