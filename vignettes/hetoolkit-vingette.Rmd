@@ -739,7 +739,7 @@ autumn_data <- autumn_data %>% filter(is.na(Q95z) == FALSE)
 autumn_data <- autumn_data %>% filter(is.na(Q10z) == FALSE)
 autumn_data <- autumn_data %>% filter(is.na(Q95zLS1) == FALSE)
 
-model_full <- lmer(LIFE_F_OE ~ Q95z + Q10z + Q95zLS1 + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
+model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + Q10z + Q95zLS1 + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
 
 summary(model_full)
 
@@ -772,7 +772,7 @@ cv_full[1]
 ```{r cv2, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop random slope
-model_1 <- model_full <- lmer(LIFE_F_OE ~ Q95z + Q10z + Q95zLS1 + (1 | biol_site_id), data = autumn_data, REML = FALSE)
+model_1 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + Q10z + Q95zLS1 + (1 | biol_site_id), data = autumn_data, REML = FALSE)
 
 cv_1 <- model_cv(model = model_1, data = autumn_data, group = "biol_site_id", k = 5, r = 20, control = my_control)
 
@@ -788,7 +788,7 @@ cv_1[1]
 ```{r cv3, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop Q95zLS1 term
-model_2 <- model_full <- lmer(LIFE_F_OE ~ Q95z + Q10z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
+model_2 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + Q10z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
 
 cv_2 <- model_cv(model = model_2, data = autumn_data, group = "biol_site_id", k = 5, r = 20, control = my_control)
 
@@ -804,7 +804,7 @@ cv_2[1]
 ```{r cv4, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop Q10z term
-model_3 <- model_full <- lmer(LIFE_F_OE ~ Q95z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
+model_3 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
 
 cv_3 <- model_cv(model = model_3, data = autumn_data, group = "biol_site_id", k = 5, r = 20, control = my_control)
 
