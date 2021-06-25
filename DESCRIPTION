@@ -35,7 +35,6 @@ Imports:
     naniar (>= 0.6.0),
     viridis (>= 0.5.1),
     purrr (>= 0.3.4),
-    plyr (>= 1.8.6),
     forcats (>= 0.5.1),
     formatR (>= 1.9),
     sf (>= 0.9.8),
@@ -51,6 +50,7 @@ Imports:
 Depends: 
     ggfortify (>= 0.4.11),
     dplyr (>= 1.0.2),
+    plyr (>= 1.8.6),
     R (>= 3.5.0)
 Suggests: 
     testthat (>= 3.0.0),
