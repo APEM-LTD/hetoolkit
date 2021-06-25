@@ -179,7 +179,7 @@ getEndGroupMeans_dtable <- function(filepathname, model) {
 getEndGroupMeans_dtableCopy <- function(model) {
 
     infile <- x103EndGroupMeans
-    names(infile) <-str_replace_all(names(infile), c( "%" = "perc", "/"="", "&" = "" ))
+    names(infile) <- stringr::str_replace_all(names(infile), c( "%" = "perc", "/"="", "&" = "" ))
     #print(colnames(infile))
     infile%>%
       dplyr::rename(RIVPACSMODEL = RIVPACS.Model) %>%
