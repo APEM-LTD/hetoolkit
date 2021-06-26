@@ -28,11 +28,11 @@
 #'
 #' The examples below illustrate how the data can be aggregated (e.g. to different time steps, e.g. year, season, month) and summarised (e.g. using mean, min, max, sd, count) prior to executing the function to explore patterns and gaps in the data.
 #'
-#' @return List containing:
-#' [[1]] A ggplot tiled heatmap with x (e.g. time) and y (e.g. site) axes. If dual = TRUE, the ggplot object includes a marginal histogram of % missingness. The plot can be optionally saved as a png file.
+#' @return A list of three elements:
+#' 1. A ggplot tiled heatmap with x (e.g. time) and y (e.g. site) axes. If dual = TRUE, the ggplot object includes a marginal histogram of % missingness. The plot can be optionally saved as a png file.
 #' If list_out is set to TRUE the list will also contain:
-#' [[2]] A tibble summary of data completeness for each value or level of x: number and proportion of missing observations, and total number of observations.
-#' [[3]] A tibble summary of data completeness for each value or level of y: number and proportion of missing observations, total observations, the number of gaps (sequences of missing time steps) in the dataset, and what the shortest and longest run of missing time steps are. The later three will be NA if there are no missing time steps.
+#' 2. A tibble summary of data completeness for each value or level of x: number and proportion of missing observations, and total number of observations.
+#' 3. A tibble summary of data completeness for each value or level of y: number and proportion of missing observations, total observations, the number of gaps (sequences of missing time steps) in the dataset, and what the shortest and longest run of missing time steps are. The later three will be NA if there are no missing time steps.
 #'
 #' @export
 #'
