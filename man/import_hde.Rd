@@ -22,7 +22,7 @@ A tibble containing daily flow data for the specified sites, with the following 
 This function retrieves daily mean flow data from the EA's hydrology data explorer (HDE) for a user-defined set of sites (gauging stations). Date can be optionally filtered by date.
 }
 \details{
-This function provides access to Environment Agency open hydrology data via the Hydrology Data Explorer (https://environment.data.gov.uk/hydrology/).
+This function provides access to Environment Agency open hydrology data via the Hydrology Data Explorer (\url{https://environment.data.gov.uk/hydrology/}).
 
 The function initially imports flow data for all dates and then filters out records that are before start_date or after end_date. If the data does not span the entire range of dates provided, additional records are created and the flow and quality values defined as NA on these dates.
 

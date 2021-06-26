@@ -25,7 +25,7 @@ import_inv(biol_dir = NULL, sites = NULL, start_date = NULL, end_date = NULL, sa
 Tibble containing biology data
 }
 \description{
-The \code{import_inv} function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip or read in from a local csv or rds file. The data can be optionally filtered by site ID and sample date.
+The \code{import_inv} function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from \url{https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip} or read in from a local csv or rds file. The data can be optionally filtered by site ID and sample date.
 }
 \details{
 If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_ALL.RDS. If saving after filtering on site or date, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_F.RDS.

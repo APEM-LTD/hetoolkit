@@ -1,7 +1,7 @@
 #' Import macroinvertebrate data in Ecology Data Explorer (EDE) format
 #'
 #' @description
-#' The `import_inv` function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip or read in from a local csv or rds file. The data can be optionally filtered by site ID and sample date.
+#' The `import_inv` function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from <https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip> or read in from a local csv or rds file. The data can be optionally filtered by site ID and sample date.
 #'
 #' @usage
 #' import_inv(biol_dir = NULL, sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
