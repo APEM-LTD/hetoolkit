@@ -5,15 +5,15 @@
 #' @usage
 #' diag_lmer(model, data, facet_by = NULL, colour_by = NULL, order_by = "mean", order = "ascending", ncol = 4, scales = "fixed", save = FALSE, save_dir = getwd(), ...)
 #'
-#' @param model A fitted linear mixed-effects lmer model of class "lmerMod".
+#' @param model A fitted linear mixed-effects lmer model of class `lmerMod`.
 #' @param data A data frame or tibble containing the model calibration dataset.
-#' @param facet_by A factor by which to facet wrap the plots (e.g. site). Default = NULL.
-#' @param colour_by A factor by which to colour-code data points (e.g. season). Default = NULL.
-#' @param order_by Method specifying how to order the levels of the faceting factor. Two options: "mean" of the fitted values, or "variance" of the residuals. Default = NULL (levels ordered alphabetically). Ignored if facet_by = NULL.
-#' @param order Command to arrange plots in "ascending" (default) or "descending" order of facet_by. Ignored if facet_by = NULL.
-#' @param ncol Number of columns to use in facet plots. Default = 4. Ignored if facet_by = NULL.
-#' @param scales When faceting, Specifies whether plotting scales should be fixed ("fixed"), free ("free"), or free in one dimension ("free_x", "free_y"). Default = "fixed". Ignored if facet_by = NULL.
-#' @param save Specifies if output plot should be saved as a png file. Default = FALSE.
+#' @param facet_by A factor by which to facet wrap the plots (e.g. site). Default = `NULL`.
+#' @param colour_by A factor by which to colour-code data points (e.g. season). Default = `NULL`.
+#' @param order_by Method specifying how to order the levels of the faceting factor. Two options: `mean` of the fitted values, or `variance` of the residuals. Default = `NULL`. (levels ordered alphabetically). Ignored if `facet_by` = `NULL`.
+#' @param order Command to arrange plots in `ascending` (default) or `descending` order of facet_by. Ignored if `facet_by` = `NULL`.
+#' @param ncol Number of columns to use in facet plots. Default = 4. Ignored if `facet_by` = `NULL`.
+#' @param scales When faceting, Specifies whether plotting scales should be fixed (`fixed`), free (`free`), or free in one dimension (`free_x`, `free_y`). Default = `fixed`. Ignored if `facet_by` = `NULL`.
+#' @param save Specifies if output plot should be saved as a png file. Default = `FALSE`.
 #' @param save_dir Path to folder where png file should be saved. Default = Current working directory.
 #' @param ... Provision to include additional arguments.
 #'
@@ -30,7 +30,7 @@
 #'
 #' @examples
 #' ## Example 1
-#' # create example dataset (sleepstudy is an example dataset from the lme4 package)
+#' # attach(lme4)
 #' # sleepstudy$type <- rep(c("A","B","C"),60)
 #'
 #' # run model

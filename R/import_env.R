@@ -19,7 +19,7 @@
 #'
 #'  Downloaded raw data files (in .csv and .zip format) will be automatically removed from the working directory following completed execution of the function.
 #'
-#'  The function will modify the output from EDE, renaiming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
+#'  The function will modify the output from EDE, renaming `SITE_ID` to `biol_site_id` (standardised column header for biology sites).
 #'
 #' @return Tibble containing environmental data
 #'
