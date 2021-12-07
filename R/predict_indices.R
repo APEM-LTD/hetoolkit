@@ -204,7 +204,7 @@ predict_indices <- function(env_data,
   # #Use function getLatLong()
   #coord_system = c("BNG", "WGS84")
   #coordsystem = "WGS84"
-  a <- paste(raw.input.data$NGR_PREFIX, substr(raw.input.data$EASTING,1,3), substr(raw.input.data$northing,1,3), sep="")
+  a <- paste(raw.input.data$NGR_PREFIX, substr(raw.input.data$EASTING,1,3), substr(raw.input.data$NORTHING,1,3), sep="")
   lat.long <- osg_parse (a, "WGS84")
   #lat.long <- with(raw.input.data, getLatLong_AZURE(NGR_PREFIX, EASTING, NORTHING, "WGS84"))
   #head(lat.long, 1)
