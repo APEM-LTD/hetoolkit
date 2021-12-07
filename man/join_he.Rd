@@ -9,7 +9,7 @@ join_he(biol_data = biol_data, flow_stats = flow_stats, mapping = NULL, LS1 = FA
 \arguments{
 \item{biol_data}{Data frame or tibble containing the processed biology data. Must contain the following columns: biol_site_id, Year and Season. Seasons must be named "Spring" and "Autumn". See Details below.}
 
-\item{flow_stats}{Data frame (output[\link{1}] from 'calc_flowstats' function), containing the processed flow statistics. Must contain the following columns: flow_site_id, water_year and season.}
+\item{flow_stats}{Data frame (first element of list returned by the 'calc_flowstats' function), containing the processed flow statistics. Must contain the following columns: flow_site_id, water_year and season.}
 
 \item{mapping}{Data frame or tibble containing paired biology and flow site IDs. Must contain columns named biol_site_id and flow_site_id. These columns must not contain any NAs. Default = NULL, used when paired biology and flow sites are assumed to have identical ids, and so mapping not required.}
 

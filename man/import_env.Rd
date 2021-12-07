@@ -31,7 +31,7 @@ If saving a copy of the downloaded data, the name of the rds file is hard-wired 
 
 Downloaded raw data files (in .csv and .zip format) will be automatically removed from the working directory following completed execution of the function.
 
-The function will modify the output from EDE, renaiming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
+The function will modify the output from EDE, renaming \code{SITE_ID} to \code{biol_site_id} (standardised column header for biology sites).
 }
 \examples{
 # Download data for all sites and save as .rds file for future use:

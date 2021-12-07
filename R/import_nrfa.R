@@ -11,7 +11,7 @@
 #' @param end_date End date for flow data extraction (YYYY-MM-DD format). Default = today's date.
 #' @param tidyup Whether or not csv files downloaded by the function to the users working directory should be deleted afterwards. Default = TRUE.
 #'
-#' @details The National River Flow Archive (NRFA; http://nrfa.ceh.ac.uk) is the main archive of river flow data for the United Kingdom, and contains data from over 1500 gauging stations. This function downloads flow data from the NRFA as a series of CSV files, one per site, and collates them into a single data set.
+#' @details The National River Flow Archive (NRFA; <http://nrfa.ceh.ac.uk>) is the main archive of river flow data for the United Kingdom, and contains data from over 1500 gauging stations. This function downloads flow data from the NRFA as a series of CSV files, one per site, and collates them into a single data set.
 #'
 #' The function initially imports flow data for all dates and then filters out records that are before start_date or after end_date. If the data does not span the entire range of dates provided, additional records are created and the flow and quality values defined as NA on these dates.
 #'

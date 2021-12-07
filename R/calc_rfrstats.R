@@ -50,15 +50,12 @@
 #' @export
 #'
 #' @examples
-#' # Example of altering date format to the required yyyy-mm-dd format
-#' x <- c("09-01-2001", "09-01-2002", "09-01-2003")
-#' as.Date(x,format="%d-%m-%Y")
 #'
 #' # Example 1
 #' # load site model flow data
-#' site.model.flow<-data(site.model.flow,package="hetoolkit")
+#' site.model.flow <- data(site.model.flow, package="hetoolkit")
 #'
-#' # run
+#'
 #' # calc_rfrstats(data = site.model.flow,
 #' #              site_col = "SITE_ID",
 #' #              date_col = "Date_end",
@@ -69,14 +66,6 @@
 #' #              save_dir = getwd())
 
 
-
-
-# use site.model.flows.rds as an example dataset
-# note that flows may not be daily (more likely monthly, or every 10 days).
-# Flows do not have to cover a full year; this is for the user to check.
-
-# work flow...
-#-------------
 
 calc_rfrstats<- function(data = NULL,
                          site_col = NULL,
@@ -109,10 +98,6 @@ calc_rfrstats<- function(data = NULL,
   # make sure saving options are viable:
   if(file.exists(save_dir) == FALSE) {stop("Specified save directory does not exist")}
   if(is.logical(save) == FALSE) {stop("Save is not logical")}
-
-  # load required packages:
-  if(!require(pacman)) install.packages("pacman")
-  pacman::p_load(lubridate, tidyverse)
 
   # format input data
   data <- data %>% dplyr::rename(site_col = site_col, date_col = date_col, flow_col = flow_col, ref_col = ref_col)

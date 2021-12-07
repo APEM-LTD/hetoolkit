@@ -146,7 +146,7 @@ calc_flowstats <- function(data,
 
   dfos_data <- data_f %>% dplyr::select(Date, Flow)
 
-  dfos_output <- hetoolkit::doForOneStation(dfos_data)
+  dfos_output <- doForOneStation(dfos_data)
 
   # Select outputs and match with flow_site_id
 
@@ -187,7 +187,7 @@ calc_flowstats <- function(data,
 
       dfos_data_ref <- data_ref %>% dplyr::select(Date, Flow)
 
-      dfos_output_ref <- hetoolkit::doForOneStation(dfos_data_ref)
+      dfos_output_ref <- doForOneStation(dfos_data_ref)
 
       dfos_output_a_ref <- as.data.frame(dfos_output_ref[[1]])
 
@@ -311,6 +311,9 @@ calc_flowstats <- function(data,
 
 ################################################################################################################
 
+#' @export
+#'
+
 doForOneStation <- function(test.flow.rec) {
 # Function is only passed a flow series at this point
 # with Date in column 1 and Flowin column 2
@@ -378,7 +381,7 @@ names(FULL.FLOW.REC) <- casefold(names(FULL.FLOW.REC))
 
 # Use APPLYFLOWSTATS
 
-STATS <- hetoolkit::APPLYFLOWSTATS(FULL.FLOW.REC)
+STATS <- APPLYFLOWSTATS(FULL.FLOW.REC)
 
 # Return
 
@@ -456,9 +459,9 @@ flowts<- flowts %>%  dplyr::group_by({{group1}}, {{group2}}) %>%
                CSD= sqrt(var(flow, na.rm=TRUE)),
                LSD= sqrt(var(log(flow), na.rm=TRUE)),
               N= sum(!(is.na(flow))),
-              EVENTS3= hetoolkit::riisbiggs2(flow, median, 3),
-              EVENTS5= hetoolkit::riisbiggs2(flow, median, 5),
-              EVENTS7= hetoolkit::riisbiggs2(flow, median, 7)) %>%
+              EVENTS3= riisbiggs2(flow, median, 3),
+              EVENTS5= riisbiggs2(flow, median, 5),
+              EVENTS7= riisbiggs2(flow, median, 7)) %>%
   dplyr::filter(!is.na({{group1}})) %>% dplyr::full_join(MISSING)
 
   flowts$N <- flowts$N + flowts$MISSING
@@ -482,7 +485,7 @@ STATION.FLOW.REC.SP<- flow.data; QSTATS1<- statsData
   bfi<- STATION.FLOW.REC.SP %>%
     dplyr::filter(!is.na(flow)) %>%
     dplyr::mutate(x=flow) %>%
-    dplyr::summarise(bfi= if(0 %in% x == FALSE ){ bfi= hetoolkit::calc_bfi(x) }else{ print ("flow contains 0's, returning NA")
+    dplyr::summarise(bfi= if(0 %in% x == FALSE ){ bfi= calc_bfi(x) }else{ print ("flow contains 0's, returning NA")
       bfi=NA}) %>%
     dplyr::mutate(season= "Annual") %>%   # season = all
     tidyr::gather(-season, key = parameter, value = value)
@@ -523,11 +526,11 @@ APPLYFLOWSTATS <- function(STATION.FLOW.REC) {
 
 # call dataprocessing function
 # does some data processing and creates season variables
-STATION.FLOW.REC.SP <- hetoolkit::DataProcessing(STATION.FLOW.REC)
+STATION.FLOW.REC.SP <- DataProcessing(STATION.FLOW.REC)
 
 gennames <- c("Q10", "Q30", "Q50","Q70", "Q90", "Q95","Q99", "zero", "mean", "sd","lsd", "n", "e3", "e5", "e7", "missing")   # for naming coloumns
 # calculate flow stats and add a period coloumn
-QSTATS1 <- STATION.FLOW.REC.SP %>% hetoolkit::CALCFLOWSTATS(season, wyear, .) %>%
+QSTATS1 <- STATION.FLOW.REC.SP %>% CALCFLOWSTATS(season, wyear, .) %>%
   dplyr::mutate(period="SPY") %>%
   #old: `colnames <-`(c("season", "water.year", gennames, "period")) %>%
   setNames(., c("season", "water.year", gennames, "period")) %>%
@@ -536,9 +539,9 @@ QSTATS1 <- STATION.FLOW.REC.SP %>% hetoolkit::CALCFLOWSTATS(season, wyear, .) %>
 QSTATS1$season<- as.character(QSTATS1$season)
 QSTATS1
 
-long_data<- hetoolkit::CreateLongData(STATION.FLOW.REC.SP, QSTATS1)  # calculate flow duration curve/bfi/means/sd
+long_data<- CreateLongData(STATION.FLOW.REC.SP, QSTATS1)  # calculate flow duration curve/bfi/means/sd
 
-standizedData<- hetoolkit::CreateFlowStats(QSTATS1, long_data, STATION.FLOW.REC.SP) # flow stats- Q values, durations/events, missing data, number of 0's...
+standizedData<- CreateFlowStats(QSTATS1, long_data, STATION.FLOW.REC.SP) # flow stats- Q values, durations/events, missing data, number of 0's...
 
 flowdata <- STATION.FLOW.REC.SP  # used to calculate missing data
 
@@ -583,7 +586,7 @@ length(test$lengths[test$values==1])
 
 find_eventDuration <- function(x, threshold ,type, pref) {
   # find events above/below a given threshold
-  flowEvents <- hetoolkit::find_events(x=x$flow, threshold=threshold ,type="type")
+  flowEvents <- find_events(x=x$flow, threshold=threshold ,type="type")
 
   flowEvents <- na.omit(flowEvents)  # remove NAs
   # find the length of each event (ie the duration above/below threshold)
@@ -660,12 +663,12 @@ thres_data <- STATION.FLOW.REC.SP %>%
 # calculate duration/events above Q70 and below Q95
 duration_above<- thres_data %>%
   dplyr::group_by(season, wyear) %>%
-  dplyr::do(hetoolkit::find_eventDuration(.,  Q70, "high", "sum"))
+  dplyr::do(find_eventDuration(.,  Q70, "high", "sum"))
 
 colnames(duration_above) <- c("season", "water.year", "durationAbove", "nEventsAbove")   # rename columns
 duration_below <- thres_data %>%
   dplyr::group_by(season, wyear) %>%
-  dplyr::do(hetoolkit::find_eventDuration(.,  Q95, "low", "sum"))
+  dplyr::do(find_eventDuration(.,  Q95, "low", "sum"))
 colnames(duration_below) <- c("season", "water.year", "durationBelow", "nEventsBelow")
 Durations<- dplyr::full_join(duration_above, duration_below, by=c("water.year", "season"))
 

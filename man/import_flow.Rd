@@ -11,28 +11,28 @@ import_flow(sites = NULL, inputs = NULL, start_date = 1900-01-01, end_date = Sys
 
 \item{inputs}{Vector of flow data inputs, must be either "NRFA", "HDE" or "FLOWFILES"}
 
-\item{start_date}{Start date for flow data extraction (YYYY-MM-DD format). Default = 1900-01-01.}
+\item{start_date}{Start date for flow data extraction (YYYY-MM-DD format). Default = \code{1900-01-01}.}
 
 \item{end_date}{End date for flow data extraction (YYYY-MM-DD format). Default = today's date.}
 
-\item{dir}{Path to local files. Ignored if 'inputs' doesn't contain "FLOWFILES".}
+\item{dir}{Path to local files. Ignored if \code{inputs} doesn't contain "FLOWFILES".}
 
-\item{skip_num}{For local files, defines the number of rows to skip before starting to read data. Ignored if 'inputs' doesn't contain "FLOWFILES".}
+\item{skip_num}{For local files, defines the number of rows to skip before starting to read data. Ignored if \code{inputs} doesn't contain "FLOWFILES".}
 
-\item{col_order}{For local files, defines which columns contain the data of interest: "date", "flow" and, if available, "quality". Ignored if 'inputs' doesn't contain "FLOWFILES".}
+\item{col_order}{For local files, defines which columns contain the data of interest: \code{date}, \code{flow} and, if available, \code{quality}. Ignored if \code{inputs} doesn't contain "FLOWFILES".}
 
-\item{date_format}{The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the flow file. Default = "dmy". See ?import_flowfiles for more information. Ignored if 'inputs' doesn't contain "FLOWFILES".}
+\item{date_format}{The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the flow file. Default = "dmy". See \code{?import_flowfiles} for more information. Ignored if \code{inputs} doesn't contain "FLOWFILES".}
 }
 \value{
-A tibble containing daily flow data for the specified sites, with the following columns: input ("HDE", "NRFA" or "FLOWFILES"), flow-site_id, date, flow and quality.
+A tibble containing daily flow data for the specified sites, with the following columns: \code{input} ("HDE", "NRFA" or "FLOWFILES"), \code{flow_site_id}, \code{date}, \code{flow} and \code{quality}.
 }
 \description{
-import_flow is a high-level function that calls import_nrfa, import_hde and import_flowfiles to import data for a user-defined list of sites.
+import_flow is a high-level function that calls \code{import_nrfa}, \code{import_hde} and \code{import_flowfiles} to import data for a user-defined list of sites.
 }
 \details{
-import_flow requires a list of site (station) ids (called 'sites'), and a corresponding list (called 'inputs') specifying where to source the data for each site (either "NRFA", "HDE" or, for local files, "FLOWFILES"). 'sites' and 'inputs' must be of equal length. Any records where 'sites' or 'inputs' is NA are dropped.
+import_flow requires a list of site (station) ids (called \code{sites}), and a corresponding list (called \code{inputs}) specifying where to source the data for each site (either "NRFA", "HDE" or, for local files, "FLOWFILES"). \code{sites} and \code{inputs} must be of equal length. Any records where \code{sites} or \code{inputs} is NA are dropped.
 
-' If a sites-inputs combination is defined more than once, the duplicate(s) are ignored and a warning message is produced.
+If a \code{sites}-\code{inputs} combination is defined more than once, the duplicate(s) are ignored and a warning message is produced.
 
 If a site id is listed twice, for two different inputs (e.g. NRFA and HDE), then the data will be imported from both sources and a warning message is produced.
 }

@@ -8,7 +8,7 @@ calc_flowstats(data = data, site_col = "flow_site_id", date_col = "date", flow_c
 }
 \arguments{
 \item{data}{Name of data frame or tibble containing the flow data to be processed.
-Must be in long format and contain columns named "flow_site_id", "Date" and "Flow" (see output from import_flows).}
+Must be in long format and contain columns for flow site id, date and flow (see output from import_flows).}
 
 \item{date_col}{Name of column in 'data' containing date of flow record.  Default = "date".}
 
@@ -89,15 +89,15 @@ Selected flow percentiles (Q10, Q30, Q50, Q70 and Q95) are calculated for each 6
 }
 \examples{
 ## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col:
-# calc_flowstats(data = flow_data,
-                #site_col = "flow_site_id",
-                #date_col = "date",
-                #flow_col = "flow")
+calc_flowstats(data = flow_data,
+                site_col = "flow_site_id",
+                date_col = "date",
+                flow_col = "flow")
 
 ## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col, and standardise QXX flow statistics using flow data specified in ref_col:
-# calc_flowstats(data = data,
-               # site_col = "flow_site_id",
-               # date_col = "date",
-               # flow_col = "HistoricalFlow",
-               # ref_col = "NaturalisedFlow")
+calc_flowstats(data = data,
+               site_col = "flow_site_id",
+               date_col = "date",
+               flow_col = "HistoricalFlow",
+               ref_col = "NaturalisedFlow")
 }

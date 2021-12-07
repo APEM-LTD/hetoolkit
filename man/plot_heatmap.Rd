@@ -34,11 +34,13 @@ plot_heatmap(data, x, y, fill, colour = "viridis", lab.x = x, lab.y = y, lab.leg
 \item{...}{Provision to include additional ggplot plotting and saving arguments, including for example: theme, file type, width and size. See ?theme and ?ggsave for details.}
 }
 \value{
-List containing:
-[\link{1}] A ggplot tiled heatmap with x (e.g. time) and y (e.g. site) axes. If dual = TRUE, the ggplot object includes a marginal histogram of \% missingness. The plot can be optionally saved as a png file.
+A list of three elements:
+\enumerate{
+\item A ggplot tiled heatmap with x (e.g. time) and y (e.g. site) axes. If dual = TRUE, the ggplot object includes a marginal histogram of \% missingness. The plot can be optionally saved as a png file.
 If list_out is set to TRUE the list will also contain:
-[\link{2}] A tibble summary of data completeness for each value or level of x: number and proportion of missing observations, and total number of observations.
-[\link{3}] A tibble summary of data completeness for each value or level of y: number and proportion of missing observations, total observations, the number of gaps (sequences of missing time steps) in the dataset, and what the shortest and longest run of missing time steps are. The later three will be NA if there are no missing time steps.
+\item A tibble summary of data completeness for each value or level of x: number and proportion of missing observations, and total number of observations.
+\item A tibble summary of data completeness for each value or level of y: number and proportion of missing observations, total observations, the number of gaps (sequences of missing time steps) in the dataset, and what the shortest and longest run of missing time steps are. The later three will be NA if there are no missing time steps.
+}
 }
 \description{
 The plot_heatmap function is designed to visualise and summarise gaps in time series data. It plots time series data for multiple sites as a tiled heatmap, and optionally produces tabular summaries of data completeness by time period and site. Although designed for application with flow time series data, it can be applied to any type of numerical data, with or without a time dimension.

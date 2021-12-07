@@ -1,28 +1,28 @@
 #' Import flow data from NRFA, HDE and local files
 #'
 #' @description
-#' import_flow is a high-level function that calls import_nrfa, import_hde and import_flowfiles to import data for a user-defined list of sites.
+#' import_flow is a high-level function that calls `import_nrfa`, `import_hde` and `import_flowfiles` to import data for a user-defined list of sites.
 #'
 #' @usage
 #'  import_flow(sites = NULL, inputs = NULL, start_date = 1900-01-01, end_date = Sys.Date, dir = NULL, skip_num = NULL, col_order = NULL)
 #'
 #' @param sites Vector of site (station) IDs to extract data for.
 #' @param inputs Vector of flow data inputs, must be either "NRFA", "HDE" or "FLOWFILES"
-#' @param start_date Start date for flow data extraction (YYYY-MM-DD format). Default = 1900-01-01.
+#' @param start_date Start date for flow data extraction (YYYY-MM-DD format). Default = `1900-01-01`.
 #' @param end_date End date for flow data extraction (YYYY-MM-DD format). Default = today's date.
-#' @param dir Path to local files. Ignored if 'inputs' doesn't contain "FLOWFILES".
-#' @param skip_num For local files, defines the number of rows to skip before starting to read data. Ignored if 'inputs' doesn't contain "FLOWFILES".
-#' @param col_order For local files, defines which columns contain the data of interest: "date", "flow" and, if available, "quality". Ignored if 'inputs' doesn't contain "FLOWFILES".
-#' @param date_format The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the flow file. Default = "dmy". See ?import_flowfiles for more information. Ignored if 'inputs' doesn't contain "FLOWFILES".
+#' @param dir Path to local files. Ignored if `inputs` doesn't contain "FLOWFILES".
+#' @param skip_num For local files, defines the number of rows to skip before starting to read data. Ignored if `inputs` doesn't contain "FLOWFILES".
+#' @param col_order For local files, defines which columns contain the data of interest: `date`, `flow` and, if available, `quality`. Ignored if `inputs` doesn't contain "FLOWFILES".
+#' @param date_format The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the flow file. Default = "dmy". See `?import_flowfiles` for more information. Ignored if `inputs` doesn't contain "FLOWFILES".
 #'
 #' @details
-#' import_flow requires a list of site (station) ids (called 'sites'), and a corresponding list (called 'inputs') specifying where to source the data for each site (either "NRFA", "HDE" or, for local files, "FLOWFILES"). 'sites' and 'inputs' must be of equal length. Any records where 'sites' or 'inputs' is NA are dropped.
+#' import_flow requires a list of site (station) ids (called `sites`), and a corresponding list (called `inputs`) specifying where to source the data for each site (either "NRFA", "HDE" or, for local files, "FLOWFILES"). `sites` and `inputs` must be of equal length. Any records where `sites` or `inputs` is NA are dropped.
 #'
-#' ' If a sites-inputs combination is defined more than once, the duplicate(s) are ignored and a warning message is produced.
+#' If a `sites`-`inputs` combination is defined more than once, the duplicate(s) are ignored and a warning message is produced.
 #'
 #' If a site id is listed twice, for two different inputs (e.g. NRFA and HDE), then the data will be imported from both sources and a warning message is produced.
 #'
-#' @return A tibble containing daily flow data for the specified sites, with the following columns: input ("HDE", "NRFA" or "FLOWFILES"), flow-site_id, date, flow and quality.
+#' @return A tibble containing daily flow data for the specified sites, with the following columns: `input` ("HDE", "NRFA" or "FLOWFILES"), `flow_site_id`, `date`, `flow` and `quality`.
 #'
 #' @export
 #'

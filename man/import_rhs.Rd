@@ -23,7 +23,7 @@ Default = Current working directory.}
 Tibble containing RHS data.
 }
 \description{
-The \code{import_rhs} function imports River Habitat Survey (RHS) data. The data can either be downloaded from from data.gov.uk (https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data) or read in from a local xlsx or rds file. Data can be optionally filtered by survey ID.
+The \code{import_rhs} function imports River Habitat Survey (RHS) data. The data can either be downloaded from from data.gov.uk (\url{https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data}) or read in from a local xlsx or rds file. Data can be optionally filtered by survey ID.
 }
 \details{
 If saving a copy of the downloaded data, the name of the rds file is hard-wired to: RHS_survey_summary_ALL.rds. If saving after filtering on site, the name of the rds file is hard-wired to: RHS_survey_summary_F.rds.

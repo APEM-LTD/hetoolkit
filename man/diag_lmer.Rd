@@ -7,23 +7,23 @@
 diag_lmer(model, data, facet_by = NULL, colour_by = NULL, order_by = "mean", order = "ascending", ncol = 4, scales = "fixed", save = FALSE, save_dir = getwd(), ...)
 }
 \arguments{
-\item{model}{A fitted linear mixed-effects lmer model of class "lmerMod".}
+\item{model}{A fitted linear mixed-effects lmer model of class \code{lmerMod}.}
 
 \item{data}{A data frame or tibble containing the model calibration dataset.}
 
-\item{facet_by}{A factor by which to facet wrap the plots (e.g. site). Default = NULL.}
+\item{facet_by}{A factor by which to facet wrap the plots (e.g. site). Default = \code{NULL}.}
 
-\item{colour_by}{A factor by which to colour-code data points (e.g. season). Default = NULL.}
+\item{colour_by}{A factor by which to colour-code data points (e.g. season). Default = \code{NULL}.}
 
-\item{order_by}{Method specifying how to order the levels of the faceting factor. Two options: "mean" of the fitted values, or "variance" of the residuals. Default = NULL (levels ordered alphabetically). Ignored if facet_by = NULL.}
+\item{order_by}{Method specifying how to order the levels of the faceting factor. Two options: \code{mean} of the fitted values, or \code{variance} of the residuals. Default = \code{NULL}. (levels ordered alphabetically). Ignored if \code{facet_by} = \code{NULL}.}
 
-\item{order}{Command to arrange plots in "ascending" (default) or "descending" order of facet_by. Ignored if facet_by = NULL.}
+\item{order}{Command to arrange plots in \code{ascending} (default) or \code{descending} order of facet_by. Ignored if \code{facet_by} = \code{NULL}.}
 
-\item{ncol}{Number of columns to use in facet plots. Default = 4. Ignored if facet_by = NULL.}
+\item{ncol}{Number of columns to use in facet plots. Default = 4. Ignored if \code{facet_by} = \code{NULL}.}
 
-\item{scales}{When faceting, Specifies whether plotting scales should be fixed ("fixed"), free ("free"), or free in one dimension ("free_x", "free_y"). Default = "fixed". Ignored if facet_by = NULL.}
+\item{scales}{When faceting, Specifies whether plotting scales should be fixed (\code{fixed}), free (\code{free}), or free in one dimension (\code{free_x}, \code{free_y}). Default = \code{fixed}. Ignored if \code{facet_by} = \code{NULL}.}
 
-\item{save}{Specifies if output plot should be saved as a png file. Default = FALSE.}
+\item{save}{Specifies if output plot should be saved as a png file. Default = \code{FALSE}.}
 
 \item{save_dir}{Path to folder where png file should be saved. Default = Current working directory.}
 
@@ -47,7 +47,7 @@ The following diagnostic plots are produced:
 }
 \examples{
 ## Example 1
-# create example dataset (sleepstudy is an example dataset from the lme4 package)
+# attach(lme4)
 # sleepstudy$type <- rep(c("A","B","C"),60)
 
 # run model

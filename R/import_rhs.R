@@ -1,7 +1,7 @@
 #' Import RHS data
 #'
 #' @description
-#' The `import_rhs` function imports River Habitat Survey (RHS) data. The data can either be downloaded from from data.gov.uk (https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data) or read in from a local xlsx or rds file. Data can be optionally filtered by survey ID.
+#' The `import_rhs` function imports River Habitat Survey (RHS) data. The data can either be downloaded from from data.gov.uk (<https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data>) or read in from a local xlsx or rds file. Data can be optionally filtered by survey ID.
 #'
 #' @usage
 #' import_rhs(rhs_dir = NULL, surveys = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
