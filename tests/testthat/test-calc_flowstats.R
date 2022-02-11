@@ -119,6 +119,29 @@ test_that("duplicate dates...", {
 
 })
 
+# "win_start should be in YYYY-MM-DD format"
+
+# "win_start is in the future"
+
+# "win_width must by in day, month, or year format"
+
+# "win_step must by in day, month, or year format"
+
+# "date_range should be in YYYY-MM-DD format"
+
+# "date_range should be of maximum length 2"
+
+# "start date exceed end date, please check date_range"
+
+# "date_range[1] is in the future"
+
+# "date_range[2] is in the future"
+
+# "q_low must be a value between 1 and 99"
+
+# "q_high must be a value between 1 and 99"
+
+
 
 #test_that("constructs expected output", {
 #
