@@ -351,7 +351,7 @@ calc_flowstats <- function(data,
 
     # filter by date_range
     if(is.null(date_range) == FALSE){
-      data_ref <- data_ref %>% dplyr::filter(date <= date_range[2] & date >= data_range[1])
+      data_ref <- data_ref %>% dplyr::filter(date <= date_range[2] & date >= date_range[1])
     }
 
     # join window dates to ref data
