@@ -45,7 +45,11 @@ Imports:
     tidyr (>= 1.1.2),
     sp (>= 1.4-5),
     stringr,
-    plotly
+    plotly,
+    schoolmath,
+    imputeTS,
+    zoo,
+    CircStats
 Depends: 
     ggfortify (>= 0.4.11),
     dplyr (>= 1.0.2),
