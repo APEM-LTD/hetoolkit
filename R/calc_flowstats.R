@@ -20,6 +20,20 @@
 
 #' @details
 #'
+#' The function uses the win_start, win_width and win_step arguments to define a moving window, which divides the flow time series into a sequence of time periods. These time periods may be contiguous, non-contiguous or overlapping (see examples below). The sequence of time periods continues up to and including the present date, even when this extends beyond the period covered by the input flow dataset, as this facilitates the subsequent joining of flow statistics and ecology data by the join_he() function. The sequence of time periods does not extend beyond the present date, however; for example, if calculating flow statistics for each calendar year, the time periods would stop at the end of the last complete year.
+#'
+#' For each time period, the function calculates a suite of flow statistics, listed below. With the exception of 7-day and 30-day minimum flow statistics that require daily data, all flow statistics are calculated regardless of the time step of the flow data. Caution should be exercised, however, when analysing flow data on a coarser (e.g. monthly) time step to ensure that the statistics are meaningful and interpretable (especially those relating to the number and timing of low and high flow events, which require reasonably high frequency flow data in order to discriminate sequences of lower and higher flows).
+#'
+#' The function requires a minimum number of records to calculate some statistics (detailed below), otherwise an NA result is returned. Meeting the minimum requirement does not, however, guarantee that a statistic has been estimated to an appropriate level of precision, and users may wish to manually filter the results to eliminate potentially unreliable estimates based on sparse data.
+#'
+#' To ensure that estimated statistics are comparable across time periods, the flow time series data should be as complete as possible (gaps can be infilled using the impute_flows() function). Missing values (NAs) are ignored when calculating all statistics, including those that count the number of events when flows exceed or fall below a certain flow threshold.
+#'
+#' To make some statistics more comparable across sites, the scaling argument optionally allows the flow time series data to be standardised by dividing by the site’s long-term mean flow. Scaling is performed after applying the date_range filter, so that the long-term mean flows can be calculated over a specified number of whole years. Because this eliminates absolute differences in mean flow from site to site, scaling is most useful when the focus is on statistics measured in flow units (e.g. sd, q5 etc, low_magnitude, low_severity, volume, min, min_7day, min_30day, max).
+#'
+#' Additionally, selected statistics (denoted by a _z suffix) are standardised using the mean and standard deviation of the estimated statistics across time periods at a given site (e.g. q5_z = (q5 – q5_mean) / q5_sd)). These standardised statistics are dimensionless, and so comparable across sites. The choice to which statistics to standardise is hard-wired, and standardised  statistics are calculated regardless of whether or not the raw flow data have been scaled (via the 'scale' argument)).
+#'
+#' The function also includes the facility to standardise the statistics for one flow scenario (specified via flow_col) using mean and standard deviation of flow statistics from the other scenario (specified via ref_col). For example, if flow_col = naturalised flows and ref_col = historical flows, then the resulting statistics can be input into a hydro-ecological model calibrated using historical flow data and used to make predictions of ecological status under naturalised flows.
+
 #'
 #' @return calc_flowstats returns a list of two data frames. The first data frame contains a suite of time-varying flow statistics for every 6 month winter/summer period at every site. The columns are as follows:
 #'
@@ -195,6 +209,7 @@ calc_flowstats <- function(data,
 
   # pull-in data
   data_1 <- data
+  data_1$site <- dplyr::pull(data_1, site_col)
   data_1$date <- dplyr::pull(data_1, date_col)
   data_1$flow <- dplyr::pull(data_1, flow_col)
 
@@ -650,7 +665,7 @@ FULL.FLOW.REC <- flow.data; QSTATS1 <- statsData
     dplyr::select(-stat, -id) %>%
     dplyr::mutate(win_no = "Q_Annual") %>%
     dplyr::bind_rows(bfi)  %>%
-    dplyr::bind_rows(FlowDurationCurve)      # remove the stat and id coloumns
+    dplyr::bind_rows(FlowDurationCurve)      # remove the stat and id columns
 
 
 
@@ -661,9 +676,10 @@ FULL.FLOW.REC <- flow.data; QSTATS1 <- statsData
 APPLYFLOWSTATS <- function(FULL.FLOW.REC, q_low, q_high) {
 
 # run CALCFLOWSTATS
-gennames <- c("Q5", "Q10", "Q20", "Q25", "Q30", "Q50","Q70", "Q75", "Q80", "Q90", "Q95","Q99", "vol", "low", "day7", "day30", "high", "mean", "sd","lsd", "n", "missing")   # for naming coloumns
-# calculate flow stats and add a period coloumn
-QSTATS1 <- FULL.FLOW.REC %>% CALCFLOWSTATS(site, win_no, .) %>%
+gennames <- c("Q5", "Q10", "Q20", "Q25", "Q30", "Q50","Q70", "Q75", "Q80", "Q90", "Q95","Q99", "vol", "low", "day7", "day30", "high", "mean", "sd","lsd", "n", "missing")   # for naming columns
+# calculate flow stats and add a period column
+QSTATS1 <- FULL.FLOW.REC %>%
+  CALCFLOWSTATS(site, win_no, .) %>%
   #old: `colnames <-`(c("season", "water.year", gennames)) %>%
   setNames(., c("site", "win_no", gennames)) %>%
   dplyr::ungroup()
@@ -699,26 +715,31 @@ return(mylist)
 # -----------------------------------------------------------------------
 
 # Required for CALCFLOWSTATS
+# Calculates the number of times a flow threshold is exceeded
+
 riisbiggs2 <- function(datavector, threshold, multiplier) {
-# code checked 26/6/2008. Numbers of times threshold exceeded are all turned into annual averages. Lets leave it like that for now
-# original riis / biggs work was all based on annual values
-# if we are looking at different time windows in the same analysis, this would need some more thought
-# difference between 182 and 183 days probably not worth worrying about
+  # code checked 26/6/2008. Numbers of times threshold exceeded are all turned into annual averages. Lets leave it like that for now
+  # original riis / biggs work was all based on annual values
+  # if we are looking at different time windows in the same analysis, this would need some more thought
+  # difference between 182 and 183 days probably not worth worrying about
 
-# in the future, absolute values might be more useful in some cases.
-# re-checked 21/10/2013
+  # in the future, absolute values might be more useful in some cases.
+  # re-checked 21/10/2013
 
-nyears <- length(datavector)/365.25
-medvec5 <- as.numeric(datavector > multiplier*threshold) # create vector of TRUE / FALSE depending on whether flow is > threshold
-medvec5 <- medvec5[!is.na(medvec5)] # NAs should have been removed already
+  nyears <- length(datavector)/365.25
+  medvec5 <- as.numeric(datavector > multiplier*threshold) # create vector of TRUE / FALSE depending on whether flow is > threshold
+  medvec5 <- medvec5[!is.na(medvec5)] # NAs should have been removed already
 
-test <- rle(medvec5)
-# length(test$lengths[test$values==1])/nyears
-length(test$lengths[test$values==1])
-} # end of function
+  test <- rle(medvec5)
+  # length(test$lengths[test$values==1])/nyears
+  length(test$lengths[test$values==1])
+}
+
 # ------------------------------------------------------------------------
 
-# Required for CreateFlowStats
+# Required for CALCFLOWSTATS
+# Calculates the duration in days above or below a flow threshold
+
 find_eventDuration <- function(x, threshold ,type, pref) {
   # find events above/below a given threshold
 
@@ -775,9 +796,11 @@ find_eventDuration <- function(x, threshold ,type, pref) {
 
 # Required for APPLYFLOWSTATS
 
-CreateFlowStats<- function(stats_data, long.data, station_data, q_high, q_low) {
+CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) {
 
-QSTATS1<- stats_data; long_data<- long.data; FULL.FLOW.REC<- station_data
+QSTATS1<- stats_data
+long_data<- long.data
+FULL.FLOW.REC<- station_data
 q_high <- as.numeric(q_high); q_low <- as.numeric(q_low)
 
 ### calculate standardized values
