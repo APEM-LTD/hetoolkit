@@ -49,8 +49,7 @@ Imports:
     schoolmath,
     imputeTS,
     zoo,
-    stats,
-    CircStats
+    stats
 Depends: 
     ggfortify (>= 0.4.11),
     dplyr (>= 1.0.2),
