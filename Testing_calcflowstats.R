@@ -491,3 +491,46 @@ impute_flow <- function(data,
 # imputeTS
 # dplyr
 # zoo
+
+
+
+#####################
+
+# AD testing
+
+data <- read.csv(file="Data/DU2V_modelled_flows.csv",header=T,row.names=NULL,sep=",")
+data$date <- lubridate::dmy(data$date)
+
+data2 <- subset(data, flow_site_id %in% c("P50059","P45454"))
+
+stats <- calc_flowstats(data = data2,
+                        site_col = "flow_site_id",
+                        flow_col = "flow",
+                        date_col = "date",
+                        win_start = "1989-01-01",
+                        win_width = "1 year",
+                        win_step = "1 year",
+                        date_range = c("1990-01-01", "2020-12-31"),
+                        q_low = 95,
+                        q_high = 50,
+                        scaling = FALSE,
+                        imputed_col = NULL,
+                        ref_col = NULL)
+stats1 <- stats[[1]]
+stats2 <- stats[[2]]
+stats3 <- stats[[3]]
+
+
+data = data2
+site_col = "flow_site_id"
+flow_col = "flow"
+date_col = "date"
+win_start = "1989-01-01"
+win_width = "1 year"
+win_step = "1 year"
+date_range = c("1990-01-01", "2020-12-31")
+q_low = 95
+q_high = 50
+scaling = FALSE
+imputed_col = NULL
+ref_col = NULL
