@@ -151,22 +151,26 @@ calc_flowstats <- function(data,
   if(is.null(win_start) == FALSE && IsDate(win_start, "%Y-%m-%d") == TRUE && isTRUE(win_start > Sys.Date()) == TRUE)
   {stop("win_start is in the future")}
 
-  matches <- c("day", "month", "year")
+  matches <- c("day", "month", "year", "week")
   if(is.null(win_width) == FALSE && grepl(matches[1], win_width) == TRUE){""} else {
     if(is.null(win_width) == FALSE && grepl(matches[2], win_width) == TRUE){""} else {
       if(is.null(win_width) == FALSE && grepl(matches[3], win_width) == TRUE){""} else {
+        if(is.null(win_width) == FALSE && grepl(matches[4], win_width) == TRUE){""} else {
           stop("win_width must by in day, month, or year format")
         }
       }
     }
+  }
 
   if(is.null(win_step) == FALSE && grepl(matches[1], win_step) == TRUE){""} else {
     if(is.null(win_step) == FALSE && grepl(matches[2], win_step) == TRUE){""} else {
       if(is.null(win_step) == FALSE && grepl(matches[3], win_step) == TRUE){""} else {
+        if(is.null(win_width) == FALSE && grepl(matches[4], win_width) == TRUE){""} else {
           stop("win_step must by in day, month, or year format")
         }
       }
     }
+  }
 
   if(is.null(date_range) == FALSE && IsDate(date_range[1], "%Y-%m-%d") == TRUE){""} else {
     if(is.null(date_range) == FALSE && IsDate(date_range[2], "%Y-%m-%d") == TRUE){""} else {
@@ -225,19 +229,25 @@ calc_flowstats <- function(data,
 
   # if win_width is in days
   if(is.null(win_width) == FALSE && grepl("day", win_width) == TRUE){
-    all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% lubridate::days(width_no),
+    all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% lubridate::days(width_no) - days(1),
                                          win_no = 1:nrow(.))
+  }
+
+  # if win_width is in weeks
+  if(is.null(win_width) == FALSE && grepl("week", win_width) == TRUE){
+    all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% lubridate::weeks(width_no) - days(1),
+                                                win_no = 1:nrow(.))
   }
 
   # if win_width is in months
   if(is.null(win_width) == FALSE && grepl("month", win_width) == TRUE){
-    all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% months(width_no),
+    all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% months(width_no) - days(1),
                                     win_no = 1:nrow(.))
   }
 
   # if win_width is in years
   if(is.null(win_width) == FALSE && grepl("year", win_width) == TRUE){
-    all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% lubridate::years(width_no),
+    all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% lubridate::years(width_no) - days(1),
                                          win_no = 1:nrow(.))
   }
 
@@ -255,11 +265,13 @@ calc_flowstats <- function(data,
   # if scaling = TRUE, standardise flow data by the mean (for each site)
   if(scaling == TRUE){
 
-    means <- data_1 %>% dplyr::group_by(site) %>%
-                        dplyr::summarise(mean_f = (mean(flow, na.rm = TRUE)))
-    data_1 <- data_1 %>% dplyr::left_join(means, by = "site") %>%
-                         dplyr::mutate(flow = flow / mean_f) %>%
-                         dplyr::select(-mean_f)
+    data_1 %>%
+
+      group_by(site) %>%
+      dplyr::mutate(mean_f = (mean(flow, na.rm = TRUE))) %>%
+      dplyr::mutate(flow = flow / mean_f) %>%
+      dplyr::select(-mean_f)
+
     }
 
   # join window dates to flow data
