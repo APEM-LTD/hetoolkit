@@ -319,22 +319,20 @@ calc_flowstats <- function(data,
                      dplyr::rename(n_imputed = n)
   }
 
-  # use CalcFlowStats to get Q-values, etc
+  # Calculate time-varying flow statistics
   STATS1 <- my_data_2 %>% CalcFlowStats()
 
-  # calculate flow duration curve/bfi/means/sd
+  # Calculate long-term flow statistics
   long_data <- CreateLongData(my_data_2, STATS1)
 
-  # calculate durations/events, missing data, number of 0's, dry events, 7/30dayminDOY...
+  # Calculate remaining time-varying flow statistics (durations/events, 7/30 day mins)
   qlow <- as.numeric(q_low)
   qhigh <- as.numeric(q_high)
   flow_stats <- CreateFlowStats(STATS1, long_data, my_data_2, qhigh, qlow)
 
   # join stats data with win_dates and rename cols
   df1.1 <- dplyr::left_join(win_dates, flow_stats, by=c("site", "win_no"))
-  df1.2 <- df1.1 %>% dplyr::mutate(n_total = (n_missing + n_data),
-                                   prop_missing = (n_missing/n_data)) %>%
-                     dplyr::rename(flow_site_id = site)
+  df1.2 <- df1.1 %>% dplyr::rename(flow_site_id = site)
 
   # get rid of mean & sd
   df1.3 <- df1.2 %>%
@@ -589,9 +587,12 @@ CalcFlowStats <- function (flowts) {
   # calculate missing data before NAs are removed
   MISSING <- flowts %>%
     dplyr::group_by(site, win_no) %>%
-    dplyr::summarise(n_missing = sum(is.na(flow)))
+    dplyr::summarise(n_data = sum(!is.na(flow)),
+                     n_missing = sum(is.na(flow)),
+                     n_total = n_missing + n_data,
+                     prop_missing = n_missing / n_data)
 
-  # calculate flow stats for each site by time period (win_no)
+  # remove NAs and calculate flow stats for each site by time period (win_no)
   flowts <- flowts %>%
     dplyr::group_by(site, win_no) %>%
     dplyr::filter(!is.na(flow)) %>%
@@ -654,23 +655,23 @@ CalcFlowStats <- function (flowts) {
                               min_7day_sd = sd(min_7day),
                               min_30day_sd = sd(min_30day),
                               max_sd = sd(max),
-                              Q5z = Q5-Q5mean/Q5sd,
-                              Q10z = Q10-Q10mean/Q10sd,
-                              Q20z = Q20-Q20mean/Q20sd,
-                              Q25z = Q25-Q25mean/Q25sd,
-                              Q30z = Q30-Q30mean/Q30sd,
-                              Q50z = Q50-Q50mean/Q50sd,
-                              Q70z = Q70-Q70mean/Q70sd,
-                              Q75z = Q75-Q75mean/Q75sd,
-                              Q80z = Q80-Q80mean/Q80sd,
-                              Q90z = Q90-Q90mean/Q90sd,
-                              Q95z = Q95-Q95mean/Q95sd,
-                              Q99z = Q99-Q99mean/Q99sd,
-                              vol_z = volume-vol_mean/vol_sd,
-                              min_z = min-min_mean/min_sd,
-                              min_7day_z = min_7day-min_7day_mean/min_7day_sd,
-                              min_30day_z = min_30day-min_30day_mean/min_30day_sd,
-                              max_z = max-max_mean/max_sd) %>%
+                              Q5z = (Q5-Q5mean)/Q5sd,
+                              Q10z = (Q10-Q10mean)/Q10sd,
+                              Q20z = (Q20-Q20mean)/Q20sd,
+                              Q25z = (Q25-Q25mean)/Q25sd,
+                              Q30z = (Q30-Q30mean)/Q30sd,
+                              Q50z = (Q50-Q50mean)/Q50sd,
+                              Q70z = (Q70-Q70mean)/Q70sd,
+                              Q75z = (Q75-Q75mean)/Q75sd,
+                              Q80z = (Q80-Q80mean)/Q80sd,
+                              Q90z = (Q90-Q90mean)/Q90sd,
+                              Q95z = (Q95-Q95mean)/Q95sd,
+                              Q99z = (Q99-Q99mean)/Q99sd,
+                              vol_z = (volume - vol_mean) / vol_sd,
+                              min_z = (min - min_mean) / min_sd,
+                              min_7day_z = (min_7day - min_7day_mean) / min_7day_sd,
+                              min_30day_z = (min_30day - min_30day_mean) / min_30day_sd,
+                              max_z = (max - max_mean) / max_sd) %>%
                         dplyr::full_join(MISSING)
 
     return(flowts)
