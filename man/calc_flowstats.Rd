@@ -4,100 +4,151 @@
 \alias{calc_flowstats}
 \title{Calculate a suite of long-term and seasonal flow statistics for one or more sites.}
 \usage{
-calc_flowstats(data = data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", ref_col = NULL)
+calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = “imputed”, win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, standardise = FALSE, ref_col = NULL)
 }
 \arguments{
-\item{data}{Name of data frame or tibble containing the flow data to be processed.
-Must be in long format and contain columns for flow site id, date and flow (see output from import_flows).}
+\item{data}{Tibble or data frame containing the flow data to be processed. Must be in long format and contain, as a minimum site id, date and flow (e.g. as output by the import_flow() function).}
 
-\item{date_col}{Name of column in 'data' containing date of flow record.  Default = "date".}
+\item{site_col}{Name of column in data containing unique flow site id. Default = "flow_site_id".}
 
-\item{flow_col}{Name of column in 'data' containing flow data for processing. Default = "flow".}
+\item{date_col}{Name of column in data containing date of flow record. Default = "date".  Dates must be in “yyyy-mm-dd” format.}
 
-\item{ref_col}{Name of column in 'data' containing flow data for reference scenario against which flow statistics are standardised. Default: NULL.}
+\item{flow_col}{Name of column in data containing flow data for processing (character). Default = "flow".}
 
-\item{sites_col}{Name of column in 'data' containing unique flow site id. Default = "flow_site_id".}
+\item{imputed_col}{Name of optional column in data specifying whether each flow value is measured (0) or imputed (1).  Default = NULL.}
+
+\item{win_start}{Start date of first time window (in yyyy-mm-dd format). Default = "1995-04-01".}
+
+\item{win_width}{Width of the time window, in days, weeks, months, quarters or years  (see ?seq.Date for options). Default = "6 months".}
+
+\item{win_step}{The increment by which the time window moves, in days, weeks, months, quarters or years (see ?seq.Date for options). Default = "6 months".}
+
+\item{date_range}{Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years.}
+
+\item{q_low}{Qx flow threshold (between 1 and 99) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).}
+
+\item{q_high}{Qx flow threshold (between 1 and 99) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).}
+
+\item{scaling}{Should the time series flow data be scaled by the long-term mean flow  at each site? Default = FALSE.}
+
+\item{ref_col}{Name of column in dataset containing reference flow scenario against which selected flow statistics are z-score standardised. Default = NULL.}
 }
 \value{
 calc_flowstats returns a list of two data frames. The first data frame contains a suite of time-varying flow statistics for every 6 month winter/summer period at every site. The columns are as follows:
 \itemize{
-\item flow_site_id (a unique site id; this is the standardised column header for flow sites)
-\item season (S = summer, W = winter)
-\item water_year (year starting 1st October; e.g. 2018 = 01/10/2018 to 30/09/2019)
+\item flow_site_id: a unique site id.
+\item start_date: start date of the time period (in yyyy-mm-dd format).
+\item end_date: end date of the time period (in yyyy-mm-dd format).
+\item n_data: the number of records with valid flows (not NA).
+\item n_missing: the number of missing flow (flow = NA).
+\item n_total: the total number of flow records (sum of n_data and n_missing).
+\item prop_missing: the proportion of missing flow records.
+\item n_imputed: the number of flow records that have been imputed (calculated only if the imputed_col argument is specified).
+\item mean: mean flow
+\item sd: standard deviation of flows
+\item Q5: the unstandardised Q10 flow in a 6-month winter or summer period.
 \item Q10: the unstandardised Q10 flow in a 6-month winter or summer period.
+\item Q20: the unstandardised Q10 flow in a 6-month winter or summer period.
+\item Q25: the unstandardised Q10 flow in a 6-month winter or summer period.
 \item Q30: the unstandardised Q30 flow in a 6-month winter or summer period.
 \item Q50: the unstandardised Q50 flow in a 6-month winter or summer period.
 \item Q70: the unstandardised Q70 flow in a 6-month winter or summer period.
+\item Q75: the unstandardised Q10 flow in a 6-month winter or summer period.
+\item Q80: the unstandardised Q10 flow in a 6-month winter or summer period.
 \item Q90: the unstandardised Q70 flow in a 6-month winter or summer period.
 \item Q95: the unstandardised Q95 flow in a 6-month winter or summer period.
 \item Q99: the unstandardised Q99 flow in a 6-month winter or summer period.
-\item Q10mean: the seasonal (winter or summer) Q10 flow, averaged across years.
-\item Q10sd: the standard deviation of the seasonal (winter or summer) Q10 flows.
 \item Q10z: the Q10 flow in a six month period, standardised using the above mean and sd. If ref_col = NULL, then the mean and sd parameters are calculated using the same flow time series (i.e. Q10z = (Q10 - Q10mean) / Q10sd); if not, the mean and sd parameters are calculated from the ref_col flow time series (i.e. Q10z = (Q10 - Q10mean_ref) / Q10sd_ref).
-\item Q30mean: (as for Q10)
-\item Q30sd: (as for Q10)
+\item Q20z: (as for Q10)
+\item Q25z: (as for Q10)
 \item Q30z: (as for Q10)
-\item Q50mean: (as for Q10)
-\item Q50sd: (as for Q10)
 \item Q50z: (as for Q10)
-\item Q70mean: (as for Q10)
-\item Q70sd: (as for Q10)
 \item Q70z: (as for Q10)
-\item Q95: (as for Q10)
-\item Q95mean: (as for Q10)
-\item Q95sd: (as for Q10)
+\item Q75z: (as for Q10)
+\item Q80z: (as for Q10)
+\item Q90z: (as for Q10)
 \item Q95z: (as for Q10)
-\item zero:	Number of zero flow days
-\item mean:	mean flow
-\item sd: standard deviation of flows
-\item lsd: standard deviation of the log flow series
-\item n:	number of days (182 or 183)
-\item e3: number of events when flows exceed 3 x the long-term median (Q50) flow
-\item e5: number of events when flows exceed 5 x the long-term median (Q50) flow
-\item e7: number of events when flows exceed 7 x the long-term median (Q50) flow
-\item missing: number of missing records (NAs)
-\item durationAbove: number of records above the long-term Q70
-\item nEventsAbove: number of events when flows exceed the long-term Q70
-\item durationBelow: number of records below the long-term Q95
-\item nEventsBelow: number of events when flows exceed the long-term Q95
-\item e3mean: e3, averaged across years
-\item e5mean: e5, averaged across years
-\item e7mean: e7, averaged across years
-\item durationAboveMean: durationAbove, averaged across years
-\item durationBelowMean: durationBelow, averaged across years
-\item nEventsAboveMean: nEventsAbove, averaged across years
-\item nEventsBelowMean: nEventsBelow, averaged across years
+\item Q99z: (as for Q10)
+\item dry_n: number of records when flow drops to zero
+\item dry_e: number of events when flow drops to zero
+\item dry_start: day of year (1-366) of first zero flow record
+\item dry_end: day of year (1-366) of last zero flow record
+\item dry_mid: mean day of year (1-366) of all zero flow records
+\item low_n: number of records when flow is below q_low
+\item low_e: number of events when flow drops below q_low
+\item low_start: day of year (1-366) of first record below q_low
+\item low_end: day of year (1-366) of first record below q_low
+\item low_mid: circular  mean day of year (1-366) of all records below q_low
+\item low_magnitude: mean flow deficit below q_low
+\item low_severity: mean flow deficit below q_low
+\item high_n: number of records when flow is above q_high
+\item high_e: number of events when flow exceeds q_high
+\item high_start: day of year (1-366) of first record above q_high
+\item high_end: day of year (1-366) of last record above q_high
+\item high_mid: circular mean day of year (1-366) of all records above q_high
+\item e_above3xq50: number of events when flow exceeds 3 x the long-term median (Q50) flow
+\item e_above5xq50: number of events when flow exceeds 5 x the long-term median (Q50) flow
+\item e_above7xq50: number of events when flow exceeds 7 x the long-term median (Q50) flow
+\item volume: sum of flows
+\item volume_z: As for q5z
+\item min: minimum flow
+\item min_z: As for q5z
+\item min_doy: minimum flow
+\item min_7day: minimum flow
+\item min_7day_z: As for q5z
+\item min_7day_doy: day of year (1-366, as midpoint) of 7-day minimum flow period
+\item min_30day: minimum 30-day mean flow
+\item min_30day_z: As for q5z
+\item min_30day_doy: day of year of (1-366, as midpoint) of 30-day minimum flow
+\item max: maximum flow
+\item max_z: As for q5z
+\item max_doy: day of year of maximum flow
 }
 
 The second data table contains long-term flow statistics. The data are arranged in long format, with the following columns:
 \itemize{
 \item flow_site_id (a unique site id)
-\item season (S = summer, W = winter, A = all)
-\item parameter (base flow index (bfi), flow duration curve percentiles (p1 to p99), and seasonal means and standard deviations for Q10, Q30, Q50, Q75 and Q95).
-\item value (calculated statistic)
+\item start_date: start date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated.
+\item end_date: end date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated.
+\item parameter  (minimum, maximum and mean flow; flow duration curve percentiles (p1 to p99); base flow index (bfi); and seasonal means and standard deviations for Q50, Q30, Q50, Q75 and Q95).
+\item value (calculated statistic).
 }
 }
 \description{
-calc_flowstats uses a time series of measured or modeled flows to calculate a suite of long-term and seasonal (winter and summer) flow statistics for one or more sites (stations). It is primarily designed to work with mean daily flows (e.g. as produced by import_flow), but can also be applied to time series data on a longer (e.g. monthly) time step. Regardless, the data should be regularly spaced and the same time step should be used for all sites.
+This function takes a time series of measured or modelled flows and uses a user-defined moving window to calculate a suite of time-varying flow statistics for one or more sites (stations). A smaller set of long-term statistics is also calculated. It is primarily designed to work with daily flows but can also be applied to time series data on a longer (e.g. 10-daily or monthly) time step. The data should be regularly spaced, and a common time step should be used for all sites.
 }
 \details{
-The function is hard-wired to exclude any flow data before 1st April 1985.  Must be in long format and contain columns named "flow_site_id", "Date" and "Flow" (see output from import_flows).
+The function uses the win_start, win_width and win_step arguments to define a moving window, which divides the flow time series into a sequence of time periods. These time periods may be contiguous, non-contiguous or overlapping (see examples below). The sequence of time periods continues up to and including the present date, even when this extends beyond the period covered by the input flow dataset, as this facilitates the subsequent joining of flow statistics and ecology data by the join_he() function. The sequence of time periods does not extend beyond the present date, however; for example, if calculating flow statistics for each calendar year, the time periods would stop at the end of the last complete year.
 
-Winter is defined as 1st October to 31st March, and Summer as 1st April to 30th September. There is no minimum number of records required in each 6 month period; if desired, the outputs can be filtered afterwards to eliminate potentially unreliable results based on sparse data.
+For each time period, the function calculates a suite of flow statistics, listed below. With the exception of 7-day and 30-day minimum flow statistics that require daily data, all flow statistics are calculated regardless of the time step of the flow data. Caution should be exercised, however, when analysing flow data on a coarser (e.g. monthly) time step to ensure that the statistics are meaningful and interpretable (especially those relating to the number and timing of low and high flow events, which require reasonably high frequency flow data in order to discriminate sequences of lower and higher flows).
 
-Selected flow percentiles (Q10, Q30, Q50, Q70 and Q95) are calculated for each 6 month winter/summer, and then standardized using the long-term mean and standard deviation of these statistics. If calculating flow statistics for two different flow scenarios (e.g. historical and naturalised), then the function includes the facility to standardise the flow percentile statistics for one scenario (specified via flow_col) using mean and standard deviation of flow statistics from the other scenario (specified via ref_col). For example, if flow_col = naturalised flows and ref_col = historical flows, then the resulting statistics can be input into a hydro-ecological model calibrated using historical flow data and used to make predictions of ecological status under naturalised flows.
+The function requires a minimum number of records to calculate some statistics (detailed below), otherwise an NA result is returned. Meeting the minimum requirement does not, however, guarantee that a statistic has been estimated to an appropriate level of precision, and users may wish to manually filter the results to eliminate potentially unreliable estimates based on sparse data.
+
+To ensure that estimated statistics are comparable across time periods, the flow time series data should be as complete as possible (gaps can be infilled using the impute_flows() function). Missing values (NAs) are ignored when calculating all statistics, including those that count the number of events when flows exceed or fall below a certain flow threshold.
+
+To make some statistics more comparable across sites, the scaling argument optionally allows the flow time series data to be standardised by dividing by the site’s long-term mean flow. Scaling is performed after applying the date_range filter, so that the long-term mean flows can be calculated over a specified number of whole years. Because this eliminates absolute differences in mean flow from site to site, scaling is most useful when the focus is on statistics measured in flow units (e.g. sd, q5 etc, low_magnitude, low_severity, volume, min, min_7day, min_30day, max).
+
+Additionally, selected statistics (denoted by a _z suffix) are standardised using the mean and standard deviation of the estimated statistics across time periods at a given site (e.g. q5_z = (q5 – q5_mean) / q5_sd)). These standardised statistics are dimensionless, and so comparable across sites. The choice to which statistics to standardise is hard-wired, and standardised  statistics are calculated regardless of whether or not the raw flow data have been scaled (via the 'scale' argument)).
+
+The function also includes the facility to standardise the statistics for one flow scenario (specified via flow_col) using mean and standard deviation of flow statistics from the other scenario (specified via ref_col). For example, if flow_col = naturalised flows and ref_col = historical flows, then the resulting statistics can be input into a hydro-ecological model calibrated using historical flow data and used to make predictions of ecological status under naturalised flows.
 }
 \examples{
-## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col:
+## calculate flow statistics for a contiguous series of summer (April to September) and winter (October to March) time periods:
 calc_flowstats(data = flow_data,
-                site_col = "flow_site_id",
-                date_col = "date",
-                flow_col = "flow")
+               win_start =  "1995-04-01",
+               win_width = "6 months",
+               win_step =  "6 months")
 
-## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col, and standardise QXX flow statistics using flow data specified in ref_col:
-calc_flowstats(data = data,
-               site_col = "flow_site_id",
-               date_col = "date",
-               flow_col = "HistoricalFlow",
-               ref_col = "NaturalisedFlow")
+## calculate flow statistics for a non-contiguous series of summer (April to September) time periods:
+calc_flowstats(data = flow_data,
+               win_start =  "1995-04-01",
+               win_width = "6 months",
+               win_step =  "1 year")
+
+## calculate flow statistics for a series of overlapping 24 month time periods:
+calc_flowstats(data = flow_data,
+               win_start =  "1995-04-01",
+               win_width = "24 months",
+               win_step =  "1 month")
+
 }

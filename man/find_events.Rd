@@ -4,7 +4,7 @@
 \alias{find_events}
 \title{find_events(x,threshold)}
 \usage{
-find_events(x, threshold, type = "high")
+find_events(flow_data, threshold, type = "high")
 }
 \description{
 find_events(x,threshold)

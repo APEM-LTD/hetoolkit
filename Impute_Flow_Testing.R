@@ -1,18 +1,39 @@
 rm(list = ls())
 
-library(tibble)
-library(schoolmath)
-library(imputeTS)
-library(dplyr)
-library(zoo)
-library(data.table)
-library(ggplot2)
-library(lubridate)
+# should all be loaded by package
+# library(tibble)
+#library(schoolmath)
+# library(imputeTS)
+# library(dplyr)
+# library(zoo)
+# library(data.table)
+# library(ggplot2)
+# library(lubridate)
 
+# read-in data
+data_du2v <- read.csv("data/DU2V_modelled_flows.csv")
 data_impute <- readxl::read_excel("data/flow.example_impute.xlsx")
 data_equipercentile <- readxl::read_excel("data/flow.example_impute_equipercentile.xlsx")
 donor_data <- readxl::read_excel("data/donor.xlsx")
 
+#Save to RDA or RDS for testing
+save(data_du2v, file = "data/data_du2v.rda")
+saveRDS(data_du2v, "tests/testthat/data_du2v.rds")
+
+save(data_impute, file = "data/data_impute.rda")
+saveRDS(data_impute, file = "tests/testthat/data_impute.RDS")
+#Restore the object
+readRDS(file = "tests/testthat/data_impute.rds")
+
+save(donor_data, file = "data/donor_data.rda")
+saveRDS(donor_data,"tests/testthat/donor_data.RDS")
+readRDS(file = "tests/testthat/donor_data.rds")
+
+save(data_equipercentile, file = "data/data_equipercentile.rda")
+saveRDS(data_equipercentile,"tests/testthat/data_equipercentile.RDS")
+readRDS(file = "tests/testthat/data_equipercentile.RDS")
+
+## examples of funtion usage
 # linear
 output <- impute_flow(data_impute, site_col = "site", date_col = "date", flow_col = "flow", method = "linear")
 
@@ -25,13 +46,3 @@ output <- impute_flow(data_equipercentile, site_col = "site", date_col = "date",
 #equipercentile (w/ donor)
 output <- impute_flow(data_equipercentile, site_col = "site", date_col = "date", flow_col = "flow", method = "equipercentile", donor = donor_data)
 
-#Save an object to a file
-saveRDS(data_impute, file = "tests/testthat/data_impute.RDS")
-#Restore the object
-readRDS(file = "tests/testthat/data_impute.rds")
-
-saveRDS(donor_data,"tests/testthat/donor_data.RDS")
-readRDS(file = "tests/testthat/donor_data.rds")
-
-saveRDS(data_equipercentile,"tests/testthat/data_equipercentile.RDS")
-readRDS(file = "tests/testthat/data_equipercentile.RDS")
