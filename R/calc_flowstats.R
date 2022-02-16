@@ -309,33 +309,27 @@ calc_flowstats <- function(data,
   # drop columns not required for flow calcs (these will be re-joined at the end)
   my_data_2 <- my_data %>% dplyr::select(site, date, win_no, flow)
 
-  # if imputed_col is specified, count imputed values
+  # if imputed_col is specified, count number of imputed records
   if(is.null(imputed_col) == FALSE){
-
-  my_data$imputed <- dplyr::pull(my_data, imputed_col)
-  count_imputed <- my_data %>%
-                     dplyr::group_by(site, win_no) %>%
-                     dplyr::count(., imputed) %>%
-                     dplyr::rename(n_imputed = n)
+    my_data$imputed <- dplyr::pull(my_data, imputed_col)
+    count_imputed <- my_data %>%
+                       dplyr::group_by(site, win_no) %>%
+                       dplyr::count(., imputed) %>%
+                       dplyr::rename(n_imputed = n)
   }
 
-  # Calculate time-varying flow statistics
+  # calculate time-varying flow statistics
   STATS1 <- my_data_2 %>% CalcFlowStats()
 
-  # Calculate long-term flow statistics
+  # calculate long-term flow statistics
   long_data <- CreateLongData(my_data_2, STATS1)
 
-  # Calculate remaining time-varying flow statistics (durations/events, 7/30 day mins)
-  qlow <- as.numeric(q_low)
-  qhigh <- as.numeric(q_high)
-  flow_stats <- CreateFlowStats(STATS1, long_data, my_data_2, qhigh, qlow)
+  # calculate remaining time-varying flow statistics (durations/events, 7/30-day mins)
+  flow_stats <- CreateFlowStats(STATS1, long_data, my_data_2, q_high, q_low)
 
-  # join stats data with win_dates and rename cols
-  df1.1 <- dplyr::left_join(win_dates, flow_stats, by=c("site", "win_no"))
-  df1.2 <- df1.1 %>% dplyr::rename(flow_site_id = site)
-
-  # get rid of mean & sd
-  df1.3 <- df1.2 %>%
+  # join time-varying statistics with win_dates, rename site column and drop unwanted columns
+  df1 <- dplyr::left_join(win_dates, flow_stats, by=c("site", "win_no")) %>%
+    dplyr::rename(flow_site_id = site)
     dplyr::select(-Q5mean, -Q5sd, -Q10mean, -Q10sd, -Q20mean, -Q20sd,
                   -Q25mean, -Q25sd, -Q30mean, -Q30sd, -Q50mean, -Q50sd,
                   -Q70mean, -Q70sd, -Q75mean, -Q75sd, -Q80mean, -Q80sd, -Q90mean, -Q90sd,
@@ -343,21 +337,21 @@ calc_flowstats <- function(data,
                   -min_30day_mean, -min_30day_sd, -min_mean, -min_sd, -max_mean, -max_sd,
                   -vol_mean, -vol_sd)
 
+  # re-order columns
   if(is.null(imputed_col) == TRUE){
-  # re-order cols
-  col_order <- c("flow_site_id", "win_no", "start_date", "end_date", "n_data", "n_missing", "n_total", "prop_missing", "mean", "sd", "Q5", "Q10", "Q20", "Q25", "Q30", "Q50", "Q70", "Q75", "Q80", "Q90", "Q95", "Q99", "Q5z", "Q10z", "Q20z", "Q25z", "Q30z", "Q50z", "Q70z", "Q75z", "Q80z", "Q90z", "Q95z", "Q99z", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity", "high_n", "high_e", "high_start", "high_end", "high_mid", "e_above3xq50", "e_above5xq50", "e_above7xq50", "volume", "vol_z", "min", "min_z", "min_doy", "min_7day", "min_7day_z", "min_7day_doy", "min_30day", "min_30day_z", "min_30day_doy", "max", "max_z", "max_doy")
-  df1 <- df1.3[, col_order]
+    col_order <- c("flow_site_id", "win_no", "start_date", "end_date", "n_data", "n_missing", "n_total", "prop_missing", "mean", "sd", "Q5", "Q10", "Q20", "Q25", "Q30", "Q50", "Q70", "Q75", "Q80", "Q90", "Q95", "Q99", "Q5z", "Q10z", "Q20z", "Q25z", "Q30z", "Q50z", "Q70z", "Q75z", "Q80z", "Q90z", "Q95z", "Q99z", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity", "high_n", "high_e", "high_start", "high_end", "high_mid", "e_above3xq50", "e_above5xq50", "e_above7xq50", "volume", "vol_z", "min", "min_z", "min_doy", "min_7day", "min_7day_z", "min_7day_doy", "min_30day", "min_30day_z", "min_30day_doy", "max", "max_z", "max_doy")
+    df1 <- df1[, col_order]
   }
 
   if(is.null(imputed_col) == FALSE){
-  # add in count of imputed flows
-  df1.4 <- dplyr::left_join(df1.3, count_imputed, by = c("site", "win_no")) %>%
-    dplyr::mutate(n_imputed = ifelse(imputed == 1, n_imputed, 0)) %>%
-    dplyr::select(-imputed) %>%
-    dplyr::mutate(prop_imputed = (n_imputed/n_data))
-  # re-order cols
-  col_order <- c("flow_site_id", "win_no", "start_date", "end_date", "n_data", "n_missing", "n_total", "prop_missing", "n_imputed", "prop_imputed", "mean", "sd", "Q5", "Q10", "Q20", "Q25", "Q30", "Q50", "Q70", "Q75", "Q80", "Q90", "Q95", "Q99", "Q5z", "Q10z", "Q20z", "Q25z", "Q30z", "Q50z", "Q70z", "Q75z", "Q80z", "Q90z", "Q95z", "Q99z", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity", "high_n", "high_e", "high_start", "high_end", "high_mid", "e_above3xq50", "e_above5xq50", "e_above7xq50", "vol", "vol_z", "min", "min_z", "min_doy", "min_7day", "min_7day_z", "min_7day_doy", "min_30day", "min_30day_z", "min_30day_doy", "max", "max_z", "max_doy")
-  df1 <- df1.4[, col_order]
+    # add in count of imputed flow records
+    df1 <- dplyr::left_join(df1, count_imputed, by = c("site", "win_no")) %>%
+      dplyr::mutate(n_imputed = ifelse(imputed == 1, n_imputed, 0)) %>%
+      dplyr::select(-imputed) %>%
+      dplyr::mutate(prop_imputed = (n_imputed/n_data))
+    # re-order cols
+    col_order <- c("flow_site_id", "win_no", "start_date", "end_date", "n_data", "n_missing", "n_total", "prop_missing", "n_imputed", "prop_imputed", "mean", "sd", "Q5", "Q10", "Q20", "Q25", "Q30", "Q50", "Q70", "Q75", "Q80", "Q90", "Q95", "Q99", "Q5z", "Q10z", "Q20z", "Q25z", "Q30z", "Q50z", "Q70z", "Q75z", "Q80z", "Q90z", "Q95z", "Q99z", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity", "high_n", "high_e", "high_start", "high_end", "high_mid", "e_above3xq50", "e_above5xq50", "e_above7xq50", "vol", "vol_z", "min", "min_z", "min_doy", "min_7day", "min_7day_z", "min_7day_doy", "min_30day", "min_30day_z", "min_30day_doy", "max", "max_z", "max_doy")
+    df1 <- df1[, col_order]
 
   }
 
