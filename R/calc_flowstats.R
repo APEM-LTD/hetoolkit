@@ -1064,7 +1064,7 @@ find_doy <- function(flow_data, type, nday) {
   # convert to DOY
   flow_day2$yday <- lubridate::yday(flow_day2$date)
   # first low or high flow day
-  m_day <- as.character(unique(flow_day2$yday))
+  m_day <- as.numeric(unique(flow_day2$yday))
 
   ## find 7day or 30day rolling mean
   if(nday == 7){
@@ -1082,7 +1082,7 @@ find_doy <- function(flow_data, type, nday) {
   # convert to DOY
   low_flow$yday <- lubridate::yday(low_flow$date - lubridate::days(3))
   # first mean low flow day
-  min_day <- as.character(low_flow$yday)
+  min_day <- as.numeric(low_flow$yday)
 
   # combine low/high flow DOY and 7/30day mean min flow DOY
   find_doy <- data.frame(m_day, min_day)
