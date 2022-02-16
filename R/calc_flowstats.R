@@ -1,4 +1,4 @@
-#' Calculate a suite of long-term and seasonal flow statistics for one or more sites.
+#' Calculate a suite of long-term and time-varying flow statistics for one or more sites.
 #'
 #' @description This function takes a time series of measured or modelled flows and uses a user-defined moving window to calculate a suite of time-varying flow statistics for one or more sites (stations). A smaller set of long-term statistics is also calculated. It is primarily designed to work with daily flows but can also be applied to time series data on a longer (e.g. 10-daily or monthly) time step. The data should be regularly spaced, and a common time step should be used for all sites.
 #'
@@ -32,86 +32,87 @@
 #'
 #' Additionally, selected statistics (denoted by a _z suffix) are standardised using the mean and standard deviation of the estimated statistics across time periods at a given site (e.g. q5_z = (q5 – q5_mean) / q5_sd)). These standardised statistics are dimensionless, and so comparable across sites. The choice to which statistics to standardise is hard-wired, and standardised  statistics are calculated regardless of whether or not the raw flow data have been scaled (via the 'scale' argument)).
 #'
-#' The function also includes the facility to standardise the statistics for one flow scenario (specified via flow_col) using mean and standard deviation of flow statistics from the other scenario (specified via ref_col). For example, if flow_col = naturalised flows and ref_col = historical flows, then the resulting statistics can be input into a hydro-ecological model calibrated using historical flow data and used to make predictions of ecological status under naturalised flows.
+#' The function also includes the facility to standardise the statistics for one flow scenario (specified via flow_col) using mean and standard deviation of flow statistics from another scenario (specified via ref_col). For example, if flow_col = naturalised flows and ref_col = historical flows, then the resulting statistics can be input into a hydro-ecological model calibrated using historical flow data and used to make predictions of ecological status under naturalised flows.
 
 #'
-#' @return calc_flowstats returns a list of two data frames. The first data frame contains a suite of time-varying flow statistics for every 6 month winter/summer period at every site. The columns are as follows:
+#' @return The function returns a list of two data frames. The first data frame contains a suite of time-varying flow statistics for every time period at every site. The columns are as follows:
 #'
 #'    - flow_site_id: a unique site id.
 #'    - start_date: start date of the time period (in yyyy-mm-dd format).
 #'    - end_date: end date of the time period (in yyyy-mm-dd format).
 #'    - n_data: the number of records with valid flows (not NA).
-#'    - n_missing: the number of missing flow (flow = NA).
+#'    - n_missing: the number of missing flow records (flow = NA).
 #'    - n_total: the total number of flow records (sum of n_data and n_missing).
-#'    - prop_missing: the proportion of missing flow records.
-#'    - n_imputed: the number of flow records that have been imputed (calculated only if the imputed_col argument is specified).
+#'    - prop_missing: the proportion of missing flow records (n_data / n_total).
+#'    - n_imputed: the number of flow records that have been imputed (this is calculated only if the imputed_col argument is specified).
 #     - prop_imputed: the proportion of flow records that have been imputed (calculated only if the imputed_col argument is specified).
 #'    - mean: mean flow
-#'    - sd: standard deviation of flows
-#'    - Q5: the unstandardised Q10 flow in a 6-month winter or summer period.
-#'    - Q10: the unstandardised Q10 flow in a 6-month winter or summer period.
-#'    - Q20: the unstandardised Q10 flow in a 6-month winter or summer period.
-#'    - Q25: the unstandardised Q10 flow in a 6-month winter or summer period.
-#'    - Q30: the unstandardised Q30 flow in a 6-month winter or summer period.
-#'    - Q50: the unstandardised Q50 flow in a 6-month winter or summer period.
-#'    - Q70: the unstandardised Q70 flow in a 6-month winter or summer period.
-#'    - Q75: the unstandardised Q10 flow in a 6-month winter or summer period.
-#'    - Q80: the unstandardised Q10 flow in a 6-month winter or summer period.
-#'    - Q90: the unstandardised Q70 flow in a 6-month winter or summer period.
-#'    - Q95: the unstandardised Q95 flow in a 6-month winter or summer period.
-#'    - Q99: the unstandardised Q99 flow in a 6-month winter or summer period.
-#'    - Q10z: the Q10 flow in a six month period, standardised using the above mean and sd. If ref_col = NULL, then the mean and sd parameters are calculated using the same flow time series (i.e. Q10z = (Q10 - Q10mean) / Q10sd); if not, the mean and sd parameters are calculated from the ref_col flow time series (i.e. Q10z = (Q10 - Q10mean_ref) / Q10sd_ref).
-#'    - Q20z: (as for Q10)
-#'    - Q25z: (as for Q10)
-#'    - Q30z: (as for Q10)
-#'    - Q50z: (as for Q10)
-#'    - Q70z: (as for Q10)
-#'    - Q75z: (as for Q10)
-#'    - Q80z: (as for Q10)
-#'    - Q90z: (as for Q10)
-#'    - Q95z: (as for Q10)
-#'    - Q99z: (as for Q10)
-#'    - dry_n: number of records when flow drops to zero
+#'    - sd: the standard deviation of flows
+#'    - Q5: the unstandardised Q5 flow
+#'    - Q10: the unstandardised Q10 flow
+#'    - Q20: the unstandardised Q20 flow
+#'    - Q25: the unstandardised Q25 flow
+#'    - Q30: the unstandardised Q30 flow
+#'    - Q50: the unstandardised Q50 flow
+#'    - Q70: the unstandardised Q70 flow
+#'    - Q75: the unstandardised Q75 flow
+#'    - Q80: the unstandardised Q80 flow
+#'    - Q90: the unstandardised Q90 flow
+#'    - Q95: the unstandardised Q95 flow
+#'    - Q99: the unstandardised Q99 flow
+#'    - Q5z: the Q5 flow, standardised using the mean and sd of the Q5 flows across all time periods for that site, i.e. q5_z = (q5 – q5mean) / Q5sd. If ref_col is not NULL, then the Q5 is estimated for the flow_col time series, but standardised using the mean and sd parameters for the ref_col time series (i.e. q50_z = (q50 - q50mean_ref) / q50sd_ref).
+#'    - Q10z: as for Q5z
+#'    - Q20z: as for Q5z
+#'    - Q25z: as for Q5z
+#'    - Q30z: as for Q5z
+#'    - Q50z: as for Q5z
+#'    - Q70z: as for Q5z
+#'    - Q75z: as for Q5z
+#'    - Q80z: as for Q5z
+#'    - Q90z: as for Q5z
+#'    - Q95z: as for Q5z
+#'    - Q99z: as for Q5z
+#'    - dry_n: number of records with zero flow
 #'    - dry_e: number of events when flow drops to zero
 #'    - dry_start: day of year (1-366) of first zero flow record
 #'    - dry_end: day of year (1-366) of last zero flow record
 #'    - dry_mid: mean day of year (1-366) of all zero flow records
-#'    - low_n: number of records when flow is below q_low
-#'    - low_e: number of events when flow drops below q_low
-#'    - low_start: day of year (1-366) of first record below q_low
-#'    - low_end: day of year (1-366) of first record below q_low
-#'    - low_mid: circular  mean day of year (1-366) of all records below q_low
+#'    - low_n: number of records when flow is below the q_low threshold
+#'    - low_e: number of events when flow drops below the q_low threshold
+#'    - low_start: day of year (1-366) of first record below the q_low threshold
+#'    - low_end: day of year (1-366) of first record below the q_low threshold
+#'    - low_mid: circular  mean day of year (1-366) of all records below the q_low threshold
 #'    - low_magnitude: mean flow deficit below q_low
-#'    - low_severity: mean flow deficit below q_low
-#'    - high_n: number of records when flow is above q_high
-#'    - high_e: number of events when flow exceeds q_high
-#'    - high_start: day of year (1-366) of first record above q_high
-#'    - high_end: day of year (1-366) of last record above q_high
-#'    - high_mid: circular mean day of year (1-366) of all records above q_high
+#'    - low_severity: cumulative flow deficit below q_low
+#'    - high_n: number of records when flow is above the q_high threshold
+#'    - high_e: number of events when flow exceeds the q_high threshold
+#'    - high_start: day of year (1-366) of first record above the q_high threshold
+#'    - high_end: day of year (1-366) of last record above the q_high threshold
+#'    - high_mid: circular mean day of year (1-366) of all records above the q_high threshold
 #'    - e_above3xq50: number of events when flow exceeds 3 x the long-term median (Q50) flow
 #'    - e_above5xq50: number of events when flow exceeds 5 x the long-term median (Q50) flow
 #'    - e_above7xq50: number of events when flow exceeds 7 x the long-term median (Q50) flow
-#'    - volume: sum of flows
-#'    - volume_z: As for q5z
+#'    - volume: total volume discharged (sum of flows)
+#'    - volume_z: as for q5z
 #'    - min: minimum flow
-#'    - min_z: As for q5z
-#'    - min_doy: minimum flow
-#'    - min_7day: minimum flow
-#'    - min_7day_z: As for q5z
+#'    - min_z: as for q5z
+#'    - min_doy: day of year (1-366) of minimum flow
+#'    - min_7day: minimum 7-day mean flow
+#'    - min_7day_z: as for q5z
 #'    - min_7day_doy: day of year (1-366, as midpoint) of 7-day minimum flow period
 #'    - min_30day: minimum 30-day mean flow
-#'    - min_30day_z: As for q5z
-#'    - min_30day_doy: day of year of (1-366, as midpoint) of 30-day minimum flow
+#'    - min_30day_z: as for q5z
+#'    - min_30day_doy: day of year of (1-366, as midpoint) of 30-day minimum flow period
 #'    - max: maximum flow
-#'    - max_z: As for q5z
-#'    - max_doy: day of year of maximum flow
+#'    - max_z: as for q5z
+#'    - max_doy: day of year (1-366) of maximum flow
 #'
 #' The second data table contains long-term flow statistics. The data are arranged in long format, with the following columns:
 #'    - flow_site_id (a unique site id)
-#'    - start_date: start date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated.
-#'    - end_date: end date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated.
-#'    - parameter  (minimum, maximum and mean flow; flow duration curve percentiles (p1 to p99); base flow index (bfi); and seasonal means and standard deviations for Q50, Q30, Q50, Q75 and Q95).
-#'    - value (calculated statistic).
+#'    - start_date: start date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated
+#'    - end_date: end date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated
+#'    - parameter  (minimum, maximum and mean flow; flow duration curve percentiles (p1 to p99); base flow index (bfi); and long-term mean and standard deviation of the time-varying Q10, Q30, Q50, Q75 and Q95 statistics)
+#'    - value (calculated statistic)
 #'
 #' @export
 #'
