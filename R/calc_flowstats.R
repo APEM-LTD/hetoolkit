@@ -882,33 +882,37 @@ find_eventDuration <- function(x, threshold ,type, pref) {
   # if n_events > 0, find start, end & mid dates, otherwise skip & assign NAs
   if(n_events > 0){
 
-  flowEvents$yday <- lubridate::yday(flowEvents$date)
+      flowEvents$yday <- lubridate::yday(flowEvents$date)
 
-  # first low/high flow day
-  n_start <- flowEvents %>% dplyr::arrange(date) %>% dplyr::slice(1)
-  n_start <- n_start$yday
+      # first low/high flow day
+      n_start <- flowEvents %>% dplyr::arrange(date) %>% dplyr::slice(1)
+      n_start <- n_start$yday
 
-  # last low/high flow day
-  n_end <- flowEvents %>% dplyr::arrange(date)
-  n_end <- utils::tail(n_end, n=1)
-  n_end <- n_end$yday
+      # last low/high flow day
+      n_end <- flowEvents %>% dplyr::arrange(date)
+      n_end <- utils::tail(n_end, n=1)
+      n_end <- n_end$yday
 
-  # average low flow day
-  conv <- 2*pi/365 ## doy -> radians
-  n_mid1 <- circ.mean(conv*(flowEvents$yday-1))/conv
-  n_mid <- (n_mid1 + 365) %% 365
+      # average low flow day
+      conv <- 2*pi/365 ## doy -> radians
+      n_mid1 <- circ.mean(conv*(flowEvents$yday-1))/conv
+      n_mid <- round((n_mid1 + 365) %% 365,0)
 
-  } else {n_start <- NA; n_end <- NA; n_mid <- NA}
+  } else {
+
+      n_start <- NA; n_end <- NA; n_mid <- NA
+
+  }
 
   find_eventDurations <- data.frame(n_records, n_events, n_start, n_end, n_mid)
 
   # calculate mean and cumulative deficit for low flow events
   if(type == "low" && n_events > 0){
-    flowEvents$deficit <- (threshold - flowEvents$flow)
-    mean_deficit <- mean(flowEvents$deficit, na.rm = TRUE)
-    cumulative_deficit <- sum(flowEvents$deficit, na.rm = TRUE)
+      flowEvents$deficit <- (threshold - flowEvents$flow)
+      mean_deficit <- mean(flowEvents$deficit, na.rm = TRUE)
+      cumulative_deficit <- sum(flowEvents$deficit, na.rm = TRUE)
 
-    find_eventDurations <- data.frame(n_records, n_events, n_start, n_end, n_mid, mean_deficit, cumulative_deficit)
+      find_eventDurations <- data.frame(n_records, n_events, n_start, n_end, n_mid, mean_deficit, cumulative_deficit)
   }
 
   return(find_eventDurations)
@@ -1088,7 +1092,7 @@ find_doy <- function(flow_data, type, nday) {
 }
 
 ##############################################################
-###IsDate
+## check whether a column if formatted as date
 
 IsDate <- function(mydate, date.format = "%d/%m/%y") {
   tryCatch(!is.na(as.Date(mydate, date.format)),
@@ -1097,7 +1101,7 @@ IsDate <- function(mydate, date.format = "%d/%m/%y") {
 
 
 ##############################################################
-## circmean
+## find circular mean
 
 circ.mean <- function (x) {
   sinr <- sum(sin(x))
