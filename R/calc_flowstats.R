@@ -37,15 +37,16 @@
 #'
 #' @return The function returns a list of two data frames. The first data frame contains a suite of time-varying flow statistics for every time period at every site. The columns are as follows:
 #'
-#'    - flow_site_id: a unique site id.
-#'    - start_date: start date of the time period (in yyyy-mm-dd format).
-#'    - end_date: end date of the time period (in yyyy-mm-dd format).
-#'    - n_data: the number of records with valid flows (not NA).
-#'    - n_missing: the number of missing flow records (flow = NA).
-#'    - n_total: the total number of flow records (sum of n_data and n_missing).
-#'    - prop_missing: the proportion of missing flow records (n_data / n_total).
-#'    - n_imputed: the number of flow records that have been imputed (this is calculated only if the imputed_col argument is specified).
-#     - prop_imputed: the proportion of flow records that have been imputed (calculated only if the imputed_col argument is specified).
+#'    - flow_site_id: a unique site id
+#'    - win_no: an autonumber counting the sequence of flow time periods
+#'    - start_date: start date of the time period (in yyyy-mm-dd format)
+#'    - end_date: end date of the time period (in yyyy-mm-dd format)
+#'    - n_data: the number of records with valid flows (not NA)
+#'    - n_missing: the number of missing flow records (flow = NA)
+#'    - n_total: the total number of flow records (sum of n_data and n_missing)
+#'    - prop_missing: the proportion of missing flow records (n_data / n_total)
+#'    - n_imputed: the number of flow records that have been imputed (this is calculated only if the imputed_col argument is specified)
+#     - prop_imputed: the proportion of flow records that have been imputed (calculated only if the imputed_col argument is specified)
 #'    - mean: mean flow
 #'    - sd: the standard deviation of flows
 #'    - Q5: the unstandardised Q5 flow
@@ -587,11 +588,13 @@ calc_flowstats <- function(data,
 CalcFlowStats <- function (group1, group2, flowts) {
 
   # calculate missing data before NAs are removed
-  MISSING <- flowts %>% dplyr::group_by(site, win_no) %>%
-    dplyr::summarise(n_missing = sum(is.na(flow))) #amount of missing flow data in each group
+  MISSING <- flowts %>%
+    dplyr::group_by(site, win_no) %>%
+    dplyr::summarise(n_missing = sum(is.na(flow)))
 
-  # calculate flow stats for each site by win_no
-  flowts <- flowts %>%  dplyr::group_by(site, win_no) %>%
+  # calculate flow stats for each site by time period (win_no)
+  flowts <- flowts %>%
+    dplyr::group_by(site, win_no) %>%
     dplyr::filter(!is.na(flow)) %>%
       dplyr::summarise(n_data = length(flow),
                        mean = mean(flow),
@@ -668,7 +671,7 @@ CalcFlowStats <- function (group1, group2, flowts) {
                               min_z = min-min_mean/min_sd,
                               min_7day_z = min_7day-min_7day_mean/min_7day_sd,
                               min_30day_z = min_30day-min_30day_mean/min_30day_sd,
-                              max_z = max-max_mean/max_sd,) %>%
+                              max_z = max-max_mean/max_sd) %>%
                         dplyr::full_join(MISSING)
 
     return(flowts)
