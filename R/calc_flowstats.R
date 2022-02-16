@@ -10,10 +10,10 @@
 #'@param flow_col Name of column in data containing flow data for processing (character). Default = "flow".
 #'@param imputed_col Name of optional column in data specifying whether each flow value is measured (0) or imputed (1).  Default = NULL.
 #'@param win_start Start date of first time window (in yyyy-mm-dd format). Default = "1995-04-01".
-#'@param win_width Width of the time window, in days, weeks, months, quarters or years  (see ?seq.Date for options). Default = "6 months".
-#'@param win_step The increment by which the time window moves, in days, weeks, months, quarters or years (see ?seq.Date for options). Default = "6 months".
-#'@param q_low Qx flow threshold (between 1 and 99) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).
-#'@param q_high Qx flow threshold (between 1 and 99) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).
+#'@param win_width Width of the time window, in days, weeks, months or years  (see ?seq.Date for options). Default = "6 months".
+#'@param win_step The increment by which the time window moves, in days, weeks, months or years (see ?seq.Date for options). Default = "6 months".
+#'@param q_low Qx flow threshold (between 1 and 99, as an integer) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).
+#'@param q_high Qx flow threshold (between 1 and 99, as an integer) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).
 #'@param date_range Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years.
 #'@param scaling Should the time series flow data be scaled by the long-term mean flow  at each site? Default = FALSE.
 #'@param ref_col Name of column in dataset containing reference flow scenario against which selected flow statistics are z-score standardised. Default = NULL.
@@ -84,7 +84,7 @@
 #'    - low_end: day of year (1-366) of first record below the q_low threshold
 #'    - low_mid: circular  mean day of year (1-366) of all records below the q_low threshold
 #'    - low_magnitude: mean flow deficit below q_low
-#'    - low_severity: cumulative flow deficit below q_low
+#'    - low_severity: cumulative flow deficit below q_low (low_n x low_magnitude)
 #'    - high_n: number of records when flow is above the q_high threshold
 #'    - high_e: number of events when flow exceeds the q_high threshold
 #'    - high_start: day of year (1-366) of first record above the q_high threshold
@@ -100,10 +100,10 @@
 #'    - min_doy: day of year (1-366) of minimum flow
 #'    - min_7day: minimum 7-day mean flow
 #'    - min_7day_z: as for q5z
-#'    - min_7day_doy: day of year (1-366, as midpoint) of 7-day minimum flow period
+#'    - min_7day_doy: day of year (1-366) of midpoint of 7-day minimum flow period
 #'    - min_30day: minimum 30-day mean flow
 #'    - min_30day_z: as for q5z
-#'    - min_30day_doy: day of year of (1-366, as midpoint) of 30-day minimum flow period
+#'    - min_30day_doy: day of year of (1-366) of midpoint of 30-day minimum flow period
 #'    - max: maximum flow
 #'    - max_z: as for q5z
 #'    - max_doy: day of year (1-366) of maximum flow
@@ -112,7 +112,7 @@
 #'    - flow_site_id (a unique site id)
 #'    - start_date: start date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated
 #'    - end_date: end date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated
-#'    - parameter  (minimum, maximum and mean flow; flow duration curve percentiles (p1 to p99); base flow index (bfi); and long-term mean and standard deviation of the time-varying Q10, Q30, Q50, Q75 and Q95 statistics)
+#'    - parameter (long-term minimum, maximum and mean flow; long-term flow duration curve percentiles (p1 to p99); long-term base flow index (bfi = 7-day minimum flow / mean flow); and long-term mean and standard deviation of the time-varying q5 to q99, minimum flow, maximum flow and 7-day minimum flow statistics)
 #'    - value (calculated statistic)
 #'
 #' @export
@@ -686,10 +686,11 @@ CalcFlowStats <- function (flowts) {
 # calculates flow duration curve
 # calculates 'long_data' required for CreateFlowData
 
-CreateLongData<- function(flow.data, statsData) {
+CreateLongData <- function(flow.data, statsData) {
 
-# rename data
-flow_data <- flow.data; QSTATS1 <- statsData
+  # rename data
+  flow_data <- flow.data
+  QSTATS1 <- statsData
 
   # calculate base flow index, if any stations have flows with 0's, make that bfi NA
   # if there are no 0s in the flow data then use calc_bfi to calculate base flow index
@@ -703,12 +704,11 @@ flow_data <- flow.data; QSTATS1 <- statsData
     dplyr::mutate(win_no = "Annual") %>%   # season = all
     tidyr::gather(-site, -win_no, key = parameter, value = value)
 
-  # flow duration curve
+  # calculate long-term flow duration curve percentile 1:99
   # returns a warning that calculation is ignoring missing values- even when NA are removed
   FlowDurationCurve <- flow_data %>%
     dplyr::filter(!is.na(flow)) %>%
     dplyr::group_by(site) %>%
-    # calc percentiles 1:99
     group_modify(~ (fasstr::calc_longterm_percentile(data = flow_data, dates = date, values = flow, percentiles=c(1:99), transpose = TRUE))) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(win_no="Annual") %>%
@@ -719,18 +719,20 @@ flow_data <- flow.data; QSTATS1 <- statsData
   long_data <- QSTATS1 %>%
     dplyr::filter(!is.na("Q30")) %>%
     # make dataframe long
-    tidyr::gather(-site, -win_no, key = stat, value = stat_value) %>%               # select just the stats we want
+    tidyr::gather(-site, -win_no, key = stat, value = stat_value) %>%  # select just the stats we want
     dplyr::filter(stat== "Q5"| stat== "Q10"| stat== "Q20"| stat== "Q25"| stat== "Q30"| stat== "Q50" | stat== "Q70" |  stat== "Q75" |stat== "Q80"|stat== "Q90"| stat== "Q95"| stat== "Q99"| stat == "vol"| stat== "min"| stat== "min_7day"| stat== "min_7day"| stat== "max") %>%
     dplyr::group_by(stat, site) %>%
-    dplyr::summarise(mean = mean(stat_value, na.rm=TRUE), sd = sd(stat_value, na.rm = TRUE)) %>%     # calculate the mean and sd for each stat by season
+    # calculate the mean and sd for each statistic by site
+    dplyr::summarise(mean = mean(stat_value, na.rm=TRUE), sd = sd(stat_value, na.rm = TRUE)) %>%
     dplyr::ungroup() %>%
-    tidyr::gather(sd, mean, key = id, value = value) %>%                   # gather mean and sd coloums into a coloumn with values and key coloumn (ie mean or sd)
-    dplyr::do(within(.,  parameter <- paste(stat, id, sep=""))) %>%                     # concatenate stat (ie Q10) and id (ie mean or sd) coloumns (example: Q10mean, Q70mean)
+    tidyr::gather(sd, mean, key = id, value = value) %>%                   # gather mean and sd columns into a column with values and key column (ie mean or sd)
+    dplyr::do(within(.,  parameter <- paste(stat, id, sep=""))) %>%                     # concatenate stat (ie Q10) and id (ie mean or sd) columns (example: Q10mean, Q70mean)
     dplyr::select(-stat, -id) %>%
     dplyr::mutate(win_no = "Q_Annual") %>%
     dplyr::bind_rows(bfi)  %>%
     dplyr::bind_rows(FlowDurationCurve)      # remove the stat and id columns
-  }
+
+}
 
 
 #######################################################################################
@@ -742,9 +744,9 @@ flow_data <- flow.data; QSTATS1 <- statsData
 CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) {
 
   # rename inputs
-  QSTATS1<- stats_data
-  long_data<- long.data
-  flow_data<- station_data
+  QSTATS1 <- stats_data
+  long_data <- long.data
+  flow_data <- station_data
   q_high <- as.numeric(q_high); q_low <- as.numeric(q_low)
 
   # filter data for calculating zero events, events above/below q_high/q_low
@@ -758,7 +760,7 @@ CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) 
   colnames(zeros) <- c("site", "win_no", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid")   # rename columns
 
   # calculate QHigh and QLow
-  # needed calculate durations above and below threshold value
+  # needed to calculate durations above and below threshold value
   high <- (100 - q_high)
   low <- (100 - q_low)
   Q_high <- paste("P", sep = "", high)
@@ -820,7 +822,7 @@ CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) 
 ##############################################################################
 
 ############### FUNCTIONS USED IN CalcFlowStats ##############################
-
+## riisbiggs2
 # Required for CalcFlowStats
 # Calculates the number of times a flow threshold is exceeded
 
@@ -855,6 +857,7 @@ calc_bfi <- function(x) {
   meanflow <- mean(x)
   calc_bfi <- min7day/meanflow
   return(calc_bfi)
+
 }
 
 ###############################################
@@ -864,7 +867,7 @@ calc_bfi <- function(x) {
 ###############################################
 ## find_eventDuration
 # Required for CreateFlowStats
-# Calculates the duration in days above or below a flow threshold
+# Calculates the duration in days above or below a flow threshold, plus magnitude and severity of flow deficits below a given threshold
 
 find_eventDuration <- function(x, threshold ,type, pref) {
   # find events above/below a given threshold
