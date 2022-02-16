@@ -320,7 +320,7 @@ calc_flowstats <- function(data,
   }
 
   # use CalcFlowStats to get Q-values, etc
-  STATS1 <- my_data_2 %>% CalcFlowStats(site, win_no, .)
+  STATS1 <- my_data_2 %>% CalcFlowStats()
 
   # calculate flow duration curve/bfi/means/sd
   long_data <- CreateLongData(my_data_2, STATS1)
@@ -402,9 +402,8 @@ calc_flowstats <- function(data,
     # drop columns not required for flow calcs
     my_data_ref_2 <- my_data_ref %>% dplyr::select(site, date, win_no, flow)
 
-    # calculate flow statistics
-    # CalcFlowStats
-    STATS1_ref <- my_data_ref_2 %>% CalcFlowStats(site, win_no, .)
+    # calculate time varying flow statistics
+    STATS1_ref <- my_data_ref_2 %>% CalcFlowStats()
 
     # Get QXz_adj
     # select the data we need from _ref dataset and rename
@@ -585,7 +584,7 @@ calc_flowstats <- function(data,
 # calculates mean & sd for all parameters, then calculates z-stats
 # Output passed to CreateFlowData
 
-CalcFlowStats <- function (group1, group2, flowts) {
+CalcFlowStats <- function (flowts) {
 
   # calculate missing data before NAs are removed
   MISSING <- flowts %>%
