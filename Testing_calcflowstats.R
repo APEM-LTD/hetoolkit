@@ -24,7 +24,7 @@ win_step <- "6 months"
 win_start <- "2010-01-01"
 q_low <- 95
 q_high <- 50
-mylist <- calc_flowstats(data = data, site_col = "site", flow_col = "flow", date_col = "date", q_low = 95, q_high = 50, imputed_col = "imputed", date_range = dates, scaling = TRUE)
+mylist <- calc_flowstats(data = data, site_col = "site", flow_col = "flow", date_col = "date", q_low = 95, q_high = 50, imputed_col = "imputed")
 view <- mylist[[1]]
 
 dates <- c("2000-01-01", "2019-01-01")
