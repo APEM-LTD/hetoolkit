@@ -6,7 +6,7 @@
 #'
 #' @param data A tibble or data frame containing the data to be imputed.
 #' @param site_col Name of column in data containing unique flow site id. Default = "flow_site_id". Site ids are coerced to a character vector.
-#' @param date_col Name of column in data containing date of flow record. Default = "date".
+#' @param date_col Name of column in data containing date of flow record. Default = "date".  Dates must be in “yyyy-mm-dd” format.
 #' @param flow_col Name of column in data containing the measured  flow data. Default = "flow".
 #' @param method Imputation method: "linear" (default), "exponential" or "equipercentile".
 #' @param donor – A tibble or data frame with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. Subsequent columns are ignored. Default = NULL. Only used when method = "equipercentile".
@@ -29,33 +29,33 @@
 #'
 #' @examples
 #' ## impute flow statistics using 'linear' method
-#' impute_flow(flow_data,
+#' impute_flow(data_impute,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "linear")
 #'
 #' ## impute flow statistics using 'exponential' method
-#' impute_flow(flow_data,
+#' impute_flow(data_impute,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "exponential")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-#' impute_flow(flow_data,
+#' impute_flow(data_equipercentile,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "equipercentile")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-#' impute_flow(flow_data,
+#' impute_flow(data_equipercentile,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
-#'             method = "equipercentile")
-#'             donor = "donor_stations"
+#'             method = "equipercentile",
+#'             donor = donor_data)
 #'
 
 
@@ -101,10 +101,10 @@ impute_flow <- function(data,
   if(isTRUE(method == "equipercentile") == TRUE && isTRUE(length(unique(data$site)) < 2) == TRUE)
   {stop("A minimum of two flow site stations are required if applying equipercentile method")}
 
-  if(!class(data$date)[1]=="POSIXct") {stop("date_col must be of POSIXct class")}
+  if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date (yyyy-mm-dd) format")}
 
   if(isTRUE(1 %in% diff.Date(data$date)) == FALSE){stop("flow data supplied is not on a daily time-step")}
-  if(isTRUE("TRUE" %in% is.na(data$flow[data$flow < 0])) == TRUE){warning("flow data contains negative values")}
+  if(isTRUE("FALSE" %in% is.na(data_impute$flow[data_impute$flow < 0])) == TRUE){warning("flow data contains negative values")}
 
   # rename so original data remains unchanged
   data_1 <- data
@@ -122,6 +122,11 @@ impute_flow <- function(data,
 
     data_f$date <- dplyr::pull(data_f, date_col)
     data_f$flow <- dplyr::pull(data_f, flow_col)
+
+    # check whether full dataset is NAs
+    if("FALSE" %in% is.na(data_f$flow) == FALSE){
+      warning(paste0("flow column contains only NAs for site", sep = " ", i))
+      next }
 
     # Check flow is numeric
     if(is.numeric(data_f$flow) == FALSE)
@@ -155,8 +160,10 @@ impute_flow <- function(data,
       original_flow_i$flow_i <- imputeTS::na_interpolation(original_flow_i$flow)
 
       imp <- original_flow_i$flow_i
+      if("TRUE" %in% is.na(original_flow_i$flow) == TRUE){
       plot_1 <- imputeTS::ggplot_na_imputations(original_flow_i$flow, imp)
       ggplot2::ggsave(paste0(getwd(), sep = "/", i, "_Imputed_Values.png"), plot = plot_1)
+      }
 
       # Merge original and imputed flow datasets
       all_flow <- dplyr::left_join(original_flow, original_flow_i, by = c("date", "site", "flow"))
@@ -208,8 +215,10 @@ impute_flow <- function(data,
           original_flow_i$flow_i <- exp(original_flow_i$flow_i)
 
           imp <- original_flow_i$flow_i
+          if("TRUE" %in% is.na(original_flow_i$flow) == TRUE){
           plot_1 <- imputeTS::ggplot_na_imputations(original_flow_i$flow, imp)
           ggplot2::ggsave(paste0(getwd(), sep = "/", i, "_Imputed_Values.png"), plot = plot_1)
+          }
 
           # Merge original and imputed flow datasets
           all_flow <- dplyr::left_join(original_flow, original_flow_i, by = c("date", "site", "flow"))
@@ -342,8 +351,10 @@ impute_flow <- function(data,
                                                               percentile, na.rm = TRUE))
 
         imp <- data_percentile_flow$flow_equipercentile
+        if("TRUE" %in% is.na(original_flow_i$flow) == TRUE){
         plot_1 <- imputeTS::ggplot_na_imputations(data_percentile_flow$flow, imp)
         ggplot2::ggsave(paste0(getwd(), sep = "/", i, "_Imputed_Values.png"), plot = plot_1)
+        }
 
         # Flag imputed data
         all_flow <- data_percentile_flow %>%
