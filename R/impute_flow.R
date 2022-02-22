@@ -2,45 +2,19 @@
 #'
 #' @description This function infills missing records in daily flow time series for one or more sites (gauging stations) using either interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.
 #'
-#' @usage impute_flow(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", method = "linear", donor = NULL)
+#' @usage impute_flow(data, site_col = " flow_site_id", date_col = "date", flow_col = "flow", method = "linear", donor = NULL)
 #'
 #' @param data A tibble or data frame containing the data to be imputed.
-<<<<<<< HEAD
 #' @param site_col Name of column in data containing unique flow site id. Default = "flow_site_id". Site ids are coerced to a character vector.
 #' @param date_col Name of column in data containing date of flow record. Default = "date".  Dates must be in “yyyy-mm-dd” format.
 #' @param flow_col Name of column in data containing the measured  flow data. Default = "flow".
 #' @param method Imputation method: "linear" (default), "exponential" or "equipercentile".
-||||||| 5db2f80
-#' @param site_col Name of column in data containing unique flow site id. Default = "flow_site_id". Site ids are coerced to a character vector.
-#' @param date_col Name of column in data containing date of flow record. Default = "date".
-#' @param flow_col Name of column in data containing the measured  flow data. Default = "flow".
-#' @param method Imputation method: "linear" (default), "exponential" or "equipercentile".
-=======
-#' @param site_col Name of column in 'data' containing unique flow site id. Default = "flow_site_id". Site ids are coerced to a character vector.
-#' @param date_col Name of column in 'data' containing date of flow record. Default = "date".
-#' @param flow_col Name of column in 'data' containing the measured  flow data. Default = "flow".
-#' @param method Imputation method: "linear" (default), "exponential" or "equipercentile". See below for details.
->>>>>>> 818ab9a988c6df42ea980f5bbc02e1b3c1f063f8
 #' @param donor – A tibble or data frame with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. Subsequent columns are ignored. Default = NULL. Only used when method = "equipercentile".
 #'
 #' @details
 #' This function is intended for imputing gauged daily flow data only; it cannot be used to impute sub-daily data, and is not designed for data on coarser time steps (e.g. 10-daily or monthly).
 #'
 #' The function offers three imputation methods: linear interpolation, exponential interpolation and an equipercentile algorithm.
-#'
-#' The default "linear" method uses linear (straight line) interpolation to impute missing flow values. It is therefore unable to infill gaps at the beginning or end of a time series (these flow values remain NA).
-#'
-#' The "exponential" method assumes that flow changes exponentially with time, and so produces imputed values with an accelerating rate of change in flow on the rising limb of the hydrograph, and a decelerating rate of change on the descending limb. Specifically, the flow on day t (Qt) is a function of the flow on the previous day (Qt-1) and the exponential decay constant (λ): Qt = Qt-1 x e-λ. For example, a flow time series with a 3 day gap – 10, NA, NA, NA, 6 – has an exponential decay constant λ = ln(10/6) / 4 = 0.1277. The interpolated value for day 2 is therefore 10*e-0.1277 = 8.801, and the full interpolated time series is: 10.000, 8.801, 7.746, 6.817, 6.000. Like the "linear" method, however, it is unable to infill gaps at the beginning or end of a time series. Furthermore, the "exponential" method will fail if the flow value immediately before or after a gap is 0 (or negative).
-#'
-#' The "equipercentile" method uses measured flows at a donor site to estimate missing flows at a target site. Specifically, the percentile value of the donor flow on any given day is assumed equal to the percentile value of the target flow. Gaps are infilled by calculating the donor flow percentile values and using the existing target flow data to derive the flow equivalent to this percentile value at the target site (for details see Hughes and Smakhtin 1996).
-#'
-#' The donor site to be used for each target site can be specified by the user (via the 'donors' argument). If 'donors' = NULL, then the function finds the site in 'data' whose flows are most strongly correlated (using Spearman’s rank correlation coefficient) with those at the target site, and uses that as the donor site. Note that this automated method does not guarantee that the donor site identified will be suitable; indeed, the donor site may be very unsuitable if none of the other sites are climatologically and hydrologically similar to the target site. To mitigate the risk of poor imputation, the function requires that paired target and donor sites have a minimum of 365 overlapping measured flow records. If this condition is not met and a donor site cannot be identified, then the function provides a warning message listing the sites affected.
-#'
-#' The interpolation methods have the benefit of simplicity and typically perform best when used to infill relatively short gaps – i.e. intervals where it is reasonable to assume that flows are stable or changing linearly or exponentially over time. The equipercentile method can be better than interpolation at infilling longer gaps, during which flows may change abruptly in response to rainfall events, but its performance is critically dependent on the suitability of the donor site. Donor sites should be hydrologically similar to, and have flows which are strongly correlated with, the target site. If these conditions are not met, then the equipercentile method can produce very imprecise or biased imputed values. When a suitable donor site is used, the equipercentile method has been demonstrated to be superior to many other imputation techniques (including catchment area scaling, long-term mean scaling, and linear regression methods using a single donor site) and to perform similarly to multiple regression using two donor sites (Harvey et al. 2012).
-#'
-#' The function applies just one, chosen method at a time, with no default to fall-back methods. If the first method fails to infill all the gaps, then the function can be run a second time, with a different chosen method, to try to infill the remaining gaps, and so on. This iterative approach provides flexibility to determine the sequence in which methods are applied.
-#'
-#' The "linear" and "exponential" methods can be applied to a single site, but the "equipercentile" method requires a minimum of two sites. When processing data for multiple sites, it is recommended that the sites have flow data that span a common time period. This is not essential, however, as the function identifies the earliest and latest dates (across all sites), and ‘expands’ the output dataset to cover all dates for all sites.  If flow cannot be imputed for a certain date, then the flow value returned is NA.
 #'
 #' @return A tibble containing the imputed flow data. The data are arranged in long format, with the following columns:
 #'
@@ -51,75 +25,39 @@
 #'    - donor_flow (measured flow at donor site on that date, if "equipercentile" method used)
 #'    - any other columns in the input dataset are automatically pulled through and joined to the output data table (e.g. the ‘input’ and ‘quality’ columns from the import_flow() function).
 #'
-#'@references
-#'
-#' Harvey, C. L., Dixon, H., and Hannaford, J. (2012) An appraisal of the performance of data-infilling methods for application to daily mean river flow records in the UK. Hydrology Research, 43(5), 618-636.
-#' Hughes, D.A., and Smakhtin, V. (1996) Daily flow time series patching or extension: A spatial interpolation approach based on flow duration curves. Hydrological Sciences Journal, 41, 851-871.
-#'
 #' @export
 #'
 #' @examples
 #' ## impute flow statistics using 'linear' method
-<<<<<<< HEAD
 #' impute_flow(data_impute,
-||||||| 5db2f80
-#' impute_flow(flow_data,
-=======
-#' impute_flow(data = flow_data,
->>>>>>> 818ab9a988c6df42ea980f5bbc02e1b3c1f063f8
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "linear")
 #'
 #' ## impute flow statistics using 'exponential' method
-<<<<<<< HEAD
 #' impute_flow(data_impute,
-||||||| 5db2f80
-#' impute_flow(flow_data,
-=======
-#' impute_flow(data = flow_data,
->>>>>>> 818ab9a988c6df42ea980f5bbc02e1b3c1f063f8
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "exponential")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-<<<<<<< HEAD
 #' impute_flow(data_equipercentile,
-||||||| 5db2f80
-#' impute_flow(flow_data,
-=======
-#' impute_flow(data = flow_data,
->>>>>>> 818ab9a988c6df42ea980f5bbc02e1b3c1f063f8
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "equipercentile")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-<<<<<<< HEAD
 #' impute_flow(data_equipercentile,
-||||||| 5db2f80
-#' impute_flow(flow_data,
-=======
-#' impute_flow(data = flow_data,
->>>>>>> 818ab9a988c6df42ea980f5bbc02e1b3c1f063f8
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
-<<<<<<< HEAD
 #'             method = "equipercentile",
 #'             donor = donor_data)
-||||||| 5db2f80
-#'             method = "equipercentile")
-#'             donor = "donor_stations"
-=======
-#'             method = "equipercentile",
-#'             donor = "donor_stations")
->>>>>>> 818ab9a988c6df42ea980f5bbc02e1b3c1f063f8
 #'
+
 
 impute_flow <- function(data,
                         site_col = "flow_site_id",
@@ -186,6 +124,7 @@ impute_flow <- function(data,
     data_f$flow <- dplyr::pull(data_f, flow_col)
 
     # check whether full dataset is NAs
+    # skip site if only NAs
     if("FALSE" %in% is.na(data_f$flow) == FALSE){
       warning(paste0("flow column contains only NAs for site", sep = " ", i))
       next }
