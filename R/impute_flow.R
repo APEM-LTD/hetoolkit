@@ -276,7 +276,7 @@ impute_flow <- function(data,
 
         # Identify most strongly correlated site (this will be the donor site)
         corr_all <- c(mget(ls(pattern = "_corr_rho")))
-        corr_all <- purrr::Reduce('bind_rows', corr_all)
+        corr_all <- Reduce('bind_rows', corr_all)
         corr_donor <- corr_all[corr_all$flow_site_id != i,]
 
         donor_site <- corr_donor$flow_site_id
@@ -381,7 +381,7 @@ impute_flow <- function(data,
 
   # Merge all sites
   flow_data_all <- c(mget(ls(pattern = "_flow_data")))
-  flow_data_all <- purrr::Reduce('bind_rows', flow_data_all)
+  flow_data_all <- Reduce('bind_rows', flow_data_all)
 
   flow_data_all <- flow_data_all[!is.na(flow_data_all$imputed),]
 
