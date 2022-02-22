@@ -276,7 +276,7 @@ impute_flow <- function(data,
 
         # Identify most strongly correlated site (this will be the donor site)
         corr_all <- c(mget(ls(pattern = "_corr_rho")))
-        corr_all <- Reduce('bind_rows', corr_all)
+        corr_all <- purr::Reduce('bind_rows', corr_all)
         corr_donor <- corr_all[corr_all$flow_site_id != i,]
 
         donor_site <- corr_donor$flow_site_id
