@@ -103,7 +103,7 @@ impute_flow <- function(data,
   if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date yyyymmdd format")}
 
   if(isTRUE(1 %in% diff.Date(data$date)) == FALSE){stop("flow data supplied is not on a daily time-step")}
-  if(isTRUE("FALSE" %in% is.na(data$flow[data$flow < 0])) == TRUE){warning("flow data contains negative values")}
+  if(isTRUE("FALSE" %in% is.na(data$flow[data_impute$flow < 0])) == TRUE){warning("flow data contains negative values")}
 
   # rename so original data remains unchanged
   data_1 <- data
@@ -114,7 +114,7 @@ impute_flow <- function(data,
     data_1 <- data[,!(names(data) %in% drop_vars)]
   }
 
-  data_2 <- data_1 %>% select(site, date, flow)
+  data_2 <- data_1 %>% dplyr::select(site, date, flow)
 
   for(i in unique(data_2$site)){
 
