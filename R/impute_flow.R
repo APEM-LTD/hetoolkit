@@ -48,35 +48,34 @@
 #'
 #' @examples
 #' ## impute flow statistics using 'linear' method
-#' impute_flow(flow_data,
+#' impute_flow(data = flow_data,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "linear")
 #'
 #' ## impute flow statistics using 'exponential' method
-#' impute_flow(flow_data,
+#' impute_flow(data = flow_data,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "exponential")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-#' impute_flow(flow_data,
+#' impute_flow(data = flow_data,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "equipercentile")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-#' impute_flow(flow_data,
+#' impute_flow(data = flow_data,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
-#'             method = "equipercentile")
-#'             donor = "donor_stations"
+#'             method = "equipercentile",
+#'             donor = "donor_stations")
 #'
-
 
 impute_flow <- function(data,
                         site_col = "flow_site_id",
