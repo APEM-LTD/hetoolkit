@@ -92,19 +92,18 @@ impute_flow <- function(data,
   if(is.null(donor) != TRUE && isTRUE(method == "equipercentile") == TRUE && is.data.frame(donor) != TRUE && tibble::is_tibble(donor) != TRUE)
   {stop("Donor stations must be specified in data frame or tibble format")}
 
-  # pull-in site_col
-
-  data$site <- dplyr::pull(data, site_col)
-  data$flow <- dplyr::pull(data, flow_col)
-  data$date <- dplyr::pull(data, date_col)
+  # rename for later and pull-in site_col
+  data <- data %>% dplyr::rename("site" = site_col,
+                                 "flow" = flow_col,
+                                 "date" = date_col)
 
   if(isTRUE(method == "equipercentile") == TRUE && isTRUE(length(unique(data$site)) < 2) == TRUE)
   {stop("A minimum of two flow site stations are required if applying equipercentile method")}
 
-  if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date (yyyy-mm-dd) format")}
+  if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date yyyymmdd format")}
 
   if(isTRUE(1 %in% diff.Date(data$date)) == FALSE){stop("flow data supplied is not on a daily time-step")}
-  if(isTRUE("FALSE" %in% is.na(data_impute$flow[data_impute$flow < 0])) == TRUE){warning("flow data contains negative values")}
+  if(isTRUE("FALSE" %in% is.na(data$flow[data_impute$flow < 0])) == TRUE){warning("flow data contains negative values")}
 
   # rename so original data remains unchanged
   data_1 <- data
@@ -115,10 +114,12 @@ impute_flow <- function(data,
     data_1 <- data[,!(names(data) %in% drop_vars)]
   }
 
-  for(i in unique(data$site)){
+  data_2 <- data_1 %>% select(site, date, flow)
+
+  for(i in unique(data_2$site)){
 
     # filter and pull-in data
-    data_f <- dplyr::filter(data_1, site == i)
+    data_f <- dplyr::filter(data_2, site == i)
 
     data_f$date <- dplyr::pull(data_f, date_col)
     data_f$flow <- dplyr::pull(data_f, flow_col)
@@ -126,8 +127,15 @@ impute_flow <- function(data,
     # check whether full dataset is NAs
     # skip site if only NAs
     if("FALSE" %in% is.na(data_f$flow) == FALSE){
+
       warning(paste0("flow column contains only NAs for site", sep = " ", i))
-      next }
+
+      if(length(unique(data$site) < 2)){
+        stop("Only one flow site specified. Flow site contains only NAs") } else {
+      next
+
+        }
+    }
 
     # Check flow is numeric
     if(is.numeric(data_f$flow) == FALSE)
@@ -352,7 +360,7 @@ impute_flow <- function(data,
                                                               percentile, na.rm = TRUE))
 
         imp <- data_percentile_flow$flow_equipercentile
-        if("TRUE" %in% is.na(original_flow_i$flow) == TRUE){
+        if("TRUE" %in% is.na(data_percentile_flow$flow) == TRUE){
         plot_1 <- imputeTS::ggplot_na_imputations(data_percentile_flow$flow, imp)
         ggplot2::ggsave(paste0(getwd(), sep = "/", i, "_Imputed_Values.png"), plot = plot_1)
         }
@@ -389,7 +397,6 @@ impute_flow <- function(data,
   flow_data_all <- flow_data_all[,!(names(flow_data_all) %in% drops)]
 
   # If present in original data, add back in original imputed and method columns
-
   if(isTRUE("method" %in% colnames(data)) == TRUE | "imputed" %in% colnames(data)){
 
     keep_vars <- c("site", "date", "method", "imputed")
@@ -403,12 +410,15 @@ impute_flow <- function(data,
 
     drop_vars2 <- c("method.y", "imputed.y")
     flow_data_all <- flow_data_all[,!(names(flow_data_all) %in% drop_vars2)]
-
     flow_data_all <- flow_data_all %>% dplyr::rename(method = method.x,
                                                      imputed = imputed.x)
-
-
   }
+
+  # add back in any other columns
+  flow_data_all <- flow_data_all %>%
+    dplyr::left_join(data_1, by = c("site", "flow", "date")) %>%
+    dplyr::rename(flow_site_id = site)
+
 
   # Output
   return(flow_data_all)

@@ -2,6 +2,8 @@ test_that("multiplication works", {
   #   expect_equal(2 * 2, 4)
   # })
 
+  library(dplyr)
+
   ### Test errors
 
   # "Data frame not found"
@@ -16,8 +18,9 @@ test_that("multiplication works", {
   ## SD - what if its not a data frame but data frame type data available that could be converted?
 
   # read in testing data
-  data_impute<-readRDS(file = "C:/Users/Sarah Davie/Desktop/R function writing/2022/hetoolkit_updated/tests/testthat/data_impute.rds")
+ # data_impute<-readRDS(file = "tests/testthat/data_impute.rds")
   names(data_impute)<-c("flow_site_id", "date","flow")
+  data_impute$date <- as.Date(data_impute$date)
 
   # "Specified date column was not identified in data"
   expect_error(impute_flow(data=data_impute, site_col = "flow_site_id", date_col = "hello",
@@ -40,12 +43,12 @@ test_that("multiplication works", {
                            flow_col = "flow", method = "linear", donor = NULL)
                , "flow data supplied is not on a daily time-step")
 
-  # date_col not a POSIXct date
-  data_a <- data_impute
-  data_a$date <-as.character(data_a$date)
-  expect_error(impute_flow(data = data_a, site_col = 'flow_site_id', date_col = "date",
+  # date_col not in date (yyyy-mm-dd) format
+  data_x <- data_impute
+  data_x$date <- as.character(data_x$date)
+  expect_error(impute_flow(data = data_x, site_col = 'flow_site_id', date_col = "date",
                            flow_col = "flow", method = "linear", donor = NULL)
-               , "date_col must be of POSIXct class")
+               , "date_col must be of date yyyymmdd format")
 
   ## SD - timezone missing warning - ok?
 
@@ -83,10 +86,12 @@ test_that("multiplication works", {
                , "Specified 'method' must be one of 'linear', 'exponential', or 'equipercentile'")
 
   # read in donor data
-  donor_data<-readRDS(file = "C:/Users/Sarah Davie/Desktop/R function writing/2022/hetoolkit_updated/tests/testthat/donor_data.rds")
+  #donor_data<-readRDS(file = "C:/Users/Sarah Davie/Desktop/R function writing/2022/hetoolkit_updated/tests/testthat/donor_data.rds")
   # read in equipercentile data
-  data_equipercentile<-readRDS(file = "C:/Users/Sarah Davie/Desktop/R function writing/2022/hetoolkit_updated/tests/testthat/data_equipercentile.RDS")
+  #data_equipercentile<-readRDS(file = "C:/Users/Sarah Davie/Desktop/R function writing/2022/hetoolkit_updated/tests/testthat/data_equipercentile.RDS")
   names(data_equipercentile)<-c("flow_site_id", "date", "flow")
+  data_equipercentile$date <- as.Date(data_equipercentile$date)
+
 
   # check warning for donor not used when adding donor to method other than equipercentile
   expect_warning(impute_flow(data = data_impute, site_col = 'flow_site_id', date_col = "date",
@@ -117,14 +122,35 @@ test_that("multiplication works", {
 
   # Equipercentile method cannot be applied for this site, due to insufficient overlapping data with the donor site
   data_a <-   data_equipercentile %>%
-    group_by(flow_site_id) %>%
-    slice(1:200)
+    dplyr::group_by(flow_site_id) %>%
+    dplyr::slice(1:200)
   expect_warning(impute_flow(data = data_a[data_a$flow_site_id%in% c(4082,4046),], site_col = 'flow_site_id', date_col = "date",
                              flow_col = "flow", method = "equipercentile", donor = donor_data)
                  , "4046-Equipercentile method cannot be applied for this site, due to insufficient overlapping data with the donor site.")
 
 
+  # Test if only NAs
+  # Create dataset
+  my_flow_data <- import_flow(sites = c("F1707", "1001"),
+                              inputs = c("HDE", "NRFA"),
+                              start_date = "2008-01-01",
+                              end_date = "2010-01-05")
+
+  # what happens if site only has NA flows?
+  my_flow_data2 <- my_flow_data[1:10,]
+  my_flow_data2$flow <- NA
+  my_flow_data2$flow <- as.numeric(my_flow_data2$flow)
+
+  # test warning
+  expect_error( impute_flow(data = my_flow_data2, site_col = "flow_site_id", date_col = "date",
+                              flow_col = "flow", method = "linear")
+                 , "Only one flow site specified. Flow site contains only NAs")
+
+
 })
+
+
+
 ### Test outputs ###
 
 
