@@ -224,8 +224,14 @@ calc_flowstats <- function(data,
   if(is.null(q_low) == FALSE && between(q_low, 1, 99) == FALSE)
   {stop("q_low must be a value between 1 and 99")}
 
+  if(between(q_low, 1, 99) == TRUE && testInteger(q_low) == FALSE)
+  {stop("q_low must be an integer (whole number) between 1 and 99")}
+
   if(is.null(q_high) == FALSE && between(q_low, 1, 99) == FALSE)
   {stop("q_high must be a value between 1 and 99")}
+
+  if(between(q_high, 1, 99) == TRUE && testInteger(q_high) == FALSE)
+  {stop("q_high must be an integer (whole number) between 1 and 99")}
 
 
   # pull-in data
@@ -233,6 +239,7 @@ calc_flowstats <- function(data,
   data_1$site <- dplyr::pull(data_1, site_col)
   data_1$date <- dplyr::pull(data_1, date_col)
   data_1$flow <- dplyr::pull(data_1, flow_col)
+  data_1 <- data_1 %>% dplyr::arrange(., site, date)
 
   # Check flow is numeric
   if(is.numeric(data_1$flow) == FALSE)
@@ -309,27 +316,18 @@ calc_flowstats <- function(data,
   # drop columns not required for flow calcs (these will be re-joined at the end)
   my_data_2 <- my_data %>% dplyr::select(site, date, win_no, flow)
 
-  # if imputed_col is specified, count number of imputed records
-  if(is.null(imputed_col) == FALSE){
-    my_data$imputed <- dplyr::pull(my_data, imputed_col)
-    count_imputed <- my_data %>%
-                       dplyr::group_by(site, win_no) %>%
-                       dplyr::count(., imputed) %>%
-                       dplyr::rename(n_imputed = n)
-  }
-
   # calculate time-varying flow statistics
   STATS1 <- my_data_2 %>% CalcFlowStats()
 
   # calculate long-term flow statistics
-  long_data <- CreateLongData(my_data_2, STATS1)
+  long_data <- suppressWarnings(CreateLongData(my_data_2, STATS1))
 
   # calculate remaining time-varying flow statistics (durations/events, 7/30-day mins)
-  flow_stats <- CreateFlowStats(STATS1, long_data, my_data_2, q_high, q_low)
+  flow_stats <- suppressWarnings(CreateFlowStats(STATS1, long_data, my_data_2, q_high, q_low))
 
   # join time-varying statistics with win_dates, rename site column and drop unwanted columns
   df1 <- dplyr::left_join(win_dates, flow_stats, by=c("site", "win_no")) %>%
-    dplyr::rename(flow_site_id = site)
+    dplyr::rename(flow_site_id = site) %>%
     dplyr::select(-Q5mean, -Q5sd, -Q10mean, -Q10sd, -Q20mean, -Q20sd,
                   -Q25mean, -Q25sd, -Q30mean, -Q30sd, -Q50mean, -Q50sd,
                   -Q70mean, -Q70sd, -Q75mean, -Q75sd, -Q80mean, -Q80sd, -Q90mean, -Q90sd,
@@ -344,15 +342,23 @@ calc_flowstats <- function(data,
   }
 
   if(is.null(imputed_col) == FALSE){
+    # count imputed data
+    my_data$imputed <- dplyr::pull(my_data, imputed_col)
+    count_imputed <- my_data %>%
+    dplyr::group_by(site, win_no) %>%
+    dplyr::count(., imputed) %>%
+    dplyr::rename(n_imputed = n,
+                  flow_site_id = site)
+
     # add in count of imputed flow records
-    df1 <- dplyr::left_join(df1, count_imputed, by = c("site", "win_no")) %>%
+    df1 <- dplyr::left_join(df1, count_imputed, by = c("flow_site_id", "win_no")) %>%
       dplyr::mutate(n_imputed = ifelse(imputed == 1, n_imputed, 0)) %>%
       dplyr::select(-imputed) %>%
       dplyr::mutate(prop_imputed = (n_imputed/n_data))
-    # re-order cols
-    col_order <- c("flow_site_id", "win_no", "start_date", "end_date", "n_data", "n_missing", "n_total", "prop_missing", "n_imputed", "prop_imputed", "mean", "sd", "Q5", "Q10", "Q20", "Q25", "Q30", "Q50", "Q70", "Q75", "Q80", "Q90", "Q95", "Q99", "Q5z", "Q10z", "Q20z", "Q25z", "Q30z", "Q50z", "Q70z", "Q75z", "Q80z", "Q90z", "Q95z", "Q99z", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity", "high_n", "high_e", "high_start", "high_end", "high_mid", "e_above3xq50", "e_above5xq50", "e_above7xq50", "vol", "vol_z", "min", "min_z", "min_doy", "min_7day", "min_7day_z", "min_7day_doy", "min_30day", "min_30day_z", "min_30day_doy", "max", "max_z", "max_doy")
-    df1 <- df1[, col_order]
 
+     # re-order cols
+    col_order <- c("flow_site_id", "win_no", "start_date", "end_date", "n_data", "n_missing", "n_total", "prop_missing", "n_imputed", "prop_imputed", "mean", "sd", "Q5", "Q10", "Q20", "Q25", "Q30", "Q50", "Q70", "Q75", "Q80", "Q90", "Q95", "Q99", "Q5z", "Q10z", "Q20z", "Q25z", "Q30z", "Q50z", "Q70z", "Q75z", "Q80z", "Q90z", "Q95z", "Q99z", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity", "high_n", "high_e", "high_start", "high_end", "high_mid", "e_above3xq50", "e_above5xq50", "e_above7xq50", "volume", "vol_z", "min", "min_z", "min_doy", "min_7day", "min_7day_z", "min_7day_doy", "min_30day", "min_30day_z", "min_30day_doy", "max", "max_z", "max_doy")
+    df1 <- df1[, col_order]
   }
 
   # add min & max dates to long_data, to create df2 for final function output
@@ -726,6 +732,8 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::bind_rows(bfi)  %>%
     dplyr::bind_rows(FlowDurationCurve)      # remove the stat and id columns
 
+  return(long_data)
+
 }
 
 
@@ -846,7 +854,7 @@ riisbiggs2 <- function(datavector, threshold, multiplier) {
 
 calc_bfi <- function(x) {
 
-  day7mean <- RcppRoll::roll_mean(x, 7, align = "right")
+  day7mean <- zoo::rollmean(x, 7, align = "right")
   min7day <- min(day7mean)
   meanflow <- mean(x)
   calc_bfi <- min7day/meanflow
@@ -1057,7 +1065,7 @@ find_doy <- function(flow_data, type, nday) {
     flow_day <- x2 %>% dplyr::filter(flow == max(flow))}
 
   # find first low or high flow day
-  flow_day2 <- flow_day %>% arrange(date) %>% dplyr::slice(., 1)
+  flow_day2 <- flow_day %>% arrange(date) %>% head(., n = 1)
   # convert to DOY
   flow_day2$yday <- lubridate::yday(flow_day2$date)
   # first low or high flow day
@@ -1065,19 +1073,30 @@ find_doy <- function(flow_data, type, nday) {
 
   ## find 7day or 30day rolling mean
   if(nday == 7){
-    minNday <- data.frame(roll_mean = c(zoo::rollmean(x2$flow, 7), NA, NA, NA, NA, NA, NA))
+    NAs <- c(NA, NA, NA, NA, NA, NA)
+    minNday <- data.frame(roll_mean = c(NAs, zoo::rollmean(x2$flow, 7)))
     x2$roll_mean <- minNday$roll_mean
-    }
+  }
   if(nday == 30){
-    minNday <- data.frame(roll_mean = c(zoo::rollmean(x2$flow, 30), NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA))
+    NAs <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+    minNday <- data.frame(roll_mean = c(NAs, zoo::rollmean(x2$flow, 30)))
     x2$roll_mean <- minNday$roll_mean
-    }
+  }
 
   # filter to find date of lowest mean flow
   low_flow <- x2 %>% dplyr::filter(roll_mean == min(roll_mean, na.rm = TRUE)) %>%
-    dplyr::arrange(date) %>% dplyr::slice(., 1)
+    dplyr::arrange(date) %>% head(., n = 1)
+
   # convert to DOY
-  low_flow$yday <- lubridate::yday(low_flow$date - lubridate::days(3))
+  if(nday == 7){
+    low_flow$yday <- lubridate::yday(low_flow$date - lubridate::days(3))
+  }
+  if(nday == 30){
+    low_flow$yday <- lubridate::yday(low_flow$date) - 14.5
+    if(schoolmath::is.negative(low_flow$yday)) {
+      low_flow$yday <- 365 - abs(low_flow$yday)
+    }
+  }
   # first mean low flow day
   min_day <- as.numeric(low_flow$yday)
 
@@ -1108,3 +1127,10 @@ circ.mean <- function (x) {
 }
 
 ##############################################################
+## test if integer
+
+testInteger <- function(x){
+  test <- all.equal(x, as.integer(x), check.attributes = FALSE)
+  if(test == TRUE){ return(TRUE) }
+  else { return(FALSE) }
+}
