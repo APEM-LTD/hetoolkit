@@ -500,7 +500,6 @@ impute_flow <- function(data,
 
 data <- read.csv(file="Data/DU2V_modelled_flows.csv",header=T,row.names=NULL,sep=",")
 data$date <- lubridate::dmy(data$date)
-
 data2 <- subset(data, flow_site_id %in% c("P50059","P45454"))
 
 stats <- calc_flowstats(data = data2,
@@ -518,7 +517,7 @@ stats <- calc_flowstats(data = data2,
                         ref_col = NULL)
 stats1 <- stats[[1]]
 stats2 <- stats[[2]]
-stats3 <- stats[[3]]
+
 
 
 data = data2
