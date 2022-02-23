@@ -117,7 +117,7 @@ test_that("multiplication works", {
   data_a <- subset(data_equipercentile,flow_site_id == 4032)
   expect_error(impute_flow(data = data_a, site_col = 'flow_site_id', date_col = "date",
                            flow_col = "flow", method = "equipercentile", donor = donor_data[1,])
-               , "A minimum of two flow site stations are required if applying equipercentile method")
+               , "A minimum of two flow stations are required if applying equipercentile method")
 
 
   # Equipercentile method cannot be applied for this site, due to insufficient overlapping data with the donor site
@@ -153,5 +153,50 @@ test_that("multiplication works", {
 
 ### Test outputs ###
 
+  test_that("impute_flow constructs expected output using 'linear'", {
+
+    impute_test_gap$date <- as.Date(impute_test_gap$date)
+
+    result <- impute_flow(data = impute_test_gap, site_col = "site", date_col = "date",
+                          flow_col = "flow", method = "linear")
+
+    compared <- readRDS(file = "impute_linear.rds")
+    expect_equivalent(result, compared)
+
+})
 
 
+  test_that("impute_flow constructs expected output using 'exponential'", {
+
+    impute_test_gap$date <- as.Date(impute_test_gap$date)
+
+    result <- impute_flow(data = impute_test_gap, site_col = "site", date_col = "date",
+                          flow_col = "flow", method = "exponential")
+    compared <- readRDS(file = "impute_exponential.rds")
+    expect_equivalent(result, compared)
+
+  })
+
+
+  test_that("impute_flow constructs expected output using 'equipercentile'", {
+
+    data_equipercentile$date <- as.Date(data_equipercentile$date)
+
+    result <- impute_flow(data = data_equipercentile, site_col = "site", date_col = "date",
+                          flow_col = "flow", method = "equipercentile")
+    compared <-  readRDS(file = "impute_equipercentile.rds")
+    expect_equal(result, compared)
+
+  })
+
+
+  test_that("impute_flow constructs expected output using 'equipercentile' plus 'donor'", {
+
+    data_equipercentile$date <- as.Date(data_equipercentile$date)
+
+    result <- impute_flow(data = data_equipercentile, site_col = "site", date_col = "date",
+                          flow_col = "flow", method = "equipercentile", donor = donor_data)
+    compared <-  readRDS(file = "impute_equipercentile_donor.rds")
+    expect_equal(result, compared)
+
+  })
