@@ -208,8 +208,8 @@ impute_flow <- function(data,
 
       test1 <- gregexpr(pattern1,data_as_string)[[1]][1]
       test2 <- gregexpr(pattern2,data_as_string)[[1]][1]
-      if(is.negative(test1) == FALSE){warning("NA value follows a 0 value, exponential method will default to linear in these instances")} else {
-        if(is.negative(test2) == FALSE){warning("NA value precedes a 0 value, exponential method will default to linear in these instances")} else {
+      if(schoolmath::is.negative(test1) == FALSE){warning("NA value follows a 0 value, exponential method will default to linear in these instances")} else {
+        if(schoolmath::is.negative(test2) == FALSE){warning("NA value precedes a 0 value, exponential method will default to linear in these instances")} else {
 
           # Filter to identify min and max dates which are not NA
           original_flow_f <- dplyr::filter(original_flow, !is.na(flow))
