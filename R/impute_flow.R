@@ -98,7 +98,7 @@ impute_flow <- function(data,
                                  "date" = date_col)
 
   if(isTRUE(method == "equipercentile") == TRUE && isTRUE(length(unique(data$site)) < 2) == TRUE)
-  {stop("A minimum of two flow site stations are required if applying equipercentile method")}
+  {stop("A minimum of two flow stations are required if applying equipercentile method")}
 
   if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date yyyymmdd format")}
 
@@ -208,8 +208,9 @@ impute_flow <- function(data,
 
       test1 <- gregexpr(pattern1,data_as_string)[[1]][1]
       test2 <- gregexpr(pattern2,data_as_string)[[1]][1]
-      if(schoolmath::is.negative(test1) == FALSE){warning("NA value follows a 0 value, exponential method will default to linear in these instances")} else {
-        if(schoolmath::is.negative(test2) == FALSE){warning("NA value precedes a 0 value, exponential method will default to linear in these instances")} else {
+      if(isTRUE(-1 %in% sign(test1) == FALSE) | isTRUE(-1 %in% sign(test2) == FALSE)){
+        warning("NA value follows or precedes a 0 value, exponential method cannot be applied in these instances")
+      next }
 
           # Filter to identify min and max dates which are not NA
           original_flow_f <- dplyr::filter(original_flow, !is.na(flow))
@@ -246,13 +247,14 @@ impute_flow <- function(data,
           drops <- "flow_i"
           all_flow <- all_flow[,!(names(all_flow) %in% drops)]
 
-        }
-      }
-    }
+  }
+
 
     # Equipercentile method
 
     if(method == "equipercentile"){
+
+      if(length(unique(data$site)) < 2){stop("equipercentile method requires a miniumum of two flow sites")}
 
       # Join all dates with observed flow data, retaining NAs where flow data is missing
       original_flow <- dplyr::left_join(x = all_dates, y = data_f, by = "date")
@@ -274,7 +276,7 @@ impute_flow <- function(data,
           data_equp <- data_equp %>% dplyr::mutate(site = j)
 
           # test correlations
-          corr <- stats::cor.test(x=original_flow$flow, y=data_equp$flow, method = 'spearman')
+          corr <- suppressWarnings(stats::cor.test(x=original_flow$flow, y=data_equp$flow, method = 'spearman'))
           corr_rho <- as.data.frame(corr$estimate)
           as.data.frame(corr_rho)
           corr_rho$flow_site_id <- j
@@ -308,7 +310,8 @@ impute_flow <- function(data,
         donor_flow$donor_site <- dplyr::pull(donor[,2])
 
         if(isTRUE(unique(original_flow$site) %in% unique(donor_flow$flow_site)) == FALSE)
-        {warning(paste("A donor site was not specified for site", sep = "-", i))}
+        {warning(paste("A donor site was not specified for site", sep = "-", i))
+          next }
 
         else {
 
@@ -341,6 +344,9 @@ impute_flow <- function(data,
         # Calculate percentile values for donor data
         raw_val <- donor_flow_data$flow
         donor_flow_data$percentile <- stats::ecdf(donor_flow_data$flow)(raw_val)
+
+        # only keep necessary column from donor_flow_data
+        donor_flow_data <- donor_flow_data %>% dplyr::select(site, date, flow, percentile)
 
         # join donor data containing percentile values with main flow data
         data_percentile_flow <- dplyr::left_join(x = original_flow, y = donor_flow_data, by = c("date"))
@@ -414,9 +420,12 @@ impute_flow <- function(data,
                                                      imputed = imputed.x)
   }
 
+
   # add back in any other columns
+  # drop flow col from original data - might not match if different decimal places
+  data_extra <- data_1 %>% dplyr::select(-flow)
   flow_data_all <- flow_data_all %>%
-    dplyr::left_join(data_1, by = c("site", "flow", "date")) %>%
+    dplyr::left_join(data_extra, by = c("site", "date")) %>%
     dplyr::rename(flow_site_id = site)
 
 
