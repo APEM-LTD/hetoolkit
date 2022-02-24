@@ -173,13 +173,21 @@ calc_flowstats <- function(data,
   if(is.null(imputed_col) == FALSE && isTRUE(imputed_col %in% colnames(data)) == FALSE)
   {stop("Specified imputed_col was not identified in data")}
 
+  if(is.null(imputed_col) == FALSE && all(imputed_col == as.integer(imputed_col))== FALSE)
+  {stop ("imputed_col values must be integer value of 0 or 1")}
+  if(is.null(imputed_col) == FALSE && (range(imputed_col)[2]>1 | range(imputed_col)[1]<0))
+  {stop ("imputed_col values must be integer value of 0 or 1")}
+
   if(is.null(ref_col) == FALSE && (ref_col %in% colnames(data)) == FALSE)
   {stop("Specified ref_col was not identified in data")}
 
-  if(is.null(win_start) == FALSE && IsDate(win_start, "%Y-%m-%d") == FALSE)
+  if(is.null(ref_col) == FALSE && is.numeric(ref_col) == FALSE)
+  {stop("Specified ref_col is not numeric")}
+
+  if(is.null(win_start) == FALSE && !is.na(lubridate::parse_date_time(win_start,orders="Ymd")) == FALSE)
   {stop("win_start should be in YYYY-MM-DD format")}
 
-  if(is.null(win_start) == FALSE && IsDate(win_start, "%Y-%m-%d") == TRUE && isTRUE(win_start > Sys.Date()) == TRUE)
+  if(is.null(win_start) == FALSE && lubridate::is.Date(win_start) == TRUE && isTRUE(win_start > Sys.Date()) == TRUE)
   {stop("win_start is in the future")}
 
   matches <- c("day", "month", "year", "week")
@@ -187,7 +195,7 @@ calc_flowstats <- function(data,
     if(is.null(win_width) == FALSE && grepl(matches[2], win_width) == TRUE){""} else {
       if(is.null(win_width) == FALSE && grepl(matches[3], win_width) == TRUE){""} else {
         if(is.null(win_width) == FALSE && grepl(matches[4], win_width) == TRUE){""} else {
-          stop("win_width must by in day, month, or year format")
+          stop("win_width must be in day, month, or year format")
         }
       }
     }
@@ -197,40 +205,42 @@ calc_flowstats <- function(data,
     if(is.null(win_step) == FALSE && grepl(matches[2], win_step) == TRUE){""} else {
       if(is.null(win_step) == FALSE && grepl(matches[3], win_step) == TRUE){""} else {
         if(is.null(win_width) == FALSE && grepl(matches[4], win_width) == TRUE){""} else {
-          stop("win_step must by in day, month, or year format")
+          stop("win_step must be in day, month, or year format")
         }
       }
     }
   }
 
-  if(is.null(date_range) == FALSE && IsDate(date_range[1], "%Y-%m-%d") == TRUE){""} else {
-    if(is.null(date_range) == FALSE && IsDate(date_range[2], "%Y-%m-%d") == TRUE){""} else {
-      if(is.null(date_range) == TRUE){""} else {
-       stop("date_range should be in YYYY-MM-DD format")
-      }
-    }
-  }
-  if(is.null(date_range) == FALSE && isTRUE(length(date_range > 2)) == TRUE)
-  {"date_range should be of maximum length 2"}
-  if(is.null(date_range) == FALSE && IsDate(date_range[1], "%Y-%m-%d") == TRUE && IsDate(date_range[2], "%Y-%m-%d") == TRUE && isTRUE(date_range[1] >= date_range[2]) == TRUE)
+  if(is.null(date_range) == FALSE && length(data_range) == 1){
+    stop("date_range is of length 1, date range must be of length 2") }
+
+  if(is.null(date_range) == FALSE && !is.na(lubridate::parse_date_time(date_range[1],orders="Ymd")) == FALSE){
+    stop("date_range should be in YYYY-MM-DD format") }
+
+  if(is.null(date_range) == FALSE && !is.na(lubridate::parse_date_time(date_range[2],orders="Ymd")) == FALSE){
+    stop("date_range should be in YYYY-MM-DD format") }
+
+  if(is.null(date_range) == FALSE && isTRUE(length(date_range) > 2) == TRUE)
+  {stop("date_range should be of maximum length 2")}
+  if(is.null(date_range) == FALSE && isTRUE(date_range[1] >= date_range[2]) == TRUE)
   {stop("start date exceed end date, please check date_range")}
-  if(is.null(date_range) == FALSE && IsDate(date_range[1], "%Y-%m-%d") == TRUE && isTRUE(date_range[1] > Sys.Date()) == TRUE)
+  if(is.null(date_range) == FALSE && isTRUE(date_range[1] > Sys.Date()) == TRUE)
   {stop("date_range[1] is in the future")}
-  if(is.null(date_range) == FALSE && IsDate(date_range[2], "%Y-%m-%d") == TRUE && isTRUE(date_range[2] > Sys.Date()) == TRUE)
+  if(is.null(date_range) == FALSE && isTRUE(date_range[2] > Sys.Date()) == TRUE)
   {stop("date_range[2] is in the future")}
 
   if(is.logical(scaling) == FALSE){stop("'scaling' is not logical")}
 
-  if(is.null(q_low) == FALSE && between(q_low, 1, 99) == FALSE)
+  if(is.null(q_low) == FALSE && dplyr::between(q_low, 1, 99) == FALSE)
   {stop("q_low must be a value between 1 and 99")}
 
-  if(between(q_low, 1, 99) == TRUE && testInteger(q_low) == FALSE)
+  if(dplyr::between(q_low, 1, 99) == TRUE && testInteger(q_low) == FALSE)
   {stop("q_low must be an integer (whole number) between 1 and 99")}
 
-  if(is.null(q_high) == FALSE && between(q_low, 1, 99) == FALSE)
+  if(is.null(q_high) == FALSE && dplyr::between(q_high, 1, 99) == FALSE)
   {stop("q_high must be a value between 1 and 99")}
 
-  if(between(q_high, 1, 99) == TRUE && testInteger(q_high) == FALSE)
+  if(dplyr::between(q_high, 1, 99) == TRUE && testInteger(q_high) == FALSE)
   {stop("q_high must be an integer (whole number) between 1 and 99")}
 
 
@@ -245,8 +255,8 @@ calc_flowstats <- function(data,
   if(is.numeric(data_1$flow) == FALSE)
   {stop("Specified flow_col is not numeric")}
 
-  # Check for duplicate dates
-  duplicates <- data_1$Date[duplicated(data_1$Date)]
+  # Check for duplicate dates in each site
+  duplicates<-data_1$date[duplicated(data.table::data.table(data_1),by=c("site","date"))]
 
   if(length(duplicates) >= 1)
   { print(duplicates)
@@ -269,7 +279,7 @@ calc_flowstats <- function(data,
   # if win_width is in days
   if(is.null(win_width) == FALSE && grepl("day", win_width) == TRUE){
     all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% lubridate::days(width_no) - days(1),
-                                         win_no = 1:nrow(.))
+                                                win_no = 1:nrow(.))
   }
 
   # if win_width is in weeks
@@ -295,7 +305,7 @@ calc_flowstats <- function(data,
   win_dates$win_no <- as.character(win_dates$win_no)
 
   all_win_dates <- win_dates %>% dplyr::rowwise() %>%
-    do(data.frame(site =.$site,
+    dplyr::do(data.frame(site =.$site,
                   date = seq(.$start_date, .$end_date, by="days"),
                   win_no =.$win_no,
                   win_start_date = .$start_date,
@@ -304,7 +314,7 @@ calc_flowstats <- function(data,
   # if scaling = TRUE, standardise flow data by the mean (for each site)
   if(scaling == TRUE){
     data_1 %>%
-      group_by(site) %>%
+      dplyr::group_by(site) %>%
       dplyr::mutate(mean_f = (mean(flow, na.rm = TRUE))) %>%
       dplyr::mutate(flow = flow / mean_f) %>%
       dplyr::select(-mean_f)
@@ -342,6 +352,7 @@ calc_flowstats <- function(data,
   }
 
   if(is.null(imputed_col) == FALSE){
+
     # count imputed data
     my_data$imputed <- dplyr::pull(my_data, imputed_col)
     count_imputed <- my_data %>%
@@ -619,9 +630,9 @@ CalcFlowStats <- function (flowts) {
                        e_above3xq50 = riisbiggs2(flow, Q50, 3),
                        e_above5xq50 = riisbiggs2(flow, Q50, 5),
                        e_above7xq50 = riisbiggs2(flow, Q50, 7)) %>%
-                       ungroup() %>%
-                       group_by(site) %>%
-                       mutate(Q5mean = mean(Q5),
+                       dplyr::ungroup() %>%
+                       dplyr::group_by(site) %>%
+                       dplyr::mutate(Q5mean = mean(Q5),
                               Q10mean = mean(Q10),
                               Q20mean = mean(Q20),
                               Q25mean = mean(Q25),
@@ -709,7 +720,7 @@ CreateLongData <- function(flow.data, statsData) {
   FlowDurationCurve <- flow_data %>%
     dplyr::filter(!is.na(flow)) %>%
     dplyr::group_by(site) %>%
-    group_modify(~ (fasstr::calc_longterm_percentile(data = flow_data, dates = date, values = flow, percentiles=c(1:99), transpose = TRUE))) %>%
+    dplyr::group_modify(~ (fasstr::calc_longterm_percentile(data = flow_data, dates = date, values = flow, percentiles=c(1:99), transpose = TRUE))) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(win_no="Annual") %>%
     setNames(., c("site", "parameter", "value", "win_no")) %>%
@@ -989,11 +1000,11 @@ zero_eventsDuration <- function(flow_data) {
   zeroEvents$yday <- lubridate::yday(zeroEvents$date)
 
   # first low flow day
-  dry_start <- zeroEvents %>% arrange(date) %>% dplyr::slice(., 1)
+  dry_start <- zeroEvents %>% dplyr::arrange(date) %>% dplyr::slice(., 1)
   dry_start <- dry_start$yday
 
   # last low flow day
-  dry_end <- zeroEvents %>% arrange(date)
+  dry_end <- zeroEvents %>% dplyr::arrange(date)
   dry_end <- utils::tail(dry_end, n=1)
   dry_end <- dry_end$yday
 
@@ -1065,7 +1076,7 @@ find_doy <- function(flow_data, type, nday) {
     flow_day <- x2 %>% dplyr::filter(flow == max(flow))}
 
   # find first low or high flow day
-  flow_day2 <- flow_day %>% arrange(date) %>% head(., n = 1)
+  flow_day2 <- flow_day %>% dplyr::arrange(date) %>% head(., n = 1)
   # convert to DOY
   flow_day2$yday <- lubridate::yday(flow_day2$date)
   # first low or high flow day
