@@ -100,8 +100,6 @@ impute_flow <- function(data,
   if(isTRUE(method == "equipercentile") == TRUE && isTRUE(length(unique(data$site)) < 2) == TRUE)
   {stop("A minimum of two flow stations are required if applying equipercentile method")}
 
-  if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date yyyymmdd format")}
-
   if(isTRUE(1 %in% diff.Date(data$date)) == FALSE){stop("flow data supplied is not on a daily time-step")}
   if(isTRUE("FALSE" %in% is.na(data$flow[data$flow < 0])) == TRUE){warning("flow data contains negative values")}
 
@@ -123,6 +121,8 @@ impute_flow <- function(data,
 
     data_f$date <- dplyr::pull(data_f, date_col)
     data_f$flow <- dplyr::pull(data_f, flow_col)
+
+    if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date yyyymmdd format")}
 
     # check whether full dataset is NAs
     # skip site if only NAs
