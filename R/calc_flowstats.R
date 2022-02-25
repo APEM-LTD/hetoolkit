@@ -14,7 +14,7 @@
 #'@param win_step The increment by which the time window moves, in days, weeks, months or years (see ?seq.Date for options). Default = "6 months".
 #'@param q_low Qx flow threshold (between 1 and 99, as an integer) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).
 #'@param q_high Qx flow threshold (between 1 and 99, as an integer) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).
-#'@param date_range Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years.
+#'@param date_range Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years (i.e c(01-01-2000, 31-12-2020))
 #'@param scaling Should the time series flow data be scaled by the long-term mean flow  at each site? Default = FALSE.
 #'@param ref_col Name of column in dataset containing reference flow scenario against which selected flow statistics are z-score standardised. Default = NULL.
 
@@ -173,16 +173,8 @@ calc_flowstats <- function(data,
   if(is.null(imputed_col) == FALSE && isTRUE(imputed_col %in% colnames(data)) == FALSE)
   {stop("Specified imputed_col was not identified in data")}
 
-  if(is.null(imputed_col) == FALSE && all(imputed_col == as.integer(imputed_col))== FALSE)
-  {stop ("imputed_col values must be integer value of 0 or 1")}
-  if(is.null(imputed_col) == FALSE && (range(imputed_col)[2]>1 | range(imputed_col)[1]<0))
-  {stop ("imputed_col values must be integer value of 0 or 1")}
-
   if(is.null(ref_col) == FALSE && (ref_col %in% colnames(data)) == FALSE)
   {stop("Specified ref_col was not identified in data")}
-
-  if(is.null(ref_col) == FALSE && is.numeric(ref_col) == FALSE)
-  {stop("Specified ref_col is not numeric")}
 
   if(is.null(win_start) == FALSE && !is.na(lubridate::parse_date_time(win_start,orders="Ymd")) == FALSE)
   {stop("win_start should be in YYYY-MM-DD format")}
@@ -211,7 +203,7 @@ calc_flowstats <- function(data,
     }
   }
 
-  if(is.null(date_range) == FALSE && length(data_range) == 1){
+  if(is.null(date_range) == FALSE && length(date_range) == 1){
     stop("date_range is of length 1, date range must be of length 2") }
 
   if(is.null(date_range) == FALSE && !is.na(lubridate::parse_date_time(date_range[1],orders="Ymd")) == FALSE){
@@ -223,11 +215,11 @@ calc_flowstats <- function(data,
   if(is.null(date_range) == FALSE && isTRUE(length(date_range) > 2) == TRUE)
   {stop("date_range should be of maximum length 2")}
   if(is.null(date_range) == FALSE && isTRUE(date_range[1] >= date_range[2]) == TRUE)
-  {stop("start date exceed end date, please check date_range")}
+  {stop("start date exceeds end date, please check date_range")}
   if(is.null(date_range) == FALSE && isTRUE(date_range[1] > Sys.Date()) == TRUE)
-  {stop("date_range[1] is in the future")}
+  {stop("date_range 1 is in the future")}
   if(is.null(date_range) == FALSE && isTRUE(date_range[2] > Sys.Date()) == TRUE)
-  {stop("date_range[2] is in the future")}
+  {stop("date_range 2 is in the future")}
 
   if(is.logical(scaling) == FALSE){stop("'scaling' is not logical")}
 
@@ -235,13 +227,13 @@ calc_flowstats <- function(data,
   {stop("q_low must be a value between 1 and 99")}
 
   if(dplyr::between(q_low, 1, 99) == TRUE && testInteger(q_low) == FALSE)
-  {stop("q_low must be an integer (whole number) between 1 and 99")}
+  {stop("q_low must be an integer between 1 and 99")}
 
   if(is.null(q_high) == FALSE && dplyr::between(q_high, 1, 99) == FALSE)
   {stop("q_high must be a value between 1 and 99")}
 
   if(dplyr::between(q_high, 1, 99) == TRUE && testInteger(q_high) == FALSE)
-  {stop("q_high must be an integer (whole number) between 1 and 99")}
+  {stop("q_high must be an integer between 1 and 99")}
 
 
   # pull-in data
@@ -260,7 +252,7 @@ calc_flowstats <- function(data,
 
   if(length(duplicates) >= 1)
   { print(duplicates)
-    stop("Duplicate dates identified")}
+   stop("Duplicate dates identified")}
 
   # filter by date_range
   if(is.null(date_range) == FALSE){
@@ -320,20 +312,22 @@ calc_flowstats <- function(data,
       dplyr::select(-mean_f)
     }
 
-  # join window dates to flow data
-  my_data <- dplyr::left_join(all_win_dates, data_1, by = c("site", "date"))
+  # join window dates to flow data for CalcFlowStats
+  my_data_cf <- dplyr::left_join(all_win_dates, data_1, by = c("site", "date"))
 
   # drop columns not required for flow calcs (these will be re-joined at the end)
-  my_data_2 <- my_data %>% dplyr::select(site, date, win_no, flow)
+  my_data_cf_2 <- my_data_cf %>% dplyr::select(site, date, win_no, flow)
+  my_data_lt <- data_1 %>% dplyr::select(site, date, flow)
+
 
   # calculate time-varying flow statistics
-  STATS1 <- my_data_2 %>% CalcFlowStats()
+  STATS1 <- my_data_cf_2 %>% CalcFlowStats()
 
   # calculate long-term flow statistics
-  long_data <- suppressWarnings(CreateLongData(my_data_2, STATS1))
+  long_data <- suppressWarnings(CreateLongData(my_data_lt, STATS1))
 
   # calculate remaining time-varying flow statistics (durations/events, 7/30-day mins)
-  flow_stats <- suppressWarnings(CreateFlowStats(STATS1, long_data, my_data_2, q_high, q_low))
+  flow_stats <- suppressWarnings(CreateFlowStats(STATS1, long_data, my_data_cf_2, data_1, q_high, q_low))
 
   # join time-varying statistics with win_dates, rename site column and drop unwanted columns
   df1 <- dplyr::left_join(win_dates, flow_stats, by=c("site", "win_no")) %>%
@@ -353,8 +347,20 @@ calc_flowstats <- function(data,
 
   if(is.null(imputed_col) == FALSE){
 
-    # count imputed data
+    # pull-in imputed col
+    my_data <- my_data_cf
     my_data$imputed <- dplyr::pull(my_data, imputed_col)
+
+    test_impute <- data_1
+    test_impute$imputed <- dplyr::pull(test_impute, imputed_col)
+    if(isTRUE(all(test_impute$imputed == as.integer(test_impute$imputed))) == FALSE)
+    {stop ("imputed_col values must be integer value of 0 or 1")}
+    if(isTRUE(range(test_impute$imputed)[2]>1) == TRUE)
+    {stop ("imputed_col values must be integer value of 0 or 1")}
+    if(isTRUE(range(test_impute$imputed)[1]<0) == TRUE)
+    {stop ("imputed_col values must be integer value of 0 or 1")}
+
+    # count imputed data
     count_imputed <- my_data %>%
     dplyr::group_by(site, win_no) %>%
     dplyr::count(., imputed) %>%
@@ -387,8 +393,70 @@ calc_flowstats <- function(data,
   # rename
   df2 <- long_data_2
 
+  # Remov flow stats where the minimum data requirements have not been met
+
+  df1.1 <- df1 %>%
+    dplyr::mutate(mean = ifelse(n_data >= 2, mean, NA),
+                  sd = ifelse(n_data >= 2, sd, NA),
+                  Q5 = ifelse(n_data >= 20, Q5, NA),
+                  Q10 = ifelse(n_data >= 10, Q10, NA),
+                  Q20 = ifelse(n_data >= 5, Q20, NA),
+                  Q25 = ifelse(n_data >= 4, Q25, NA),
+                  Q30 = ifelse(n_data >= 4, Q30, NA),
+                  Q50 = ifelse(n_data >= 2, Q50, NA),
+                  Q70 = ifelse(n_data >= 4, Q70, NA),
+                  Q75 = ifelse(n_data >= 4, Q75, NA),
+                  Q80 = ifelse(n_data >= 5, Q80, NA),
+                  Q90 = ifelse(n_data >= 10, Q90, NA),
+                  Q95 = ifelse(n_data >= 20, Q95, NA),
+                  Q99 = ifelse(n_data >= 100, Q99, NA),
+                  Q5z = ifelse(n_data >= 20, Q5z, NA),
+                  Q10z = ifelse(n_data >= 10, Q10z, NA),
+                  Q20z = ifelse(n_data >= 5, Q20z, NA),
+                  Q25z = ifelse(n_data >= 4, Q25z, NA),
+                  Q30z = ifelse(n_data >= 4, Q30z, NA),
+                  Q50z = ifelse(n_data >= 2, Q50z, NA),
+                  Q70z = ifelse(n_data >= 4, Q70z, NA),
+                  Q75z = ifelse(n_data >= 4, Q75z, NA),
+                  Q80z = ifelse(n_data >= 5, Q80z, NA),
+                  Q90z = ifelse(n_data >= 10, Q90z, NA),
+                  Q95z = ifelse(n_data >= 20, Q95z, NA),
+                  Q99z = ifelse(n_data >= 100, Q99z, NA),
+                  dry_n = ifelse(n_data >= 2, dry_n, NA),
+                  dry_start = ifelse(n_data >= 28, dry_start, NA),
+                  dry_end = ifelse(n_data >= 28, dry_end, NA),
+                  dry_mid = ifelse(n_data >= 28, dry_mid, NA),
+                  low_n = ifelse(n_data >= 2, low_n, NA),
+                  low_start = ifelse(n_data >= 28, low_start, NA),
+                  low_end = ifelse(n_data >= 28, low_end, NA),
+                  low_mid = ifelse(n_data >= 28, low_mid, NA),
+                  low_magnitude = ifelse(n_data >= 28, low_magnitude, NA),
+                  low_severity = ifelse(n_data >= 28, low_severity, NA),
+                  high_n = ifelse(n_data >= 2, high_n, NA),
+                  high_start = ifelse(n_data >= 28, high_start, NA),
+                  high_end = ifelse(n_data >= 28, high_end, NA),
+                  high_mid = ifelse(n_data >= 28, high_mid, NA),
+                  e_above3xq50  = ifelse(n_data >= 28, e_above3xq50, NA),
+                  e_above5xq50  = ifelse(n_data >= 28, e_above5xq50, NA),
+                  e_above7xq50  = ifelse(n_data >= 28, e_above7xq50, NA),
+                  volume = ifelse(n_data >= 3, volume, NA),
+                  vol_z = ifelse(n_data >= 3, vol_z, NA),
+                  min = ifelse(n_data >= 3, min, NA),
+                  min_z = ifelse(n_data >= 3, min_z, NA),
+                  min_doy = ifelse(n_data >= 3, min_doy, NA),
+                  min_7day = ifelse(n_data >= 90, min_7day, NA),
+                  min_7day_z = ifelse(n_data >= 90, min_7day_z, NA),
+                  min_7day_doy = ifelse(n_data >= 90, min_7day_doy, NA),
+                  min_30day = ifelse(n_data >= 180, min_30day, NA),
+                  min_30day_z = ifelse(n_data >= 180, min_30day_z, NA),
+                  min_30day_doy = ifelse(n_data >= 180, min_30day_doy, NA),
+                  max = ifelse(n_data >= 3, max, NA),
+                  max_z = ifelse(n_data >= 3, max_z, NA),
+                  max_doy = ifelse(n_data >= 3, max_doy, NA))
+
+
   ### create final data to return
-  final_list <- list(df1, df2)
+  final_list <- list(df1.1, df2)
 
   ### if a ref_col is specified
   # calculate ref values using ref_col
@@ -399,6 +467,9 @@ calc_flowstats <- function(data,
     data_ref$site <- dplyr::pull(data_ref, site_col)
     data_ref$date <- dplyr::pull(data_ref, date_col)
     data_ref$flow <- dplyr::pull(data_ref, ref_col)
+
+    if(is.numeric(data_ref$flow) == FALSE)
+    {stop("Specified ref_col is not numeric")}
 
     # filter by date_range
     if(is.null(date_range) == FALSE){
@@ -412,7 +483,7 @@ calc_flowstats <- function(data,
     my_data_ref_2 <- my_data_ref %>% dplyr::select(site, date, win_no, flow)
 
     # calculate time varying flow statistics
-    STATS1_ref <- my_data_ref_2 %>% CalcFlowStats()
+    STATS1_ref <- CalcFlowStats(my_data_ref_2)
 
     # Get QXz_adj
     # select the data we need from _ref dataset and rename
@@ -537,7 +608,7 @@ calc_flowstats <- function(data,
     df1_ALL$Q99z_ref <- (Q99 - Q99mean_ref) / Q99sd_ref
 
     # Get vol_z_adj
-    vol <- df1_ALL$vol
+    vol <- df1_ALL$volume
     volmean_ref <- df1_ALL$volmean_ref
     volsd_ref <- df1_ALL$volsd_ref
     df1_ALL$vol_z_ref <- (vol - volmean_ref) / volsd_ref
@@ -558,7 +629,7 @@ calc_flowstats <- function(data,
     min_7day <- df1_ALL$min_7day
     min_day7mean_ref <- df1_ALL$min_day7mean_ref
     min_day7sd_ref <- df1_ALL$min_day7sd_ref
-    df1_ALL$min_30day_z_ref <- (min_7day - min_day7mean_ref) / min_day7sd_ref
+    df1_ALL$min_7day_z_ref <- (min_7day - min_day7mean_ref) / min_day7sd_ref
 
     # Get min_day30_z_adj
     min_30day <- df1_ALL$min_30day
@@ -575,8 +646,86 @@ calc_flowstats <- function(data,
                               -minsd_ref, -maxmean_ref, -maxsd_ref, -volmean_ref, -volsd_ref,
                               -min_day30mean_ref, -min_day30sd_ref, -min_day7mean_ref, -min_day7sd_ref)
 
+
+    df1_ALL.1 <- df1_ALL %>%
+      dplyr::mutate(mean = ifelse(n_data >= 2, mean, NA),
+                    sd = ifelse(n_data >= 2, sd, NA),
+                    Q5 = ifelse(n_data >= 20, Q5, NA),
+                    Q10 = ifelse(n_data >= 10, Q10, NA),
+                    Q20 = ifelse(n_data >= 5, Q20, NA),
+                    Q25 = ifelse(n_data >= 4, Q25, NA),
+                    Q30 = ifelse(n_data >= 4, Q30, NA),
+                    Q50 = ifelse(n_data >= 2, Q50, NA),
+                    Q70 = ifelse(n_data >= 4, Q70, NA),
+                    Q75 = ifelse(n_data >= 4, Q75, NA),
+                    Q80 = ifelse(n_data >= 5, Q80, NA),
+                    Q90 = ifelse(n_data >= 10, Q90, NA),
+                    Q95 = ifelse(n_data >= 20, Q95, NA),
+                    Q99 = ifelse(n_data >= 100, Q99, NA),
+                    Q5z = ifelse(n_data >= 20, Q5z, NA),
+                    Q10z = ifelse(n_data >= 10, Q10z, NA),
+                    Q20z = ifelse(n_data >= 5, Q20z, NA),
+                    Q25z = ifelse(n_data >= 4, Q25z, NA),
+                    Q30z = ifelse(n_data >= 4, Q30z, NA),
+                    Q50z = ifelse(n_data >= 2, Q50z, NA),
+                    Q70z = ifelse(n_data >= 4, Q70z, NA),
+                    Q75z = ifelse(n_data >= 4, Q75z, NA),
+                    Q80z = ifelse(n_data >= 5, Q80z, NA),
+                    Q90z = ifelse(n_data >= 10, Q90z, NA),
+                    Q95z = ifelse(n_data >= 20, Q95z, NA),
+                    Q99z = ifelse(n_data >= 100, Q99z, NA),
+                    dry_n = ifelse(n_data >= 2, dry_n, NA),
+                    dry_start = ifelse(n_data >= 28, dry_start, NA),
+                    dry_end = ifelse(n_data >= 28, dry_end, NA),
+                    dry_mid = ifelse(n_data >= 28, dry_mid, NA),
+                    low_n = ifelse(n_data >= 2, low_n, NA),
+                    low_start = ifelse(n_data >= 28, low_start, NA),
+                    low_end = ifelse(n_data >= 28, low_end, NA),
+                    low_mid = ifelse(n_data >= 28, low_mid, NA),
+                    low_magnitude = ifelse(n_data >= 28, low_magnitude, NA),
+                    low_severity = ifelse(n_data >= 28, low_severity, NA),
+                    high_n = ifelse(n_data >= 2, high_n, NA),
+                    high_start = ifelse(n_data >= 28, high_start, NA),
+                    high_end = ifelse(n_data >= 28, high_end, NA),
+                    high_mid = ifelse(n_data >= 28, high_mid, NA),
+                    e_above3xq50  = ifelse(n_data >= 28, e_above3xq50, NA),
+                    e_above5xq50  = ifelse(n_data >= 28, e_above5xq50, NA),
+                    e_above7xq50  = ifelse(n_data >= 28, e_above7xq50, NA),
+                    volume = ifelse(n_data >= 3, volume, NA),
+                    vol_z = ifelse(n_data >= 3, vol_z, NA),
+                    min = ifelse(n_data >= 3, min, NA),
+                    min_z = ifelse(n_data >= 3, min_z, NA),
+                    min_doy = ifelse(n_data >= 3, min_doy, NA),
+                    min_7day = ifelse(n_data >= 90, min_7day, NA),
+                    min_7day_z = ifelse(n_data >= 90, min_7day_z, NA),
+                    min_7day_doy = ifelse(n_data >= 90, min_7day_doy, NA),
+                    min_30day = ifelse(n_data >= 180, min_30day, NA),
+                    min_30day_z = ifelse(n_data >= 180, min_30day_z, NA),
+                    min_30day_doy = ifelse(n_data >= 180, min_30day_doy, NA),
+                    max = ifelse(n_data >= 3, max, NA),
+                    max_z = ifelse(n_data >= 3, max_z, NA),
+                    max_doy = ifelse(n_data >= 3, max_doy, NA),
+                    Q5z_ref = ifelse(n_data >= 20, Q5z_ref, NA),
+                    Q10z_ref = ifelse(n_data >= 10, Q10z_ref, NA),
+                    Q20z_ref = ifelse(n_data >= 5, Q20z_ref, NA),
+                    Q25z_ref = ifelse(n_data >= 4, Q25z_ref, NA),
+                    Q30z_ref = ifelse(n_data >= 4, Q30z_ref, NA),
+                    Q50z_ref = ifelse(n_data >= 2, Q50z_ref, NA),
+                    Q70z_ref = ifelse(n_data >= 4, Q70z_ref, NA),
+                    Q75z_ref = ifelse(n_data >= 4, Q75z_ref, NA),
+                    Q80z_ref = ifelse(n_data >= 5, Q80z_ref, NA),
+                    Q90z_ref = ifelse(n_data >= 10, Q90z_ref, NA),
+                    Q95z_ref = ifelse(n_data >= 20, Q95z_ref, NA),
+                    Q99z_ref = ifelse(n_data >= 100, Q99z_ref, NA),
+                    vol_z_ref = ifelse(n_data >= 3, vol_z_ref, NA),
+                    min_z_ref = ifelse(n_data >= 3, min_z_ref, NA),
+                    max_z_ref = ifelse(n_data >= 3, max_z_ref, NA),
+                    min_7day_z_ref = ifelse(n_data >= 90, min_7day_z_ref, NA),
+                    min_30day_z_ref = ifelse(n_data >= 180, min_30day_z_ref, NA)
+                    )
+
     # Create a list of output_1 (with adj QXz values) and output_2
-    final_list_ref <- list(df1_ALL, df2)
+    final_list_ref <- list(df1_ALL.1, df2)
 
   }
 
@@ -754,13 +903,14 @@ CreateLongData <- function(flow.data, statsData) {
 # calculates durations above/below qhigh/qlow, and zero flow durations
 # Calculates the minimum/maximum flow date as DOY, plus mean 30/70day_min DOY
 
-CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) {
+CreateFlowStats <- function(stats_data, long.data, station_data, original_data, q_high, q_low) {
 
   # rename inputs
   QSTATS1 <- stats_data
   long_data <- long.data
   flow_data <- station_data
   q_high <- as.numeric(q_high); q_low <- as.numeric(q_low)
+  data_1 <- original_data
 
   # filter data for calculating zero events, events above/below q_high/q_low
   thres_data <- flow_data %>%
@@ -786,7 +936,7 @@ CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) 
   Qvals2<- Qvals %>%
     tidyr::spread(., key=parameter, value=value) %>%
     dplyr::select(-win_no)
-  colnames(Qvals2) <- c("site", "qHigh", "qLow")
+  colnames(Qvals2) <- c("site", "qLow", "qHigh")
   thres_dataQ <- dplyr::left_join(thres_data, Qvals2, by = "site")
 
   # calculate duration/events above q_low and q_high
@@ -805,6 +955,7 @@ CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) 
   colnames(duration_below) <- c("site", "win_no", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity")   # rename columns
   Durations <- dplyr::full_join(duration_above, duration_below, by=c("site", "win_no"))
 
+  if(isTRUE(1 %in% diff.Date(data_1$date)) == TRUE){
   # calculate min, max, min 7/30day rolling mean DOY
   # min plus 7day_min
   doy1 <- thres_data %>%
@@ -818,6 +969,15 @@ CreateFlowStats <- function(stats_data, long.data, station_data, q_high, q_low) 
     dplyr::do(find_doy(.,  "high", 30))
   colnames(doy2) <- c("site", "win_no", "max_doy", "min_30day_doy")
   minmax_doy <- dplyr::full_join(doy1, doy2, by=c("site", "win_no"))
+  }
+
+  else {
+    minmax_doy <- thres_data %>% dplyr::group_by(site, win_no) %>%
+      dplyr::mutate(min_doy = NA,
+                     min_7day_doy = NA,
+                     max_doy = NA,
+                     min_30day_doy = NA)
+  }
 
   # Join QSTATS1 with Duration (dataframe with durations/events above/below)
   QSTATS1.2<- dplyr::full_join(QSTATS1, Durations, by=c("site", "win_no"))
@@ -1071,9 +1231,9 @@ find_doy <- function(flow_data, type, nday) {
 
   ## find min or max flow
   if(type == "low"){
-    flow_day <- x2 %>% dplyr::filter(flow == min(flow))}
+    flow_day <- x2 %>% dplyr::filter(flow == min(x2$flow))}
   if(type == "high"){
-    flow_day <- x2 %>% dplyr::filter(flow == max(flow))}
+    flow_day <- x2 %>% dplyr::filter(flow == max(x2$flow))}
 
   # find first low or high flow day
   flow_day2 <- flow_day %>% dplyr::arrange(date) %>% head(., n = 1)
@@ -1084,15 +1244,37 @@ find_doy <- function(flow_data, type, nday) {
 
   ## find 7day or 30day rolling mean
   if(nday == 7){
+
+    if(length(x2) > 7) {
     NAs <- c(NA, NA, NA, NA, NA, NA)
     minNday <- data.frame(roll_mean = c(NAs, zoo::rollmean(x2$flow, 7)))
     x2$roll_mean <- minNday$roll_mean
+
+    }
+
+    if(length(x2) < 7) {
+
+      min_day <- NA
+    }
+
   }
+
   if(nday == 30){
+
+    if(length(x2) > 30) {
     NAs <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
     minNday <- data.frame(roll_mean = c(NAs, zoo::rollmean(x2$flow, 30)))
     x2$roll_mean <- minNday$roll_mean
+    }
+
+    if(length(x2) < 30) {
+
+      min_day <- NA
+    }
+
   }
+
+    if(length(x2) > 7) {
 
   # filter to find date of lowest mean flow
   low_flow <- x2 %>% dplyr::filter(roll_mean == min(roll_mean, na.rm = TRUE)) %>%
@@ -1110,6 +1292,8 @@ find_doy <- function(flow_data, type, nday) {
   }
   # first mean low flow day
   min_day <- as.numeric(low_flow$yday)
+
+    }
 
   # combine low/high flow DOY and 7/30day mean min flow DOY
   find_doy <- data.frame(m_day, min_day)
