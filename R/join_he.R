@@ -1,22 +1,22 @@
-#' Link biology data to six-monthly flow statistics for paired biology and flow sites.
+#' Link biology samples with time-varying flow statistics for paired biology and flow sites.
 #'
 #' @description
-#' This function joins biology sample data with time-varying flow statistics for one or more antecedent (lagged) time periods (as calculated by the calc_flowstats() function) to create a combined dataset for hydro-ecological modelling.
+#' This function joins biology sample data with time-varying flow statistics for one or more antecedent (lagged) time periods (as calculated by the `calc_flowstats` function) to create a combined dataset for hydro-ecological modelling.
 #'
 #' @usage
 #' join_he(biol_data, flow_stats, mapping = NULL, method = "A" , lags = 0, join_type = "add_flows")
 #'
 #' @param biol_data Data frame or tibble containing the processed biology data. Must contain the following columns: biol_site_id and date.
-#' @param flow_stats Data frame or tibble containing the calculated time-varying flow statistics, by site and time period and win_no (as produced by the calc_flowstats() function ). Must contain the following columns: flow_site_id, start_date and end_date. The function joins all the variables in flow_stats to the biology samples, so it is advisable to manually drop any flow statistics which are not of interest before applying the function.
-#' @param mapping Data frame or tibble containing paired biology sites IDs and flow site IDs. Must contain columns named biol_site_id and flow_site_id. These columns must not contain any NAs. Default = NULL, which assumes that paired biology and flow sites have identical ids, so mapping is not required.
+#' @param flow_stats Data frame or tibble containing the calculated time-varying flow statistics, by site and time period and win_no (as produced by the `calc_flowstats` function ). Must contain the following columns: flow_site_id, start_date and end_date. The function joins all the variables in `flow_stats` to the biology samples, so it is advisable to manually drop any flow statistics which are not of interest before applying the function.
+#' @param mapping Data frame or tibble containing paired biology sites IDs and flow site IDs. Must contain columns named biol_site_id and flow_site_id. These columns must not contain any NAs. Default = `NULL`, which assumes that paired biology and flow sites have identical ids, so mapping is not required.
 #' @param method Choice of method for linking biology samples to flow statistics for antecedent time periods. Using method = "A" (default), lag 0 is defined for each biology sample as the most recently finished flow time period; using method = "B", lag 0 is defined as the most recently started flow time period. See below for details.
 #' @param lags Vector of lagged flow time periods of interest. Values must be zero or positive, with larger values representing longer time lags (i.e. an increasing time gap between the flow time period and the biology sample date). Default = 0. See below for details.
-#' @param join_type To add flow statistics to each biology sample, choose "add_flows" (default); this produces a dataset of biological metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. To add biology sample data to flow statistics for each time period, choose "add_biol"; this produces a time series of flow statistics with associated biological metrics which can be used to assess the coverage of historical flow conditions using the plot_rngflows() function .
+#' @param join_type To add flow statistics to each biology sample, choose "add_flows" (default); this produces a dataset of biological metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. To add biology sample data to flow statistics for each time period, choose "add_biol"; this produces a time series of flow statistics with associated biological metrics which can be used to assess the coverage of historical flow conditions using the `plot_rngflows` function .
 #'
 #' @details
-#' 'biol_data' and 'flow_stats' may contain more sites than listed in 'mapping', but any sites not listed in 'mapping' will be filtered out. If mapping = NULL, then biology site and flow sites with matching ids will be paired automatically.
+#' `biol_data` and `flow_stats` may contain more sites than listed in `mapping`, but any sites not listed in `mapping` will be filtered out. If `mapping = NULL`, then biology site and flow sites with matching ids will be paired automatically.
 #'
-#' The calc_flowstats() function uses a moving window approach to calculate a time-varying flow statistics for a  sequence of time periods which can be either: (i) contiguous (i.e. each time period is followed immediately by the next one), (ii) non-contiguous (i.e. there is a gap between one time period at the next), or (iii) over-lapping (i.e. the next time period stats before the previous one has finished).
+#' The `calc_flowstats` function uses a moving window approach to calculate a time-varying flow statistics for a  sequence of time periods which can be either: (i) contiguous (i.e. each time period is followed immediately by the next one), (ii) non-contiguous (i.e. there is a gap between one time period at the next), or (iii) over-lapping (i.e. the next time period stats before the previous one has finished).
 #'
 #' To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (method = "A") or most recently started (method = "B") flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on.
 #'
@@ -24,7 +24,7 @@
 #'
 #' As a second example, suppose we again have a biology sample dated 15 September 2020 and that flow statistics are available for a sequence of overlapping 6 month periods (i.e. February to July 2020, March to August 2020, April to September 2020, and so on). Using Method "A", the Lag 0 period for that biology sample would be March to August 2020 (the most recently finished time period), the Lag 1 period would be February to July 2020, the Lag 2 period would be January to June 2020, and so on. Similarly, using Method "B", the Lag 0 period for that biology sample would be would be September 2000 to February 2021 (the most recently started time period), the Lag 1 period would be 1 August 2000 to January 2021, the Lag 2 period would be July to December 2020, and so on.
 
-#' @return join_he returns a tibble containing processed biology data linked to processed flow statistics.
+#' @return `join_he` returns a tibble containing the linked biology data and flow statistics.
 #'
 #' @export
 #'
@@ -118,7 +118,7 @@ join_he <- function(biol_data,
   flow_stats <- flow_stats
   biol_data <- biol_data
 
-  if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date yyyymmdd format")}
+  if(lubridate::is.Date(biol_data$date) == FALSE) {stop("date_col must be yyyy-mm-dd date format")}
 
   ## get mapping
   if(is.null(mapping) == FALSE){
