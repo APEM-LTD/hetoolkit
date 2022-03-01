@@ -105,47 +105,47 @@ import_flow <- function(sites, inputs, start_date = "1985-01-01", end_date = Sys
   # stop if inputs contains invalid text
   names <- c("NRFA", "HDE", "FLOWFILES")
   match <- inputs %in% names
-  if(sjmisc::str_contains(match, "FALSE")){
+  if(str_contains(match, "FALSE")){
     stop("'inputs' contains character string that isn't one of: 'NRFA', 'HDE' or 'FLOWFILES'")
   }
 
   # stop if flowfiles specified and directory is not specified
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (is.null(dir) == TRUE)) {
+  if(str_contains(inputs, "FLOWFILES") && (is.null(dir) == TRUE)) {
     stop("'FLOWFILES' specified in 'inputs' but directory not given")
   }
 
   # stop if flowfiles specified and directory does not exist
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (file.exists(dir) == FALSE)) {
+  if(str_contains(inputs, "FLOWFILES") && (file.exists(dir) == FALSE)) {
     stop("'FLOWFILES' specified in 'inputs' but 'dir' does not exist")
   }
 
   # stop if flowfiles specified and skip number is not defined
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (is.null(skip_num) == TRUE)) {
+  if(str_contains(inputs, "FLOWFILES") && (is.null(skip_num) == TRUE)) {
     stop("'FLOWFILES' specified in 'inputs' but skip_num is not given")
   }
 
   #stop if flowfiles specified and skip number is in invalid format
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (is.numeric(skip_num) == FALSE)) {
+  if(str_contains(inputs, "FLOWFILES") && (is.numeric(skip_num) == FALSE)) {
     stop("'skip_num' is in invalid format, should be numeric")
   }
 
   # stop if flowfiles specified and more than one skip number is defined
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (length(skip_num) >1)) {
+  if(str_contains(inputs, "FLOWFILES") && (length(skip_num) >1)) {
     stop("Where being used only one skip number can be defined")
   }
 
   # stop if flowfiles specified and column order is not defined
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (is.null(col_order) == TRUE)) {
+  if(str_contains(inputs, "FLOWFILES") && (is.null(col_order) == TRUE)) {
     stop("'FLOWFILES' specified in 'inputs' but col_order not given")
   }
 
   # stop if flowfiles specified and column order is in invalid format
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (is.numeric(col_order) == FALSE)) {
+  if(str_contains(inputs, "FLOWFILES") && (is.numeric(col_order) == FALSE)) {
     stop("Flowfiles specified but col_order is in invalid format, should be numeric")
   }
 
   # stop if flowfiles specified and column order is wrong length
-  if(sjmisc::str_contains(inputs, "FLOWFILES") && (length(col_order) !=3)) {
+  if(str_contains(inputs, "FLOWFILES") && (length(col_order) !=3)) {
     stop("Where being used the order of three columns needs to be defined")
   }
 
