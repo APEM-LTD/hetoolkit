@@ -47,66 +47,66 @@
 #'    - prop_missing: the proportion of missing flow records (n_data / n_total)
 #'    - n_imputed: the number of flow records that have been imputed (this is calculated only if the imputed_col argument is specified)
 #     - prop_imputed: the proportion of flow records that have been imputed (calculated only if the imputed_col argument is specified)
-#'    - mean: mean flow
-#'    - sd: the standard deviation of flows
-#'    - Q5: the unstandardised Q5 flow
-#'    - Q10: the unstandardised Q10 flow
-#'    - Q20: the unstandardised Q20 flow
-#'    - Q25: the unstandardised Q25 flow
-#'    - Q30: the unstandardised Q30 flow
-#'    - Q50: the unstandardised Q50 flow
-#'    - Q70: the unstandardised Q70 flow
-#'    - Q75: the unstandardised Q75 flow
-#'    - Q80: the unstandardised Q80 flow
-#'    - Q90: the unstandardised Q90 flow
-#'    - Q95: the unstandardised Q95 flow
-#'    - Q99: the unstandardised Q99 flow
-#'    - Q5z: the Q5 flow, standardised using the mean and sd of the Q5 flows across all time periods for that site, i.e. q5_z = (q5 – q5mean) / Q5sd. If ref_col is not NULL, then the Q5 is estimated for the flow_col time series, but standardised using the mean and sd parameters for the ref_col time series (i.e. q50_z = (q50 - q50mean_ref) / q50sd_ref).
-#'    - Q10z: as for Q5z
-#'    - Q20z: as for Q5z
-#'    - Q25z: as for Q5z
-#'    - Q30z: as for Q5z
-#'    - Q50z: as for Q5z
-#'    - Q70z: as for Q5z
-#'    - Q75z: as for Q5z
-#'    - Q80z: as for Q5z
-#'    - Q90z: as for Q5z
-#'    - Q95z: as for Q5z
-#'    - Q99z: as for Q5z
-#'    - dry_n: number of records with zero flow
-#'    - dry_e: number of events when flow drops to zero
-#'    - dry_start: day of year (1-366) of first zero flow record
-#'    - dry_end: day of year (1-366) of last zero flow record
-#'    - dry_mid: mean day of year (1-366) of all zero flow records
-#'    - low_n: number of records when flow is below the q_low threshold
-#'    - low_e: number of events when flow drops below the q_low threshold
-#'    - low_start: day of year (1-366) of first record below the q_low threshold
-#'    - low_end: day of year (1-366) of first record below the q_low threshold
-#'    - low_mid: circular  mean day of year (1-366) of all records below the q_low threshold
-#'    - low_magnitude: mean flow deficit below q_low
-#'    - low_severity: cumulative flow deficit below q_low (low_n x low_magnitude)
-#'    - high_n: number of records when flow is above the q_high threshold
-#'    - high_e: number of events when flow exceeds the q_high threshold
-#'    - high_start: day of year (1-366) of first record above the q_high threshold
-#'    - high_end: day of year (1-366) of last record above the q_high threshold
-#'    - high_mid: circular mean day of year (1-366) of all records above the q_high threshold
-#'    - e_above3xq50: number of events when flow exceeds 3 x the long-term median (Q50) flow
-#'    - e_above5xq50: number of events when flow exceeds 5 x the long-term median (Q50) flow
-#'    - e_above7xq50: number of events when flow exceeds 7 x the long-term median (Q50) flow
-#'    - volume: total volume discharged (sum of flows)
-#'    - volume_z: as for q5z
-#'    - min: minimum flow
-#'    - min_z: as for q5z
-#'    - min_doy: day of year (1-366) of minimum flow
-#'    - min_7day: minimum 7-day mean flow
-#'    - min_7day_z: as for q5z
-#'    - min_7day_doy: day of year (1-366) of midpoint of 7-day minimum flow period
-#'    - min_30day: minimum 30-day mean flow
-#'    - min_30day_z: as for q5z
-#'    - min_30day_doy: day of year of (1-366) of midpoint of 30-day minimum flow period
-#'    - max: maximum flow
-#'    - max_z: as for q5z
-#'    - max_doy: day of year (1-366) of maximum flow
+#'    - mean: mean flow (min. (min. records required = 2)records required = 2)
+#'    - sd: the standard deviation of flows (min. records required = 2)
+#'    - Q5: the unstandardised Q5 flow (min. records required = 20)
+#'    - Q10: the unstandardised Q10 flow (min. records required = 10)
+#'    - Q20: the unstandardised Q20 flow (min. records required = 5)
+#'    - Q25: the unstandardised Q25 flow (min. records required = 4)
+#'    - Q30: the unstandardised Q30 flow (min. records required = 4)
+#'    - Q50: the unstandardised Q50 flow (min. records required = 2)
+#'    - Q70: the unstandardised Q70 flow (min. records required = 4)
+#'    - Q75: the unstandardised Q75 flow (min. records required = 4)
+#'    - Q80: the unstandardised Q80 flow (min. records required = 5)
+#'    - Q90: the unstandardised Q90 flow (min. records required = 10)
+#'    - Q95: the unstandardised Q95 flow (min. records required = 20)
+#'    - Q99: the unstandardised Q99 flow (min. records required = 100)
+#'    - Q5z: the Q5 flow, standardised using the mean and sd of the Q5 flows across all time periods for that site, i.e. q5_z = (q5 – q5mean) / Q5sd. If ref_col is not NULL, then the Q5 is estimated for the flow_col time series, but standardised using the mean and sd parameters for the ref_col time series (i.e. q50_z = (q50 - q50mean_ref) / q50sd_ref). (min. records required = 20)
+#'    - Q10z: as for Q5z (min. records required = 10)
+#'    - Q20z: as for Q5z (min. records required = 5)
+#'    - Q25z: as for Q5z (min. records required = 4)
+#'    - Q30z: as for Q5z (min. records required = 4)
+#'    - Q50z: as for Q5z (min. records required = 2)
+#'    - Q70z: as for Q5z (min. records required = 4)
+#'    - Q75z: as for Q5z (min. records required = 4)
+#'    - Q80z: as for Q5z (min. records required = 5)
+#'    - Q90z: as for Q5z (min. records required = 10)
+#'    - Q95z: as for Q5z (min. records required = 20)
+#'    - Q99z: as for Q5z (min. records required = 100)
+#'    - dry_n: number of records with zero flow (min. records required = 2)
+#'    - dry_e: number of events when flow drops to zero (min. records required = 28)
+#'    - dry_start: day of year (1-366) of first zero flow record (min. records required = 8)
+#'    - dry_end: day of year (1-366) of last zero flow record (min. records required = 28)
+#'    - dry_mid: mean day of year (1-366) of all zero flow records (min. records required = 28)
+#'    - low_n: number of records when flow is below the q_low threshold (min. records required = 2)
+#'    - low_e: number of events when flow drops below the q_low threshold (min. records required = 28)
+#'    - low_start: day of year (1-366) of first record below the q_low threshold (min. records required = 28)
+#'    - low_end: day of year (1-366) of first record below the q_low threshold (min. records required = 28)
+#'    - low_mid: circular  mean day of year (1-366) of all records below the q_low threshold (min. records required = 28)
+#'    - low_magnitude: mean flow deficit below q_low (min. records required = 28)
+#'    - low_severity: cumulative flow deficit below q_low (low_n x low_magnitude) (min. records required = 28)
+#'    - high_n: number of records when flow is above the q_high threshold (min. records required = 2)
+#'    - high_e: number of events when flow exceeds the q_high threshold (min. records required = 28)
+#'    - high_start: day of year (1-366) of first record above the q_high threshold (min. records required = 28)
+#'    - high_end: day of year (1-366) of last record above the q_high threshold (min. records required = 28)
+#'    - high_mid: circular mean day of year (1-366) of all records above the q_high threshold (min. records required = 28)
+#'    - e_above3xq50: number of events when flow exceeds 3 x the long-term median (Q50) flow (min. records required = 28)
+#'    - e_above5xq50: number of events when flow exceeds 5 x the long-term median (Q50) flow (min. records required = 28)
+#'    - e_above7xq50: number of events when flow exceeds 7 x the long-term median (Q50) flow (min. records required = 28)
+#'    - volume: total volume discharged (sum of flows) (min. records required = 3)
+#'    - volume_z: as for q5z (min. records required = 3)
+#'    - min: minimum flow (min. records required = 3)
+#'    - min_z: as for q5z (min. records required = 3)
+#'    - min_doy: day of year (1-366) of minimum flow (min. records required = 3)
+#'    - min_7day: minimum 7-day mean flow (min. records required = 90)
+#'    - min_7day_z: as for q5z (min. records required = 90)
+#'    - min_7day_doy: day of year (1-366) of midpoint of 7-day minimum flow period (min. records required = 90)
+#'    - min_30day: minimum 30-day mean flow (min. records required = 180)
+#'    - min_30day_z: as for q5z (min. records required = 180)
+#'    - min_30day_doy: day of year of (1-366) of midpoint of 30-day minimum flow period (min. records required = 180)
+#'    - max: maximum flow (min. records required = 3)
+#'    - max_z: as for q5z (min. records required = 3)
+#'    - max_doy: day of year (1-366) of maximum flow (min. records required = 3)
 #'
 #' The second data table contains long-term flow statistics. The data are arranged in long format, with the following columns:
 #'    - flow_site_id (a unique site id)
@@ -327,7 +327,7 @@ calc_flowstats <- function(data,
   long_data <- suppressWarnings(CreateLongData(my_data_lt, STATS1))
 
   # calculate remaining time-varying flow statistics (durations/events, 7/30-day mins)
-  flow_stats <- suppressWarnings(CreateFlowStats(STATS1, long_data, my_data_cf_2, data_1, q_high, q_low))
+  flow_stats <- suppressWarnings(CreateFlowStats(STATS1, long_data, my_data_cf_2, data_1, q_high = q_high, q_low = q_low))
 
   # join time-varying statistics with win_dates, rename site column and drop unwanted columns
   df1 <- dplyr::left_join(win_dates, flow_stats, by=c("site", "win_no")) %>%
@@ -861,7 +861,7 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::group_by(site) %>%
     dplyr::summarise(bfi = if(0 %in% x == FALSE ){ bfi= calc_bfi(.$x) }else{ print ("flow contains 0's, returning NA")
       bfi=NA}) %>%
-    dplyr::mutate(win_no = "Annual") %>%   # season = all
+    dplyr::mutate(win_no = "Annual") %>%
     tidyr::gather(-site, -win_no, key = parameter, value = value)
 
   # calculate long-term flow duration curve percentile 1:99
@@ -873,7 +873,7 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::ungroup() %>%
     dplyr::mutate(win_no="Annual") %>%
     setNames(., c("site", "parameter", "value", "win_no")) %>%
-    dplyr::mutate(parameter=as.character(parameter)) # season= ALL
+    dplyr::mutate(parameter=as.character(parameter))
 
   # create a long dataframe containing just means and sd for each Q value, BFI and flow duration curve
   long_data <- QSTATS1 %>%
@@ -1286,7 +1286,7 @@ find_doy <- function(flow_data, type, nday) {
   }
   if(nday == 30){
     low_flow$yday <- lubridate::yday(low_flow$date) - 14.5
-    if(schoolmath::is.negative(low_flow$yday)) {
+    if(isTRUE(-1 %in% sign(low_flow$yday)) == TRUE) {
       low_flow$yday <- 365 - abs(low_flow$yday)
     }
   }
