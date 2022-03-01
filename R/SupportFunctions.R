@@ -715,6 +715,8 @@ miss_var_run <- function(data, var){
 }
 
 #' @export
+
+
 miss_var_run.default <- function(data, var){
 
   var <- rlang::enquo(var)
@@ -777,4 +779,57 @@ roll_mean <- function(x,
   )
   colnames(result) <- colnames(x)
   result
+}
+
+##############################################################
+## test if integer
+
+testInteger <- function(x){
+  test <- all.equal(x, as.integer(x), check.attributes = FALSE)
+  if(test == TRUE){ return(TRUE) }
+  else { return(FALSE) }
+}
+
+
+
+
+
+############################# test_if_null etc (naniar) ###################################
+
+test_if_null <- function(x){
+
+  # test for null
+  if (is.null(x)) {
+    stop("Input must not be NULL", call. = FALSE)
+  }
+}
+
+test_if_missing <- function(x){
+
+  # test for null
+  if (missing(x)) {
+    stop("argument must be specified", call. = FALSE)
+  }
+}
+
+#' Test if input is a data.frame
+#'
+#' @param x object
+#'
+#' @return an error if input (x) is a data.frame
+#'
+#' @examples
+#' \dontrun{
+#' # success
+#' test_if_dataframe(airquality)
+#' #fail
+#' my_test <- matrix(10)
+#' test_if_dataframe(my_test)
+#' }
+#'
+test_if_dataframe <- function(x){
+  # test for dataframe
+  if (!inherits(x, "data.frame")) {
+    stop("Input must inherit from data.frame", call. = FALSE)
+  }
 }
