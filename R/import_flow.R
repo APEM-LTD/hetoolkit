@@ -1,7 +1,7 @@
 #' Import flow data from NRFA, HDE and local files
 #'
 #' @description
-#' import_flow is a high-level function that calls `import_nrfa`, `import_hde` and `import_flowfiles` to import data for a user-defined list of sites.
+#' `import_flow` is a high-level function that calls `import_nrfa`, `import_hde` and `import_flowfiles` to import data for a user-defined list of sites.
 #'
 #' @usage
 #'  import_flow(sites = NULL, inputs = NULL, start_date = 1900-01-01, end_date = Sys.Date, dir = NULL, skip_num = NULL, col_order = NULL)
