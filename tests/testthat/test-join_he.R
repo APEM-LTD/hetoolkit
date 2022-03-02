@@ -73,18 +73,6 @@ test_that("flow_site_id is valid within flow_stats...", {
 
 })
 
-test_that("flow_site_id is valid within flow_stats...", {
-
-  biol_data <- readRDS("biol_data_jHE.rds")
-  flow_stats <- readRDS("flow_stats_jHE.rds")
-
-  flow_stats_2 <- flow_stats %>% dplyr::rename(flow_site = flow_site_id)
-
-  expect_error(join_he(biol_data = biol_data,
-                       flow_stats = flow_stats_2),
-               "flow_site_id column was not identified in flow_stats")
-
-})
 
 test_that("start_date is valid within flow_stats...", {
 
@@ -331,19 +319,42 @@ test_that("unavailable lags...", {
 
 })
 
-#test_that("join_he constructs expected output", {
-#
-#  join_data_test <- readRDS("join_data_test.rds")
-#  biol_all_test <- readRDS("biol_all_test.rds")
-#  flowstats_test <- readRDS("flowstats_test.rds")
-#  mapping_test <- readRDS("mapping_test.rds")
-#
-#  result <- join_he(biol_data = biol_all_test,
-#                  flow_stats = flowstats_test,
-#                  mapping = mapping_test,
-#                 lag_vars = c("Q95z", "Q10z"),
-#                  LS1 = TRUE,
-#                  LS2 = TRUE)
-#  compared <- join_data_test
-#  expect_equal(result, compared)
-#})
+test_that("join_he constructs expected output", {
+
+  biol_data <- readRDS("biol_data_jHE.rds")
+  flow_stats <- readRDS("flow_stats_jHE.rds")
+  mapping <- readRDS("mapping_jHE.rds")
+  compared <- readRDS("joinhe_output.rds")
+
+    result <- join_he(biol_data = biol_data,
+                      flow_stats = flow_stats,
+                      mapping = mapping,
+                      method = "A" ,
+                      lags = c(0,1),
+                      join_type = "add_flows")
+
+
+  expect_equal(result, compared)
+
+})
+
+test_that("join_he constructs expected output, NA flows for when lags extend prior to flow data", {
+
+  biol_data <- readRDS("biol_data_jHE.rds")
+  flow_stats <- readRDS("flow_stats_jHE.rds")
+  mapping <- readRDS("mapping_jHE.rds")
+  compared <- readRDS("joinhe_output_lags.rds")
+
+        result <- join_he(biol_data = biol_data,
+                            flow_stats = flow_stats,
+                            mapping = mapping,
+                            method = "A" ,
+                            lags = c(0,5),
+                            join_type = "add_flows")
+
+
+  test <- identical(result$Q5_lag5, compared$Q5_lag5)
+
+  expect_true(test)
+
+})
