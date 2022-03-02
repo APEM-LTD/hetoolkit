@@ -454,6 +454,8 @@ calc_flowstats <- function(data,
                   max_z = ifelse(n_data >= 3, max_z, NA),
                   max_doy = ifelse(n_data >= 3, max_doy, NA))
 
+  df1.1$win_no <- as.numeric(df1.1$win_no)
+  df1.1 <- arrange(df1.1, flow_site_id, win_no)
 
   ### create final data to return
   final_list <- list(df1.1, df2)
@@ -723,6 +725,9 @@ calc_flowstats <- function(data,
                     min_7day_z_ref = ifelse(n_data >= 90, min_7day_z_ref, NA),
                     min_30day_z_ref = ifelse(n_data >= 180, min_30day_z_ref, NA)
                     )
+
+    df1_ALL.1$win_no <- as.numeric(df1_ALL.1$win_no)
+    df1_ALL.1 <- arrange(df1_ALL.1, flow_site_id, win_no)
 
     # Create a list of output_1 (with adj QXz values) and output_2
     final_list_ref <- list(df1_ALL.1, df2)

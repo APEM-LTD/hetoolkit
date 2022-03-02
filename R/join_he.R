@@ -68,7 +68,7 @@ join_he <- function(biol_data,
                     mapping = NULL,
                     method = "A",
                     lags = 0,
-                    join_type = "add_flow"){
+                    join_type = "add_flows"){
 
 
   if(is.data.frame(biol_data) == FALSE){stop("biol_data is invalid format")}
@@ -108,11 +108,10 @@ join_he <- function(biol_data,
   if(testInteger(lags) == FALSE) {stop("lags must be an integer")}
 
   if(method != "A" && method != "B")
-  {stop("method must be specified using 'A' or 'B'")}
+  {stop("method must be specified using A or B")}
 
   if(join_type != "add_flows" && join_type != "add_biol")
-  {stop("join_type must be specified using 'add_flows' or 'add_biol'")}
-
+  {stop("join_type must be specified using add_flows or add_biol")}
 
   ## get flow stats
   flow_stats <- flow_stats
@@ -120,11 +119,37 @@ join_he <- function(biol_data,
 
   if(lubridate::is.Date(biol_data$date) == FALSE) {stop("date_col must be yyyy-mm-dd date format")}
 
+  if(isTRUE("TRUE" %in% (biol_data$date > Sys.Date()) == TRUE))
+  {warning("biol_data: date is in the future")}
+
+  if(isTRUE("TRUE" %in% (biol_data$date < flow_stats$start_date[1])) == TRUE)
+  {warning("biol_data: date precedes the the start_date of the earliest time window")}
+
   ## get mapping
   if(is.null(mapping) == FALSE){
 
-    biol_data <- dplyr::filter(biol_data, biol_site_id %in% unique(mapping$biol_site_id))
+    mapping <- mapping
+
+    if(isTRUE(TRUE %in% duplicated(mapping$biol_site_id))){stop("biol_site_id cannot be mapped to more than one flow_site_id")}
+
+    not_mapped_biol <- dplyr::filter(biol_data, !(biol_site_id %in% unique(mapping$biol_site_id)))
+    not_mapped_flow <- dplyr::filter(flow_stats, !(flow_site_id %in% unique(mapping$flow_site_id)))
+
+    if(isTRUE(length(unique(not_mapped_biol$biol_site_id)) >= length(unique(mapping$biol_site_id))) == TRUE)
+    {stop(paste("none of the biol_site_ids listed in biol_data are specified in mapping"))}
+
+    if(length(not_mapped_biol$biol_site_id) > 0)
+      {warning(paste("biol_site_id was not identified in mapping", sep = ": ", list(unique(not_mapped_biol$biol_site_id))))}
+
+    if(isTRUE(length(unique(not_mapped_flow$flow_site_id)) > length(unique(mapping$flow_site_id))) == TRUE)
+    {stop(paste("none of the flow_site_ids listed in flow_stats are specified in mapping"))}
+
+    if(isTRUE(length(not_mapped_flow$flow_site_id) > 0) == TRUE)
+      {warning(paste("flow_site_id was not identified in mapping", sep = ": ", list(unique(not_mapped_flow$flow_site_id))))}
+
+     biol_data <- dplyr::filter(biol_data, biol_site_id %in% unique(mapping$biol_site_id))
     flow_stats <- dplyr::filter(flow_stats, flow_site_id %in% unique(mapping$flow_site_id))
+
 
   }
 
@@ -156,19 +181,25 @@ join_he <- function(biol_data,
 
       # create lag win_no
       flow_stats_lag <- flow_stats %>%
-        mutate(lag = i,
-               win_no = win_no + lag) %>%
+        dplyr::mutate(lag = i,
+               win_no = win_no - lag) %>%
                 dplyr::select(flow_site_id, win_no)
 
+      # create lag name
+      as.character(lags)
+      lag_name <- as.character(paste("lag", sep = "", i))
+
+      # warning if o	A lagged flow period is not available in the flow stats dataset (i.e. the flow data doesn’t extend that far back)
+      if(isTRUE(-1 %in% sign(flow_stats_lag$win_no)) == TRUE)
+        {warning(paste(lag_name, sep = " ", "may not be available for all flow periods. Flow data doesn’t extend that far back."))}
+
       # join flow stats for each lag
-      flow_stats_lag_1 <- left_join(flow_stats_lag, flow_stats, by = c("flow_site_id", "win_no"))
+      flow_stats_lag_1 <- dplyr::left_join(flow_stats_lag, flow_stats, by = c("flow_site_id", "win_no"))
 
       # remove identifiers
       flow_stats_lag_2 <- flow_stats_lag_1 %>% dplyr::select(-flow_site_id, -start_date, -end_date)
 
       # rename cols with lag_x
-      as.character(lags)
-      lag_name <- as.character(paste("lag", sep = "_", i))
       colnames(flow_stats_lag_2) <- paste(colnames(flow_stats_lag_2), lag_name, sep = "_")
 
       # assign to a dataframe
@@ -178,7 +209,7 @@ join_he <- function(biol_data,
 
     # collate and bind all lagged flow stats
     flow_stats_lag_all <- c(mget(ls(pattern = "_flow_stats_lag")))
-    flow_stats_lag_all_2 <- Reduce('bind_cols', flow_stats_lag_all)
+    flow_stats_lag_all_2 <- dplyr::bind_cols(flow_stats_lag_all)
 
     # all flow data
     flow_stats_all <- cbind(flow_stats_temp, flow_stats_lag_all_2)
@@ -193,6 +224,9 @@ join_he <- function(biol_data,
       biol_data_2 <- biol_data %>%
         dplyr::left_join(mapping, by = "biol_site_id")
 
+      if(TRUE %in% (unique(biol_data_2$flow_site_id) %in% unique(flow_stats$flow_site_id)) == FALSE)
+      {stop("none of the flow_site_ids listed in flow_stats are specified in mapping")}
+
       # index biology and flow stats to find the nearest flow window and create date_list
       date_indx <- survival::neardate(biol_data_2$flow_site_id, flow_stats$flow_site_id,
                                       biol_data_2$date, flow_stats$end_date, best = "prior",
@@ -203,19 +237,19 @@ join_he <- function(biol_data,
                               biol_site_id = biol_data_2["biol_site_id"])
 
       # join date_list to biol_data
-      biol_data_3 <- biol_data_2 %>% left_join(date_list, by = c("biol_site_id", "flow_site_id", "date"))
+      biol_data_3 <- biol_data_2 %>% dplyr::left_join(date_list, by = c("biol_site_id", "flow_site_id", "date"))
 
      if(join_type == "add_flows"){
 
       # join flow stats to biology data
-      join_data <- biol_data_3 %>% left_join(flow_stats_all, by = c("flow_site_id","win_no"))
+      join_data <- biol_data_3 %>% dplyr::left_join(flow_stats_all, by = c("flow_site_id","win_no"))
 
      }
 
       if(join_type == "add_biol"){
 
       # join biology data to flow stats
-      join_data <- flow_stats_all %>% left_join(biol_data_3, by = c("flow_site_id","win_no"))
+      join_data <- flow_stats_all %>% dplyr::left_join(biol_data_3, by = c("flow_site_id","win_no"))
 
       }
 
@@ -228,6 +262,9 @@ join_he <- function(biol_data,
     biol_data_2 <- biol_data %>%
       dplyr::left_join(mapping, by = "biol_site_id")
 
+    if(TRUE %in% (unique(biol_data_2$flow_site_id) %in% unique(flow_stats$flow_site_id)) == FALSE)
+    {stop("none of the flow_site_ids listed in flow_stats are specified in mapping")}
+
     # index biology and flow stats to find the nearest flow window and create date_list
     date_indx <- survival::neardate(biol_data_2$flow_site_id, flow_stats$flow_site_id,
                                      biol_data_2$date, flow_stats$start_date, best = "prior",
@@ -238,22 +275,19 @@ join_he <- function(biol_data,
                             biol_site_id = biol_data_2["biol_site_id"])
 
     # join date_list to biol_data
-    biol_data_3 <- biol_data_2 %>% left_join(date_list, by = c("biol_site_id", "flow_site_id", "date"))
-
-    join_data <- biol_data_3 %>% left_join(flow_stats_all, by = c("flow_site_id","win_no"))
-
+    biol_data_3 <- biol_data_2 %>% dplyr::left_join(date_list, by = c("biol_site_id", "flow_site_id", "date"))
 
     if(join_type == "add_flows"){
 
       # join flow stats to biology data
-      join_data <- biol_data_3 %>% left_join(flow_stats_all, by = c("flow_site_id","win_no"))
+      join_data <- biol_data_3 %>% dplyr::left_join(flow_stats_all, by = c("flow_site_id","win_no"))
 
     }
 
     if(join_type == "add_biol"){
 
       # join biology data to flow stats
-      join_data <- flow_stats_all %>% left_join(biol_data_3, by = c("flow_site_id","win_no"))
+      join_data <- flow_stats_all %>% dplyr::left_join(biol_data_3, by = c("flow_site_id","win_no"))
 
     }
 

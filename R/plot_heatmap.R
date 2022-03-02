@@ -221,7 +221,7 @@ plot_heatmap <- function(data,
 
     miss <- data %>%
       dplyr::group_by(y) %>%
-      naniar::miss_var_run( var = fill) %>%
+      miss_var_run( var = fill) %>%
       group_by(y,is_na) %>%
       dplyr::summarise(number_of_gaps = n(), smallest_gap = min(run_length), biggest_gap = max(run_length))
 

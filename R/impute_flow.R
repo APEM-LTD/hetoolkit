@@ -166,11 +166,11 @@ impute_flow <- function(data,
       original_flow_i <- original_flow %>%
         dplyr::filter(date <= maxdate & date >= mindate)
 
-      original_flow_i$flow_i <- imputeTS::na_interpolation(original_flow_i$flow)
+      original_flow_i$flow_i <- na_interpolation(original_flow_i$flow)
 
       imp <- original_flow_i$flow_i
       if("TRUE" %in% is.na(original_flow_i$flow) == TRUE){
-      plot_1 <- imputeTS::ggplot_na_imputations(original_flow_i$flow, imp)
+      plot_1 <- ggplot_na_imputations(original_flow_i$flow, imp)
       ggplot2::ggsave(paste0(getwd(), sep = "/", i, "_Imputed_Values.png"), plot = plot_1)
       }
 
@@ -221,12 +221,12 @@ impute_flow <- function(data,
           original_flow_i <- original_flow %>%
             dplyr::filter(date <= maxdate & date >= mindate)
 
-          original_flow_i$flow_i <- imputeTS::na_interpolation(log(original_flow_i$flow))
+          original_flow_i$flow_i <- na_interpolation(log(original_flow_i$flow))
           original_flow_i$flow_i <- exp(original_flow_i$flow_i)
 
           imp <- original_flow_i$flow_i
           if("TRUE" %in% is.na(original_flow_i$flow) == TRUE){
-          plot_1 <- imputeTS::ggplot_na_imputations(original_flow_i$flow, imp)
+          plot_1 <- ggplot_na_imputations(original_flow_i$flow, imp)
           ggplot2::ggsave(paste0(getwd(), sep = "/", i, "_Imputed_Values.png"), plot = plot_1)
           }
 
@@ -367,7 +367,7 @@ impute_flow <- function(data,
 
         imp <- data_percentile_flow$flow_equipercentile
         if("TRUE" %in% is.na(data_percentile_flow$flow) == TRUE){
-        plot_1 <- imputeTS::ggplot_na_imputations(data_percentile_flow$flow, imp)
+        plot_1 <- ggplot_na_imputations(data_percentile_flow$flow, imp)
         ggplot2::ggsave(paste0(getwd(), sep = "/", i, "_Imputed_Values.png"), plot = plot_1)
         }
 

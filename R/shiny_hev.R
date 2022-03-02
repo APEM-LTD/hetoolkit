@@ -296,5 +296,3 @@ shiny_hev <- function(data,
   }
 
 }
-
-

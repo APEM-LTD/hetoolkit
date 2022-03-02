@@ -63,7 +63,7 @@
 #' #        mapping = mapping)
 
 
-join_he <- function(biol_data,
+join_he_old <- function(biol_data,
                     flow_stats,
                     mapping = NULL,
                     LS1 = FALSE,

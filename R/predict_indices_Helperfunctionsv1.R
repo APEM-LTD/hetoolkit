@@ -292,7 +292,7 @@ getSubstrate <- function(bould_cob, pebbles_gr, snd, silt_cl, lower_b, upper_b) 
   TOTSUB <- sum(bould_cob, pebbles_gr, snd, silt_cl)
   msg    <- "Succ"
   MSUBST <- -999 #Error that no calculation takes place
-  if(TOTSUB<lower_b | TOTSUB > upper_b) { # Check bounds [97,103] for TOTSUB
+  if((TOTSUB < lower_b) == TRUE | (TOTSUB > upper_b) == TRUE) { # Check bounds [97,103] for TOTSUB
       msg  <- "Fail: TOTSUB bounds exceeded for substrate, "
       msubst_frame <- data.frame(MSUBST, msg)
       colnames(msubst_frame) <- c("log","msg")

@@ -90,7 +90,7 @@
 #'                ref_col = "NaturalisedFlow")
 
 
-calc_flowstats <- function(data,
+calc_flowstats_old <- function(data,
                          site_col = "flow_site_id",
                          date_col = "date",
                          flow_col = "flow",
@@ -146,7 +146,7 @@ calc_flowstats <- function(data,
 
   dfos_data <- data_f %>% dplyr::select(Date, Flow)
 
-  dfos_output <- doForOneStation(dfos_data)
+  dfos_output <- doForOneStation_old(dfos_data)
 
   # Select outputs and match with flow_site_id
 
@@ -187,7 +187,7 @@ calc_flowstats <- function(data,
 
       dfos_data_ref <- data_ref %>% dplyr::select(Date, Flow)
 
-      dfos_output_ref <- doForOneStation(dfos_data_ref)
+      dfos_output_ref <- doForOneStation_old(dfos_data_ref)
 
       dfos_output_a_ref <- as.data.frame(dfos_output_ref[[1]])
 
@@ -314,7 +314,7 @@ calc_flowstats <- function(data,
 #' @export
 #'
 
-doForOneStation <- function(test.flow.rec) {
+doForOneStation_old <- function(test.flow.rec) {
 # Function is only passed a flow series at this point
 # with Date in column 1 and Flowin column 2
 
@@ -381,7 +381,7 @@ names(FULL.FLOW.REC) <- casefold(names(FULL.FLOW.REC))
 
 # Use APPLYFLOWSTATS
 
-STATS <- APPLYFLOWSTATS(FULL.FLOW.REC)
+STATS <- APPLYFLOWSTATS_old(FULL.FLOW.REC)
 
 # Return
 
@@ -400,7 +400,7 @@ print("not enough flow data"); flush.console()
 
 # Required for APPLYFLOWSTATS
 
-DataProcessing<- function(full.flow.rec) {
+DataProcessing_old <- function(full.flow.rec) {
   FULL.FLOW.REC<-  full.flow.rec
 
   FULL.FLOW.REC$sp <- FALSE
@@ -437,7 +437,7 @@ DataProcessing<- function(full.flow.rec) {
 
 # Required as part of APPLYFLOWSTATS
 
-CALCFLOWSTATS <- function (group1, group2, flowts) {
+CALCFLOWSTATS_old <- function (group1, group2, flowts) {
 
 #calculate missing data before NAs are removed
 MISSING<- flowts %>% dplyr::group_by({{group1}}, {{group2}}) %>%
@@ -474,7 +474,7 @@ flowts<- flowts %>%  dplyr::group_by({{group1}}, {{group2}}) %>%
 
 # Required as part of APPLYFLOWSTATS
 
-CreateLongData<- function(flow.data, statsData) {
+CreateLongData_old <- function(flow.data, statsData) {
 
 # rename data
 STATION.FLOW.REC.SP<- flow.data; QSTATS1<- statsData
@@ -522,15 +522,15 @@ STATION.FLOW.REC.SP<- flow.data; QSTATS1<- statsData
 
 ########################################################
 
-APPLYFLOWSTATS <- function(STATION.FLOW.REC) {
+APPLYFLOWSTATS_old <- function(STATION.FLOW.REC) {
 
 # call dataprocessing function
 # does some data processing and creates season variables
-STATION.FLOW.REC.SP <- DataProcessing(STATION.FLOW.REC)
+STATION.FLOW.REC.SP <- DataProcessing_old(STATION.FLOW.REC)
 
 gennames <- c("Q10", "Q30", "Q50","Q70", "Q90", "Q95","Q99", "zero", "mean", "sd","lsd", "n", "e3", "e5", "e7", "missing")   # for naming coloumns
 # calculate flow stats and add a period coloumn
-QSTATS1 <- STATION.FLOW.REC.SP %>% CALCFLOWSTATS(season, wyear, .) %>%
+QSTATS1 <- STATION.FLOW.REC.SP %>% CALCFLOWSTATS_old(season, wyear, .) %>%
   dplyr::mutate(period="SPY") %>%
   #old: `colnames <-`(c("season", "water.year", gennames, "period")) %>%
   setNames(., c("season", "water.year", gennames, "period")) %>%
@@ -539,9 +539,9 @@ QSTATS1 <- STATION.FLOW.REC.SP %>% CALCFLOWSTATS(season, wyear, .) %>%
 QSTATS1$season<- as.character(QSTATS1$season)
 QSTATS1
 
-long_data<- CreateLongData(STATION.FLOW.REC.SP, QSTATS1)  # calculate flow duration curve/bfi/means/sd
+long_data<- CreateLongData_old(STATION.FLOW.REC.SP, QSTATS1)  # calculate flow duration curve/bfi/means/sd
 
-standizedData<- CreateFlowStats(QSTATS1, long_data, STATION.FLOW.REC.SP) # flow stats- Q values, durations/events, missing data, number of 0's...
+standizedData<- CreateFlowStats_old(QSTATS1, long_data, STATION.FLOW.REC.SP) # flow stats- Q values, durations/events, missing data, number of 0's...
 
 flowdata <- STATION.FLOW.REC.SP  # used to calculate missing data
 
@@ -563,7 +563,7 @@ return(mylist)
 
 # Required for CALCFLOWSTATS
 
-riisbiggs2 <- function(datavector, threshold, multiplier) {
+riisbiggs2_old <- function(datavector, threshold, multiplier) {
 # code checked 26/6/2008. Numbers of times threshold exceeded are all turned into annual averages. Lets leave it like that for now
 # original riis / biggs work was all based on annual values
 # if we are looking at different time windows in the same analysis, this would need some more thought
@@ -584,16 +584,16 @@ length(test$lengths[test$values==1])
 
 # Required for CreateFlowStats
 
-find_eventDuration <- function(x, threshold ,type, pref) {
+find_eventDuration_old <- function(x, threshold ,type, pref) {
   # find events above/below a given threshold
-  flowEvents <- find_events(x=x$flow, threshold=threshold ,type="type")
+  flowEvents <- find_events_old(x=x$flow, threshold=threshold ,type="type")
 
-  flowEvents <- na.omit(flowEvents)  # remove NAs
+  flowEvents_old <- na.omit(flowEvents)  # remove NAs
   # find the length of each event (ie the duration above/below threshold)
   find_eventDurations <- dplyr::summarize(dplyr::group_by(flowEvents,event),
                                           duration = length(event))
 
-  if(nrow(find_eventDurations) > 0) {
+  if(nrow(find_eventDurations_old) > 0) {
       if(pref=="mean")
       {
         # if mean, then find the mean duration above/below threshold
@@ -618,7 +618,7 @@ find_eventDuration <- function(x, threshold ,type, pref) {
 
 # Required for APPLYFLOWSTATS
 
-CreateFlowStats<- function(stats_data, long.data, station_data) {
+CreateFlowStats_old <- function(stats_data, long.data, station_data) {
 
 QSTATS1<- stats_data; long_data<- long.data; STATION.FLOW.REC.SP<- station_data
 
@@ -715,7 +715,7 @@ QSTATS_final<- dplyr::full_join(QSTATS1.3, newstat, by=c("season"))
 # calc_bfi
 # Required for CreateLongData
 
-calc_bfi <- function(x) {
+calc_bfi_old <- function(x) {
 
   day7mean <- RcppRoll::roll_mean(x, 7, align = "right")
   min7day <- min(day7mean)
@@ -730,7 +730,7 @@ calc_bfi <- function(x) {
 # Required for find_eventDuration
 
 #' find_events(x,threshold)
-find_events <- function(x,threshold,type="high") {
+find_events_old <- function(x,threshold,type="high") {
 
   x <- data.frame(flow = x)
 

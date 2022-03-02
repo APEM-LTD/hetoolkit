@@ -162,7 +162,7 @@ diag_lmer <- function(model,
               geom_point() +
               xlab("Fitted") + ylab("Residuals") +
               labs(title = "Variance of residuals",
-                   subtitle = sjmisc::word_wrap("Residuals should be centred around 0 and have a similar amount of vertical scatter at all fitted values",50),
+                   subtitle = word_wrap("Residuals should be centred around 0 and have a similar amount of vertical scatter at all fitted values",50),
                    colour=stringr::str_to_title(colour_by)) +
               geom_hline(yintercept=0, linetype="dashed", colour="black") +
               theme(legend.key = element_rect(fill = NA, color = NA))
