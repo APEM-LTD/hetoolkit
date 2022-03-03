@@ -288,8 +288,10 @@ impute_flow <- function(data,
         corr_all <- c(mget(ls(pattern = "_corr_rho")))
         corr_all <- Reduce('bind_rows', corr_all)
         corr_donor <- corr_all[corr_all$flow_site_id != i,]
+        corr_donor_final <- corr_donor %>%
+          filter(corr_donor$`corr$estimate` == max(corr_donor$`corr$estimate`))
 
-        donor_site <- corr_donor$flow_site_id
+        donor_site <- corr_donor_final$flow_site_id
 
         # filter the original dataset to get donor site flow data
         donor_flow_data <- data %>%
@@ -306,12 +308,18 @@ impute_flow <- function(data,
 
         # Identify the corresponding donor station
         donor_flow <- donor
-        donor_flow$flow_site <- dplyr::pull(donor[,1])
-        donor_flow$donor_site <- dplyr::pull(donor[,2])
+        donor_flow$flow_site <- donor[,1]
+        donor_flow$donor_site <- donor[,2]
 
         if(isTRUE(unique(original_flow$site) %in% unique(donor_flow$flow_site)) == FALSE)
         {warning(paste("A donor site was not specified for site", sep = "-", i))
-          next }
+
+          all_flow <- original_flow
+          all_flow$imputed <- 0
+
+          donor_flow_data <- NULL
+
+          }
 
         else {
 
@@ -324,12 +332,9 @@ impute_flow <- function(data,
             dplyr::filter(site == donor_flow_f$donor_site)
         }
 
-        if(isTRUE(unique(original_flow$site) %in% unique(donor_flow$flow_site)) == FALSE){
-          all_flow <- original_flow
-          all_flow$imputed <- 0
-        }
-
       }
+
+      if(is.null(donor_flow_data) == FALSE){
 
       # Check if there are sufficient overlapping records between the main flow site and the donor site
       if(length(intersect(data_f$date, donor_flow_data$date)) < 365)
@@ -382,6 +387,8 @@ impute_flow <- function(data,
 
         # incorporate imputed flow to flow column
         all_flow <- all_flow %>% dplyr::mutate(flow = ifelse(is.na(flow), flow_equipercentile, flow))
+
+      }
 
       }
     }
