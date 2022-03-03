@@ -326,12 +326,12 @@ The code below demonstrates the how to summarise whether these columns contain N
 ```{r predict, warning=FALSE, message=FALSE, tidy=TRUE}
 
 # check substrate variables for presence of NAs
-env_data %>%
+env_data_final %>%
   select(BOULDERS_COBBLES, PEBBLES_GRAVEL, SAND, SILT_CLAY) %>%  
   summarise_all(funs(sum(is.na(.))))
 
 # replace NAs, if required
-env_data$BOULDERS_COBBLES[is.na(env_data$BOULDERS_COBBLES)] <- 0
+env_data_final$BOULDERS_COBBLES[is.na(env_data_final$BOULDERS_COBBLES)] <- 0
 
 ```
 
@@ -340,15 +340,15 @@ Now that the substrate data is complete, the expected scores can be generated.
 ```{r predict_1, warning=FALSE, message=FALSE, tidy=TRUE}
 
 # run predictions
-predict_data <- predict_indices(env_data = env_data)
+predict_data <- predict_indices(env_data = env_data_final, all_indices = TRUE)
 
 # view predict_data
 predict_data
 
 # drop unwanted variables
-keeps <- c("biol_site_id", "Season", "TL2_WHPT_ASPT_AbW_DistFam", "TL2_WHPT_NTAXA_AbW_DistFam", "TL3_LIFE_Fam_DistFam", "TL3_PSI_Fam")
+keeps <- c("biol_site_id", "SEASON", "TL2_WHPT_ASPT_AbW_DistFam", "TL2_WHPT_NTAXA_AbW_DistFam", "TL3_LIFE_Fam_DistFam", "TL3_PSI_Fam")
 
-predict_data <- predict_data[ , (names(predict_data) %in% keeps)]
+predict_data_final <- predict_data[ , (names(predict_data) %in% keeps)]
 
 ```
 
@@ -366,7 +366,7 @@ biol_data <- biol_data %>%
                       WHPT_NTAXA = mean(WHPT_N_TAXA),
                       PSI_F = mean(PSI_FAMILY_SCORE),
                       LIFE_F = mean(LIFE_FAMILY_INDEX),
-                      SAMPLE_DATE = mean(SAMPLE_DATE)) %>%
+                      date = mean(SAMPLE_DATE)) %>%
             dplyr::ungroup()
 
 ```
@@ -499,13 +499,37 @@ gridExtra::grid.arrange(a[[1]])
 
 ```
 
+## Impute flow gaps
+
+The `impute_flow` function is designed to infills missing records in daily flow time series for one or more sites (gauging stations) using either interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.
+
+The output dataset is in long format, similar to that produced by `import_flow`.  The output dataset contain an 'imputed' colunms; this is a flag  indicating whether each flow value is original (0) or imputed (1).
+
+Additionally, this function plots up observed and imputed flow values for each site; enabling the user to validate the imputation.
+
+```{r impute flow, warning=FALSE, message=FALSE, tidy=TRUE}
+
+flow_data <- impute_flow(flow_data, 
+                         site_col = "flow_site_id", 
+                         date_col = "date", 
+                         flow_col = "flow", 
+                         method = "linear")
+
+```
+
 ## Calculate flow statistics
 
-`calc_flowstats` uses a time series of measured or modelled flows to calculate a suite of long-term and seasonal (winter and summer) flow statistics for one or more sites (stations). 
+`calc_flowstats` takes a time series of measured or modelled flows and uses a user-defined moving window to calculate a suite of long-term and time-varying flow statistics flow statistics for one or more sites (stations). 
+
+The function uses the win_start, win_width and win_step arguments to define a moving window, which divides the flow time series into a sequence  of time periods. These time periods may be contiguous, non-contiguous or overlapping. 
+
+The sequence of time periods continues up to and including the present date, even when this extends beyond the period covered by the input flow dataset, as this facilitates the subsequent joining of flow statistics and ecology data by the `join_he` function. 
 
 It is primarily designed to work with mean daily flows (e.g. as produced by import_flow), but can also be applied to time series data on a longer (e.g. monthly) time step. 
 
 Regardless, the data should be regularly spaced and the same time step should be used for all sites.
+
+This is an updated version of the `calc_flowstats` function.  The first iteration of the function remains available, using `calc_flowstats_old`.
 
 ```{r calculate flow stats, warning=FALSE, message=FALSE, results=FALSE, tidy=TRUE}
 
@@ -547,8 +571,21 @@ flow_stats[[2]]
 
 ## Join biology and flow data
 
-The `join_he` function links biology data to six-monthly flow statistics (from calc_flowstats) to create a dataset for hydro-ecological modelling. The function includes an option to lag selected flow statistics.
+The `join_he` function links biology data with time-varying flow statistics for one or more antecedent (lagged) time periods (as calculated by the `calc_flowstats` function) to create a combined dataset for hydro-ecological modelling. 
 
+The function allows to user to select a method for linking biology samples to flow statistics for antecedent time periods: 
+* using method = "A" (default), lag 0 is defined for each biology sample as the most recently finished flow time period; 
+* using method = "B", lag 0 is defined as the most recently started flow time period. 
+To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (method = "A") or most recently started (method = "B") flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on. The function allows the user to select which antecedent (lagged) time periods the biology data is joined to, e.g. lag = c(0,1,2).  This method is demonstrated in the schematic below.
+
+![image info](./data/jeHE.png)
+
+The function also includes an option to specify the 'join_type':
+* "add_flows" (default) produces a dataset of biological metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. 
+* "add_biol" produces a time series of flow statistics with associated biological metrics which can be used to assess the coverage of historical flow conditions using the `plot_rngflows` function.
+
+This is an updated version of the `join_he` function.  The first iteration of the function remains available, using `join_he_old`.
+ 
 We will join the data for the pairs of biology and flow sites specified in `master_data`.  
 
 ```{r join HE, message=FALSE, warning=FALSE, tidy=TRUE}
@@ -561,7 +598,7 @@ mapping <- master_data[, c("biol_site_id", "flow_site_id")]
 
 # join flow statistics to biology data
 
-join_data <- join_he(biol_data = biol_all, flow_stats = flowstats_1, mapping = mapping, lag_vars = c("Q95z", "Q10z"), LS1 = TRUE, LS2 = TRUE)
+join_data <- join_he(biol_data = biol_all, flow_stats = flowstats_1, mapping = mapping, lags = c(0, 1), method = "A", join_type = "add_flows")
 
 # view join_data
 join_data
