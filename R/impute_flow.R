@@ -288,8 +288,10 @@ impute_flow <- function(data,
         corr_all <- c(mget(ls(pattern = "_corr_rho")))
         corr_all <- Reduce('bind_rows', corr_all)
         corr_donor <- corr_all[corr_all$flow_site_id != i,]
+        corr_donor_final <- corr_donor %>%
+          filter(corr_donor$`corr$estimate` == max(corr_donor$`corr$estimate`))
 
-        donor_site <- corr_donor$flow_site_id
+        donor_site <- corr_donor_final$flow_site_id
 
         # filter the original dataset to get donor site flow data
         donor_flow_data <- data %>%
@@ -306,8 +308,8 @@ impute_flow <- function(data,
 
         # Identify the corresponding donor station
         donor_flow <- donor
-        donor_flow$flow_site <- dplyr::pull(donor[,1])
-        donor_flow$donor_site <- dplyr::pull(donor[,2])
+        donor_flow$flow_site <- donor[,1]
+        donor_flow$donor_site <- donor[,2]
 
         if(isTRUE(unique(original_flow$site) %in% unique(donor_flow$flow_site)) == FALSE)
         {warning(paste("A donor site was not specified for site", sep = "-", i))
