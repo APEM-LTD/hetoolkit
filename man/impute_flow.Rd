@@ -11,7 +11,7 @@ impute_flow(data, site_col = " flow_site_id", date_col = "date", flow_col = "flo
 
 \item{site_col}{Name of column in data containing unique flow site id. Default = "flow_site_id". Site ids are coerced to a character vector.}
 
-\item{date_col}{Name of column in data containing date of flow record. Default = "date".}
+\item{date_col}{Name of column in data containing date of flow record. Default = "date".  Dates must be in “yyyy-mm-dd” format.}
 
 \item{flow_col}{Name of column in data containing the measured  flow data. Default = "flow".}
 
@@ -40,32 +40,32 @@ The function offers three imputation methods: linear interpolation, exponential 
 }
 \examples{
 ## impute flow statistics using 'linear' method
-impute_flow(flow_data,
+impute_flow(data_impute,
             site_col = "flow_site_id",
             date_col = "date",
             flow_col = "flow",
             method = "linear")
 
 ## impute flow statistics using 'exponential' method
-impute_flow(flow_data,
+impute_flow(data_impute,
             site_col = "flow_site_id",
             date_col = "date",
             flow_col = "flow",
             method = "exponential")
 
 impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-impute_flow(flow_data,
+impute_flow(data_equipercentile,
             site_col = "flow_site_id",
             date_col = "date",
             flow_col = "flow",
             method = "equipercentile")
 
 impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-impute_flow(flow_data,
+impute_flow(data_equipercentile,
             site_col = "flow_site_id",
             date_col = "date",
             flow_col = "flow",
-            method = "equipercentile")
-            donor = "donor_stations"
+            method = "equipercentile",
+            donor = donor_data)
 
 }

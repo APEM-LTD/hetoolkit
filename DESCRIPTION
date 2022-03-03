@@ -44,7 +44,8 @@ Imports:
     stringr,
     plotly,
     zoo,
-    stats
+    stats,
+    rict
 Depends: 
     R (>= 3.5.0)
 Suggests: 
@@ -52,4 +53,5 @@ Suggests:
     knitr,
     rmarkdown
 Config/testthat/edition: 3
+Remotes: github::aquaMetrics/rict
 VignetteBuilder: knitr
