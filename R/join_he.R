@@ -51,7 +51,7 @@
 #' 2           4  0.9   0.5   0.8
 #' 3           4  0.4   0.5   0.8
 #'
-## Add biology sample data to flow statistics for each time period
+#' ## Add biology sample data to flow statistics for each time period
 #' join_he(biol, flows, lags = c(0,1), join_type ="add_biol")
 #'
 #' time_period q95_0 q95_1 id life
@@ -60,7 +60,42 @@
 #'           3   0.8   0.6  NA   NA
 #'           4   0.5   0.8   2  0.9
 #'           4   0.5   0.8   3  0.4
-
+#'
+#' ## load example datasets
+#' load(file = "data/biol_data_jhe.rda")
+#' load(file = "data/flow_stats_jhe.rda")
+#' load(file = "data/mapping_jhe.rda")
+#'
+#' # test 1: method A join
+#' join_he(biol_data = biol_data,
+#'         flow_stats = flow_stats,
+#'         mapping = mapping,
+#'         method = "A",
+#'         lags = c(0,1),
+#'         join_type = "add_flows")
+#'
+#' # test 2: method B join
+#' join_he(biol_data = biol_data,
+#'         flow_stats = flow_stats,
+#'         mapping = mapping,
+#'         method = "B",
+#'         lags = c(0,1),
+#'         join_type = "add_flows")
+#'
+#' # test 3: automatic mapping
+#' join_he(biol_data = biol_data,
+#'         flow_stats = flow_stats,
+#'         method = "B",
+#'         lags = c(0,1),
+#'         join_type = "add_flows")
+#'
+#' # test 4: add biol to flows
+#' join_he(biol_data = biol_data,
+#'         flow_stats = flow_stats,
+#'         mapping = mapping,
+#'         method = "A",
+#'         lags = c(0,1),
+#'         join_type = "add_biol")
 
 
 join_he <- function(biol_data,
@@ -135,13 +170,13 @@ join_he <- function(biol_data,
     not_mapped_biol <- dplyr::filter(biol_data, !(biol_site_id %in% unique(mapping$biol_site_id)))
     not_mapped_flow <- dplyr::filter(flow_stats, !(flow_site_id %in% unique(mapping$flow_site_id)))
 
-    if(isTRUE(length(unique(not_mapped_biol$biol_site_id)) >= length(unique(mapping$biol_site_id))) == TRUE)
+    if(isTRUE(TRUE %in% (mapping$biol_site_id %in% biol_data$biol_site_id)) == FALSE)
     {stop(paste("none of the biol_site_ids listed in biol_data are specified in mapping"))}
 
     if(length(not_mapped_biol$biol_site_id) > 0)
       {warning(paste("biol_site_id was not identified in mapping", sep = ": ", list(unique(not_mapped_biol$biol_site_id))))}
 
-    if(isTRUE(length(unique(not_mapped_flow$flow_site_id)) > length(unique(mapping$flow_site_id))) == TRUE)
+    if(isTRUE(TRUE %in% (mapping$flow_site_id %in% flow_stats$flow_site_id)) == FALSE)
     {stop(paste("none of the flow_site_ids listed in flow_stats are specified in mapping"))}
 
     if(isTRUE(length(not_mapped_flow$flow_site_id) > 0) == TRUE)
@@ -224,9 +259,6 @@ join_he <- function(biol_data,
       biol_data_2 <- biol_data %>%
         dplyr::left_join(mapping, by = "biol_site_id")
 
-      if(TRUE %in% (unique(biol_data_2$flow_site_id) %in% unique(flow_stats$flow_site_id)) == FALSE)
-      {stop("none of the flow_site_ids listed in flow_stats are specified in mapping")}
-
       # index biology and flow stats to find the nearest flow window and create date_list
       date_indx <- survival::neardate(biol_data_2$flow_site_id, flow_stats$flow_site_id,
                                       biol_data_2$date, flow_stats$end_date, best = "prior",
@@ -261,9 +293,6 @@ join_he <- function(biol_data,
     # add mapping
     biol_data_2 <- biol_data %>%
       dplyr::left_join(mapping, by = "biol_site_id")
-
-    if(TRUE %in% (unique(biol_data_2$flow_site_id) %in% unique(flow_stats$flow_site_id)) == FALSE)
-    {stop("none of the flow_site_ids listed in flow_stats are specified in mapping")}
 
     # index biology and flow stats to find the nearest flow window and create date_list
     date_indx <- survival::neardate(biol_data_2$flow_site_id, flow_stats$flow_site_id,
