@@ -254,10 +254,10 @@ env_data_excel <- env_data_excel %>% dplyr::mutate(
   WFD_WATERBODY_ID = as.character(WFD_WATERBODY_ID))
 
 # convert to tibble format
-env_data_excel <- as.tibble(env_data_excel)
+env_data_excel <- as_tibble(env_data_excel)
 
 # join datasets
-env_data_final <- rbind(env_data, env_data_excel)
+env_data <- rbind(env_data, env_data_excel)
 
 ```
 
@@ -312,10 +312,10 @@ rhs_data
 
 The `predict_indices` function mirrors the functionality of the RICT model available on the MS Azure platform (https://gallery.azure.ai/Experiment/RICT-package-2). Specifically, it uses the environmental data downloaded from EDE to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. No classification is undertaken.
 
-All data validation and transformation (conversion) are done within `predict_indices` using functions predefined in HelperFunctionsv1.R. Similarly, predictions are made using PredictionfunctionsV2.R.
+Data validation, transformation (conversion) and predications are done within `predict_indices` using functionality predefined in the AquaMetrics RICT package (https://github.com/aquaMetrics/rict); specifically, the 'rict_predict' function is applied.
 
 To run, the following columns containing substrate composition data must not contain NAs, and must total to 100 for every site:  
-
+ 
 * BOULDERS_COBBLES 
 * PEBBLES_GRAVEL 
 * SAND 
@@ -326,21 +326,26 @@ The code below demonstrates the how to summarise whether these columns contain N
 ```{r predict, warning=FALSE, message=FALSE, tidy=TRUE}
 
 # check substrate variables for presence of NAs
-env_data_final %>%
+env_data %>%
   select(BOULDERS_COBBLES, PEBBLES_GRAVEL, SAND, SILT_CLAY) %>%  
   summarise_all(funs(sum(is.na(.))))
 
 # replace NAs, if required
-env_data_final$BOULDERS_COBBLES[is.na(env_data_final$BOULDERS_COBBLES)] <- 0
+env_data$BOULDERS_COBBLES[is.na(env_data$BOULDERS_COBBLES)] <- 0
 
 ```
 
 Now that the substrate data is complete, the expected scores can be generated.
+Here, we opt to calculate all available indices - we can then filter these down at a later stage.
+
+This is an updated version of the `predict_indices` function.  The first iteration of the function remains available, using `preict_indices_old`.
 
 ```{r predict_1, warning=FALSE, message=FALSE, tidy=TRUE}
 
 # run predictions
-predict_data <- predict_indices(env_data = env_data_final, all_indices = TRUE)
+predict_data <- predict_indices(env_data = env_data, 
+                                file_format = "EDE", 
+                                all_indices = TRUE)
 
 # view predict_data
 predict_data
@@ -348,7 +353,13 @@ predict_data
 # drop unwanted variables
 keeps <- c("biol_site_id", "SEASON", "TL2_WHPT_ASPT_AbW_DistFam", "TL2_WHPT_NTAXA_AbW_DistFam", "TL3_LIFE_Fam_DistFam", "TL3_PSI_Fam")
 
-predict_data_final <- predict_data[ , (names(predict_data) %in% keeps)]
+predict_data <- predict_data[ , (names(predict_data) %in% keeps)]
+
+predict_data <- predict_data %>%
+  dplyr::rename(Season = SEASON) %>%
+  dplyr::mutate(Season = case_when(Season == 1 ~ "Spring",
+                                   Season == 2 ~ "Summer",
+                                   Season == 3 ~ "Autumn"))
 
 ```
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_flowstats.R
 \name{calc_flowstats}
 \alias{calc_flowstats}
-\title{Calculate a suite of long-term and seasonal flow statistics for one or more sites.}
+\title{Calculate a suite of long-term and time-varying flow statistics for one or more sites.}
 \usage{
 calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = “imputed”, win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, standardise = FALSE, ref_col = NULL)
 }
@@ -19,99 +19,101 @@ calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "f
 
 \item{win_start}{Start date of first time window (in yyyy-mm-dd format). Default = "1995-04-01".}
 
-\item{win_width}{Width of the time window, in days, weeks, months, quarters or years  (see ?seq.Date for options). Default = "6 months".}
+\item{win_width}{Width of the time window, in days, weeks, months or years  (see ?seq.Date for options). Default = "6 months".}
 
-\item{win_step}{The increment by which the time window moves, in days, weeks, months, quarters or years (see ?seq.Date for options). Default = "6 months".}
+\item{win_step}{The increment by which the time window moves, in days, weeks, months or years (see ?seq.Date for options). Default = "6 months".}
 
-\item{date_range}{Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years.}
+\item{date_range}{Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years (i.e c(01-01-2000, 31-12-2020))}
 
-\item{q_low}{Qx flow threshold (between 1 and 99) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).}
+\item{q_low}{Qx flow threshold (between 1 and 99, as an integer) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).}
 
-\item{q_high}{Qx flow threshold (between 1 and 99) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).}
+\item{q_high}{Qx flow threshold (between 1 and 99, as an integer) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).}
 
 \item{scaling}{Should the time series flow data be scaled by the long-term mean flow  at each site? Default = FALSE.}
 
 \item{ref_col}{Name of column in dataset containing reference flow scenario against which selected flow statistics are z-score standardised. Default = NULL.}
 }
 \value{
-calc_flowstats returns a list of two data frames. The first data frame contains a suite of time-varying flow statistics for every 6 month winter/summer period at every site. The columns are as follows:
+The function returns a list of two data frames. The first data frame contains a suite of time-varying flow statistics for every time period at every site. The columns are as follows:
 \itemize{
-\item flow_site_id: a unique site id.
-\item start_date: start date of the time period (in yyyy-mm-dd format).
-\item end_date: end date of the time period (in yyyy-mm-dd format).
-\item n_data: the number of records with valid flows (not NA).
-\item n_missing: the number of missing flow (flow = NA).
-\item n_total: the total number of flow records (sum of n_data and n_missing).
-\item prop_missing: the proportion of missing flow records.
-\item n_imputed: the number of flow records that have been imputed (calculated only if the imputed_col argument is specified).
-\item mean: mean flow
-\item sd: standard deviation of flows
-\item Q5: the unstandardised Q10 flow in a 6-month winter or summer period.
-\item Q10: the unstandardised Q10 flow in a 6-month winter or summer period.
-\item Q20: the unstandardised Q10 flow in a 6-month winter or summer period.
-\item Q25: the unstandardised Q10 flow in a 6-month winter or summer period.
-\item Q30: the unstandardised Q30 flow in a 6-month winter or summer period.
-\item Q50: the unstandardised Q50 flow in a 6-month winter or summer period.
-\item Q70: the unstandardised Q70 flow in a 6-month winter or summer period.
-\item Q75: the unstandardised Q10 flow in a 6-month winter or summer period.
-\item Q80: the unstandardised Q10 flow in a 6-month winter or summer period.
-\item Q90: the unstandardised Q70 flow in a 6-month winter or summer period.
-\item Q95: the unstandardised Q95 flow in a 6-month winter or summer period.
-\item Q99: the unstandardised Q99 flow in a 6-month winter or summer period.
-\item Q10z: the Q10 flow in a six month period, standardised using the above mean and sd. If ref_col = NULL, then the mean and sd parameters are calculated using the same flow time series (i.e. Q10z = (Q10 - Q10mean) / Q10sd); if not, the mean and sd parameters are calculated from the ref_col flow time series (i.e. Q10z = (Q10 - Q10mean_ref) / Q10sd_ref).
-\item Q20z: (as for Q10)
-\item Q25z: (as for Q10)
-\item Q30z: (as for Q10)
-\item Q50z: (as for Q10)
-\item Q70z: (as for Q10)
-\item Q75z: (as for Q10)
-\item Q80z: (as for Q10)
-\item Q90z: (as for Q10)
-\item Q95z: (as for Q10)
-\item Q99z: (as for Q10)
-\item dry_n: number of records when flow drops to zero
-\item dry_e: number of events when flow drops to zero
-\item dry_start: day of year (1-366) of first zero flow record
-\item dry_end: day of year (1-366) of last zero flow record
-\item dry_mid: mean day of year (1-366) of all zero flow records
-\item low_n: number of records when flow is below q_low
-\item low_e: number of events when flow drops below q_low
-\item low_start: day of year (1-366) of first record below q_low
-\item low_end: day of year (1-366) of first record below q_low
-\item low_mid: circular  mean day of year (1-366) of all records below q_low
-\item low_magnitude: mean flow deficit below q_low
-\item low_severity: mean flow deficit below q_low
-\item high_n: number of records when flow is above q_high
-\item high_e: number of events when flow exceeds q_high
-\item high_start: day of year (1-366) of first record above q_high
-\item high_end: day of year (1-366) of last record above q_high
-\item high_mid: circular mean day of year (1-366) of all records above q_high
-\item e_above3xq50: number of events when flow exceeds 3 x the long-term median (Q50) flow
-\item e_above5xq50: number of events when flow exceeds 5 x the long-term median (Q50) flow
-\item e_above7xq50: number of events when flow exceeds 7 x the long-term median (Q50) flow
-\item volume: sum of flows
-\item volume_z: As for q5z
-\item min: minimum flow
-\item min_z: As for q5z
-\item min_doy: minimum flow
-\item min_7day: minimum flow
-\item min_7day_z: As for q5z
-\item min_7day_doy: day of year (1-366, as midpoint) of 7-day minimum flow period
-\item min_30day: minimum 30-day mean flow
-\item min_30day_z: As for q5z
-\item min_30day_doy: day of year of (1-366, as midpoint) of 30-day minimum flow
-\item max: maximum flow
-\item max_z: As for q5z
-\item max_doy: day of year of maximum flow
+\item flow_site_id: a unique site id
+\item win_no: an autonumber counting the sequence of flow time periods
+\item start_date: start date of the time period (in yyyy-mm-dd format)
+\item end_date: end date of the time period (in yyyy-mm-dd format)
+\item n_data: the number of records with valid flows (not NA)
+\item n_missing: the number of missing flow records (flow = NA)
+\item n_total: the total number of flow records (sum of n_data and n_missing)
+\item prop_missing: the proportion of missing flow records (n_data / n_total)
+\item n_imputed: the number of flow records that have been imputed (this is calculated only if the imputed_col argument is specified)
+\item mean: mean flow (min. (min. records required = 2)records required = 2)
+\item sd: the standard deviation of flows (min. records required = 2)
+\item Q5: the unstandardised Q5 flow (min. records required = 20)
+\item Q10: the unstandardised Q10 flow (min. records required = 10)
+\item Q20: the unstandardised Q20 flow (min. records required = 5)
+\item Q25: the unstandardised Q25 flow (min. records required = 4)
+\item Q30: the unstandardised Q30 flow (min. records required = 4)
+\item Q50: the unstandardised Q50 flow (min. records required = 2)
+\item Q70: the unstandardised Q70 flow (min. records required = 4)
+\item Q75: the unstandardised Q75 flow (min. records required = 4)
+\item Q80: the unstandardised Q80 flow (min. records required = 5)
+\item Q90: the unstandardised Q90 flow (min. records required = 10)
+\item Q95: the unstandardised Q95 flow (min. records required = 20)
+\item Q99: the unstandardised Q99 flow (min. records required = 100)
+\item Q5z: the Q5 flow, standardised using the mean and sd of the Q5 flows across all time periods for that site, i.e. q5_z = (q5 – q5mean) / Q5sd. If ref_col is not NULL, then the Q5 is estimated for the flow_col time series, but standardised using the mean and sd parameters for the ref_col time series (i.e. q50_z = (q50 - q50mean_ref) / q50sd_ref). (min. records required = 20)
+\item Q10z: as for Q5z (min. records required = 10)
+\item Q20z: as for Q5z (min. records required = 5)
+\item Q25z: as for Q5z (min. records required = 4)
+\item Q30z: as for Q5z (min. records required = 4)
+\item Q50z: as for Q5z (min. records required = 2)
+\item Q70z: as for Q5z (min. records required = 4)
+\item Q75z: as for Q5z (min. records required = 4)
+\item Q80z: as for Q5z (min. records required = 5)
+\item Q90z: as for Q5z (min. records required = 10)
+\item Q95z: as for Q5z (min. records required = 20)
+\item Q99z: as for Q5z (min. records required = 100)
+\item dry_n: number of records with zero flow (min. records required = 2)
+\item dry_e: number of events when flow drops to zero (min. records required = 28)
+\item dry_start: day of year (1-366) of first zero flow record (min. records required = 8)
+\item dry_end: day of year (1-366) of last zero flow record (min. records required = 28)
+\item dry_mid: mean day of year (1-366) of all zero flow records (min. records required = 28)
+\item low_n: number of records when flow is below the q_low threshold (min. records required = 2)
+\item low_e: number of events when flow drops below the q_low threshold (min. records required = 28)
+\item low_start: day of year (1-366) of first record below the q_low threshold (min. records required = 28)
+\item low_end: day of year (1-366) of first record below the q_low threshold (min. records required = 28)
+\item low_mid: circular  mean day of year (1-366) of all records below the q_low threshold (min. records required = 28)
+\item low_magnitude: mean flow deficit below q_low (min. records required = 28)
+\item low_severity: cumulative flow deficit below q_low (low_n x low_magnitude) (min. records required = 28)
+\item high_n: number of records when flow is above the q_high threshold (min. records required = 2)
+\item high_e: number of events when flow exceeds the q_high threshold (min. records required = 28)
+\item high_start: day of year (1-366) of first record above the q_high threshold (min. records required = 28)
+\item high_end: day of year (1-366) of last record above the q_high threshold (min. records required = 28)
+\item high_mid: circular mean day of year (1-366) of all records above the q_high threshold (min. records required = 28)
+\item e_above3xq50: number of events when flow exceeds 3 x the long-term median (Q50) flow (min. records required = 28)
+\item e_above5xq50: number of events when flow exceeds 5 x the long-term median (Q50) flow (min. records required = 28)
+\item e_above7xq50: number of events when flow exceeds 7 x the long-term median (Q50) flow (min. records required = 28)
+\item volume: total volume discharged (sum of flows) (min. records required = 3)
+\item volume_z: as for q5z (min. records required = 3)
+\item min: minimum flow (min. records required = 3)
+\item min_z: as for q5z (min. records required = 3)
+\item min_doy: day of year (1-366) of minimum flow (min. records required = 3)
+\item min_7day: minimum 7-day mean flow (min. records required = 90)
+\item min_7day_z: as for q5z (min. records required = 90)
+\item min_7day_doy: day of year (1-366) of midpoint of 7-day minimum flow period (min. records required = 90)
+\item min_30day: minimum 30-day mean flow (min. records required = 180)
+\item min_30day_z: as for q5z (min. records required = 180)
+\item min_30day_doy: day of year of (1-366) of midpoint of 30-day minimum flow period (min. records required = 180)
+\item max: maximum flow (min. records required = 3)
+\item max_z: as for q5z (min. records required = 3)
+\item max_doy: day of year (1-366) of maximum flow (min. records required = 3)
 }
 
 The second data table contains long-term flow statistics. The data are arranged in long format, with the following columns:
 \itemize{
 \item flow_site_id (a unique site id)
-\item start_date: start date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated.
-\item end_date: end date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated.
-\item parameter  (minimum, maximum and mean flow; flow duration curve percentiles (p1 to p99); base flow index (bfi); and seasonal means and standard deviations for Q50, Q30, Q50, Q75 and Q95).
-\item value (calculated statistic).
+\item start_date: start date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated
+\item end_date: end date of the long-term time period (in yyyy-mm-dd format) for which the statistics are calculated
+\item parameter (long-term minimum, maximum and mean flow; long-term flow duration curve percentiles (p1 to p99); long-term base flow index (bfi = 7-day minimum flow / mean flow); and long-term mean and standard deviation of the time-varying q5 to q99, minimum flow, maximum flow and 7-day minimum flow statistics)
+\item value (calculated statistic)
 }
 }
 \description{
@@ -130,7 +132,7 @@ To make some statistics more comparable across sites, the scaling argument optio
 
 Additionally, selected statistics (denoted by a _z suffix) are standardised using the mean and standard deviation of the estimated statistics across time periods at a given site (e.g. q5_z = (q5 – q5_mean) / q5_sd)). These standardised statistics are dimensionless, and so comparable across sites. The choice to which statistics to standardise is hard-wired, and standardised  statistics are calculated regardless of whether or not the raw flow data have been scaled (via the 'scale' argument)).
 
-The function also includes the facility to standardise the statistics for one flow scenario (specified via flow_col) using mean and standard deviation of flow statistics from the other scenario (specified via ref_col). For example, if flow_col = naturalised flows and ref_col = historical flows, then the resulting statistics can be input into a hydro-ecological model calibrated using historical flow data and used to make predictions of ecological status under naturalised flows.
+The function also includes the facility to standardise the statistics for one flow scenario (specified via flow_col) using mean and standard deviation of flow statistics from another scenario (specified via ref_col). For example, if flow_col = naturalised flows and ref_col = historical flows, then the resulting statistics can be input into a hydro-ecological model calibrated using historical flow data and used to make predictions of ecological status under naturalised flows.
 }
 \examples{
 ## calculate flow statistics for a contiguous series of summer (April to September) and winter (October to March) time periods:

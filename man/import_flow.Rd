@@ -27,7 +27,7 @@ import_flow(sites = NULL, inputs = NULL, start_date = 1900-01-01, end_date = Sys
 A tibble containing daily flow data for the specified sites, with the following columns: \code{input} ("HDE", "NRFA" or "FLOWFILES"), \code{flow_site_id}, \code{date}, \code{flow} and \code{quality}.
 }
 \description{
-import_flow is a high-level function that calls \code{import_nrfa}, \code{import_hde} and \code{import_flowfiles} to import data for a user-defined list of sites.
+\code{import_flow} is a high-level function that calls \code{import_nrfa}, \code{import_hde} and \code{import_flowfiles} to import data for a user-defined list of sites.
 }
 \details{
 import_flow requires a list of site (station) ids (called \code{sites}), and a corresponding list (called \code{inputs}) specifying where to source the data for each site (either "NRFA", "HDE" or, for local files, "FLOWFILES"). \code{sites} and \code{inputs} must be of equal length. Any records where \code{sites} or \code{inputs} is NA are dropped.
