@@ -21,12 +21,13 @@ knitr::opts_chunk$set(echo = TRUE)
 rm(list = ls())
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjPlot, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr,ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny)
+install.packages("sjPlot", dependencies = T)
+pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr,ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny)
 
 # Load the package
 devtools::load_all()
 
-#install_deps()
+install_deps()
 
 ```
 
@@ -950,7 +951,7 @@ Other useful diagnostic plots for `lmer` models include:
 
 ```{r message=FALSE, warning=FALSE}
 
-sjPlot::plot_model(model = model_3, 
+plot_model(model = model_3, 
                    type = "re", 
                    facet.grid = FALSE, 
                    free.scale = FALSE, 

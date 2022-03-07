@@ -60,7 +60,7 @@ predict_indices <- function(env_data,
       summarise_all(funs(sum(is.na(.))))
 
     # replace NAs, if required
-    raw.input.data$BOULDERS_COBBLES[is.na(raw.input.data$raw.input.data)] <- 0
+    raw.input.data$BOULDERS_COBBLES[is.na(raw.input.data$BOULDERS_COBBLES)] <- 0
 
   # Add RICT Format File Columns
   raw.input.data$SPR_SEASON_ID <- 1
@@ -104,7 +104,8 @@ predict_indices <- function(env_data,
                   BOULDER_COBBLES = BOULDERS_COBBLES,
                   HARDNESS = TOTAL_HARDNESS,
                   MEAN_WIDTH = WIDTH,
-                  MEAN_DEPTH = DEPTH) %>%
+                  MEAN_DEPTH = DEPTH,
+                  SITE = BIOL_SITE_ID) %>%
     dplyr::mutate(YEAR = as.integer(format(Sys.Date(), "%Y")))
 
   }

@@ -179,7 +179,7 @@ diag_lmer <- function(model,
   }
 
   # 4A. Histogram of residuals (all data) - I prefer this to a single boxplot.
-  p <- sjPlot::plot_model(model, type = "diag")[[3]]
+  p <- plot_model(model, type = "diag")[[3]]
   if(is.null(facet_by)) p_out[[4]]<-p
 
   # 4B. Boxplot of residuals by Group, to check for equal variances
@@ -195,7 +195,7 @@ diag_lmer <- function(model,
   }
 
   # 5. Plot of residuals vs each fixed predictor
-  p <- sjPlot::plot_model(model, type = 'resid', grid = TRUE, show.data = TRUE)
+  p <- plot_model(model, type = 'resid', grid = TRUE, show.data = TRUE)
   p <- p + labs(title = paste0("Residuals vs fixed predictor",ifelse(dim(model@pp$X)[2]>2,"s","")), y = "Residuals")
   p_out[[5]] <- p
 
