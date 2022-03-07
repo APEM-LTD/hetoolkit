@@ -56,5 +56,7 @@ Suggests:
     knitr,
     rmarkdown
 Config/testthat/edition: 3
-Remotes: github::aquaMetrics/rict
+Remotes: github::aquaMetrics/rict,
+         github::strengejacke/sjPlot,
+         github::strengejacke/sjstats
 VignetteBuilder: knitr
