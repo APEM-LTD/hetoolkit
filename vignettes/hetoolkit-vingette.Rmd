@@ -21,11 +21,10 @@ knitr::opts_chunk$set(echo = TRUE)
 rm(list = ls())
 
 if(!require(pacman)) install.packages("pacman")
-install.packages("sjPlot", dependencies = T)
-pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr,ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny)
+pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr, ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny)
 
 # Load the package
-devtools::load_all()
+devtools::load_all(export_all = FALSE)
 
 install_deps()
 
@@ -784,11 +783,11 @@ autumn_data <- all_data %>% filter(Season == "Autumn")
 #filter data to eliminate NAs (necessary for cross-validation later on)
 autumn_data <- autumn_data %>% filter(is.na(LIFE_F_OE) == FALSE)
 autumn_data <- autumn_data %>% filter(is.na(biol_site_id) == FALSE)
-autumn_data <- autumn_data %>% filter(is.na(Q95z) == FALSE)
-autumn_data <- autumn_data %>% filter(is.na(Q10z) == FALSE)
-autumn_data <- autumn_data %>% filter(is.na(Q95zLS1) == FALSE)
+autumn_data <- autumn_data %>% filter(is.na(Q95z_lag0) == FALSE)
+autumn_data <- autumn_data %>% filter(is.na(Q10z_lag0) == FALSE)
+autumn_data <- autumn_data %>% filter(is.na(Q95z_lag1) == FALSE)
 
-model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + Q10z + Q95zLS1 + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
+model_full <- lme4::lmer(LIFE_F_OE ~ Q95z_lag0 + Q10z_lag0 + Q95z_lag1 + (Q95z_lag0 | biol_site_id), data = autumn_data, REML = FALSE)
 
 summary(model_full)
 
@@ -853,7 +852,7 @@ cv_2[1]
 ```{r cv4, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop Q10z term
-model_3 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
+model_3 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z_lag0 + (Q95z_lag0 | biol_site_id), data = autumn_data, REML = FALSE)
 
 cv_3 <- model_cv(model = model_3, data = autumn_data, group = "biol_site_id", k = 5, r = 20, control = my_control)
 
@@ -951,7 +950,7 @@ Other useful diagnostic plots for `lmer` models include:
 
 ```{r message=FALSE, warning=FALSE}
 
-plot_model(model = model_3, 
+sjPlot::plot_model(model = model_3, 
                    type = "re", 
                    facet.grid = FALSE, 
                    free.scale = FALSE, 
