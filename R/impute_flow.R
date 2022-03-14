@@ -308,10 +308,10 @@ impute_flow <- function(data,
 
         # Identify the corresponding donor station
         donor_flow <- donor
-        donor_flow$flow_site <- donor[,1]
-        donor_flow$donor_site <- donor[,2]
+        donor_flow$flow_site <- donor_flow[,1]
+        donor_flow$donor_site <- donor_flow[,2]
 
-        if(isTRUE(unique(original_flow$site) %in% unique(donor_flow$flow_site)) == FALSE)
+        if(unique(original_flow$site) %in% unique(donor_flow$flow_site) == FALSE)
         {warning(paste("A donor site was not specified for site", sep = "-", i))
 
           all_flow <- original_flow

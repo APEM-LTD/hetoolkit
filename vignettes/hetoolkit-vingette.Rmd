@@ -312,7 +312,11 @@ rhs_data
 
 The `predict_indices` function mirrors the functionality of the RICT model available on the MS Azure platform (https://gallery.azure.ai/Experiment/RICT-package-2). Specifically, it uses the environmental data downloaded from EDE to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. No classification is undertaken.
 
-Data validation, transformation (conversion) and predications are done within `predict_indices` using functionality predefined in the AquaMetrics RICT package (https://github.com/aquaMetrics/rict); specifically, the 'rict_predict' function is applied.
+Data validation, transformation (conversion) and predications are done within `predict_indices` using functionality predefined in the AquaMetrics RICT package (https://github.com/aquaMetrics/rict); specifically, the 'rict_predict' function from the aquaMetrics RICT package is applied.
+
+The `predict_indices` function can accept environmental data formatted in either of two formats, specified using the 'file_format' agruement:
+* "EDE" - environmental data is formatted as downloaded from the EA's Ecology Data Explorer
+* "RICT" - environmental data is in the RICT template format.
 
 To run, the following columns containing substrate composition data must not contain NAs, and must total to 100 for every site:  
  
@@ -321,7 +325,7 @@ To run, the following columns containing substrate composition data must not con
 * SAND 
 * SILT_CLAY  
 
-The code below demonstrates the how to summarise whether these columns contain NAs, and how to replace NAs as required.
+The code below demonstrates the how to summarise whether these columns contain NAs, and how to replace NAs as required. Note, this code will only run if using data in the "EDE" file format.
 
 ```{r predict, warning=FALSE, message=FALSE, tidy=TRUE}
 
@@ -512,19 +516,55 @@ gridExtra::grid.arrange(a[[1]])
 
 ## Impute flow gaps
 
-The `impute_flow` function is designed to infills missing records in daily flow time series for one or more sites (gauging stations) using either interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.
+The `impute_flow` function is designed to infill missing records in daily flow time series for one or more sites (gauging stations) using either an interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.
 
-The output dataset is in long format, similar to that produced by `import_flow`.  The output dataset contain an 'imputed' colunms; this is a flag  indicating whether each flow value is original (0) or imputed (1).
+The most straight-forward interpolation can be completed using a 'linear' or 'exponential' method. 
 
-Additionally, this function plots up observed and imputed flow values for each site; enabling the user to validate the imputation.
+The output dataset is in long format, similar to that produced by `import_flow`.  The output dataset contains an 'imputed' colunm; this is a flag  indicating whether each flow value is original (0) or imputed (1).  Additionally, this function plots up observed and imputed flow values for each site; enabling the user to validate the imputation.  
+
+Flow interpolation using the 'linear' method is demonstated below:
 
 ```{r impute flow, warning=FALSE, message=FALSE, tidy=TRUE}
 
-flow_data <- impute_flow(flow_data, 
-                         site_col = "flow_site_id", 
-                         date_col = "date", 
-                         flow_col = "flow", 
-                         method = "linear")
+flow_data_imputed <- impute_flow(flow_data, 
+                                 site_col = "flow_site_id", 
+                                 date_col = "date", 
+                                 flow_col = "flow", 
+                                 method = "linear")
+
+```
+
+If applying the 'equipercentile' method, an optional 'donor' arguement can be specified.  The 'donor' arguement must be specified in data frame format with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. The function assumes that data for all flow sites specified within the 'donor' data table, including paired donor sites, are contained within the 'flow_data' supplied.  
+
+If flow data for paired donor stations are not already included within the 'flow_data' dataframe, then it will be necessary to appended the donor flow data, as is demonstrated below:
+
+```{r append donor flow, warning=FALSE, message=FALSE, tidy=TRUE}
+
+# create 'donor' data frame
+donor_mapping <- data.frame(station = ("F3105"), donor_station = ("033014"))
+
+# get a list of donor sites
+donorsites <- unique(donor$donor_station)
+
+# download donor flow data
+flow_data_donor <- import_flow(sites = donorsites,
+                    inputs = "HDE",
+                    start_date = "2010-01-01",
+                    end_date = "2019-12-31",
+                    dir = "data/wiski",
+                    skip_num = 21,
+                    col_order = c(1,2,3))
+
+# append donor flow data to the original flow data
+flow_data_all <- flow_data %>% rbind(flow_data_donor)
+
+# impute flow data using the equipercentile method
+flow_data_imputed <- impute_flow(flow_data_all, 
+                                 site_col = "flow_site_id", 
+                                 date_col = "date", 
+                                 flow_col = "flow", 
+                                 method = "equipercentile",
+                                 donor = donor_mapping)
 
 ```
 
@@ -545,6 +585,7 @@ This is an updated version of the `calc_flowstats` function.  The first iteratio
 ```{r calculate flow stats, warning=FALSE, message=FALSE, results=FALSE, tidy=TRUE}
 
 # uses flow_data, as produced using import_flow()
+# will also accept interpolated flow data (flow_data_imputed), as produced using impute_flow()
 
 #  set any negative flow readings to NA
 flow_data$flow[flow_data$flow <= 0] <- NA
