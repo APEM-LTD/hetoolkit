@@ -580,7 +580,7 @@ It is primarily designed to work with mean daily flows (e.g. as produced by impo
 
 Regardless, the data should be regularly spaced and the same time step should be used for all sites.
 
-This is an updated version of the `calc_flowstats` function.  The first iteration of the function remains available, using `calc_flowstats_old`.
+This is an updated version of the `calc_flowstats` function.  The first iteration of the function, which employs fixed 6-monthly spring and autumn flow periods, remains available using `calc_flowstats_old`.
 
 ```{r calculate flow stats, warning=FALSE, message=FALSE, results=FALSE, tidy=TRUE}
 
@@ -611,7 +611,7 @@ The second data table contains long-term flow statistics. The data are arranged 
 
 * flow_site_id (a unique site id);
 * season (S = summer, W = winter, A = all);
-* parameter (base flow index (bfi), flow duration curve percentiles (p1 to p99), and seasonal means and standard deviations for Q10, Q30, Q50, Q75 and Q95); and
+* parameter (base flow index (bfi), flow duration curve percentiles (p1 to p99), and seasonal means and standard deviations for Q5, Q10, Q20, Q25, Q30, Q50, Q70, Q75, Q80, Q90, Q95 and Q99); and
 * value (calculated statistic).
 
 ```{r calculate flow stats_print2, warning=FALSE, message=FALSE, tidy=TRUE}
