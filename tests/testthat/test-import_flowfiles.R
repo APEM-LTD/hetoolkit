@@ -45,12 +45,12 @@ test_that ("Error if end date is in the wrong format",{
 })
 
 test_that ("Error if start date is in the future",{
-  expect_error(import_flowfiles(sites =  "0130TH", dir = "data/wiski" , skip_num = 21, col_order = c(1,2,3), start_date="2022-01-01"),
+  expect_error(import_flowfiles(sites =  "0130TH", dir = "data/wiski" , skip_num = 21, col_order = c(1,2,3), start_date="2030-01-01"),
              "Start date given is in the future")
 })
 
 test_that ("Error if end date is in the future",{
-  expect_error(import_flowfiles(sites =  "0130TH", dir = "data/wiski" , skip_num = 21, col_order = c(1,2,3), end_date="2022-01-01"),
+  expect_error(import_flowfiles(sites =  "0130TH", dir = "data/wiski" , skip_num = 21, col_order = c(1,2,3), end_date="2030-01-01"),
              "End date given is in the future")
 })
 

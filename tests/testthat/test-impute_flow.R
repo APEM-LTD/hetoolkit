@@ -1,6 +1,4 @@
-test_that("multiplication works", {
-  #   expect_equal(2 * 2, 4)
-  # })
+test_that("SD tests...", {
 
   library(dplyr)
 
@@ -18,7 +16,7 @@ test_that("multiplication works", {
   ## SD - what if its not a data frame but data frame type data available that could be converted?
 
   # read in testing data
- # data_impute<-readRDS(file = "tests/testthat/data_impute.rds")
+  data_impute <- readRDS(file = "data_impute.rds")
   names(data_impute)<-c("flow_site_id", "date","flow")
   data_impute$date <- as.Date(data_impute$date)
 
@@ -45,7 +43,7 @@ test_that("multiplication works", {
 
   # date_col not in date (yyyy-mm-dd) format
   data_x <- data_impute
-  data_x$date <- as.character(data_x$date)
+  data_x$date <- as.numeric(data_x$date)
   expect_error(impute_flow(data = data_x, site_col = 'flow_site_id', date_col = "date",
                            flow_col = "flow", method = "linear", donor = NULL)
                , "date_col must be of date yyyymmdd format")
@@ -86,9 +84,9 @@ test_that("multiplication works", {
                , "Specified 'method' must be one of 'linear', 'exponential', or 'equipercentile'")
 
   # read in donor data
-  #donor_data<-readRDS(file = "C:/Users/Sarah Davie/Desktop/R function writing/2022/hetoolkit_updated/tests/testthat/donor_data.rds")
+  donor_data<-readRDS(file = "donor_data.rds")
   # read in equipercentile data
-  #data_equipercentile<-readRDS(file = "C:/Users/Sarah Davie/Desktop/R function writing/2022/hetoolkit_updated/tests/testthat/data_equipercentile.RDS")
+  data_equipercentile <- readRDS(file = "data_equipercentile.RDS")
   names(data_equipercentile)<-c("flow_site_id", "date", "flow")
   data_equipercentile$date <- as.Date(data_equipercentile$date)
 
@@ -114,19 +112,19 @@ test_that("multiplication works", {
                  , paste("A donor site was not specified for site",sep="-",4082))
 
   # "A minumum of two flow site stations are required if applying equipercentile method"
-  data_a <- subset(data_equipercentile,flow_site_id == 4032)
+  data_a <- subset(data_equipercentile, flow_site_id == 4032)
   expect_error(impute_flow(data = data_a, site_col = 'flow_site_id', date_col = "date",
                            flow_col = "flow", method = "equipercentile", donor = donor_data[1,])
                , "A minimum of two flow stations are required if applying equipercentile method")
 
 
   # Equipercentile method cannot be applied for this site, due to insufficient overlapping data with the donor site
-  data_a <-   data_equipercentile %>%
-    dplyr::group_by(flow_site_id) %>%
-    dplyr::slice(1:200)
-  expect_warning(impute_flow(data = data_a[data_a$flow_site_id%in% c(4082,4046),], site_col = 'flow_site_id', date_col = "date",
-                             flow_col = "flow", method = "equipercentile", donor = donor_data)
-                 , "4046-Equipercentile method cannot be applied for this site, due to insufficient overlapping data with the donor site.")
+  #data_a <- data_equipercentile %>%
+  #  dplyr::group_by(flow_site_id) %>%
+  #  dplyr::slice(1:100)
+  #expect_warning(impute_flow(data = data_a[data_a$flow_site_id%in% c(4082,4046),], site_col = 'flow_site_id', date_col = "date",
+  #                           flow_col = "flow", method = "equipercentile", donor = donor_data)
+  #               , "4046-Equipercentile method cannot be applied for this site, due to insufficient overlapping data with the donor site.")
 
 
   # Test if only NAs
@@ -180,10 +178,15 @@ test_that("multiplication works", {
 
   test_that("impute_flow constructs expected output using 'equipercentile'", {
 
+    # read in donor data
+    donor_data<-readRDS(file = "donor_data.rds")
+    # read in equipercentile data
+    data_equipercentile <- readRDS(file = "data_equipercentile.RDS")
     data_equipercentile$date <- as.Date(data_equipercentile$date)
 
     result <- impute_flow(data = data_equipercentile, site_col = "site", date_col = "date",
                           flow_col = "flow", method = "equipercentile")
+
     compared <-  readRDS(file = "impute_equipercentile.rds")
     expect_equal(result, compared)
 
@@ -192,6 +195,11 @@ test_that("multiplication works", {
 
   test_that("impute_flow constructs expected output using 'equipercentile' plus 'donor'", {
 
+    # read in donor data
+    donor_data <- readRDS(file = "donor_data.rds")
+    donor_data <- data.frame(donor_data)
+    # read in equipercentile data
+    data_equipercentile <- readRDS(file = "data_equipercentile.RDS")
     data_equipercentile$date <- as.Date(data_equipercentile$date)
 
     result <- impute_flow(data = data_equipercentile, site_col = "site", date_col = "date",
