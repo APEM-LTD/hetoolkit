@@ -187,7 +187,7 @@ First we download zipped shapefiles for our basemap, and load them in as sf obje
 
 ```{r get_data, message=FALSE, warning=FALSE}
 
-download('https://environment.data.gov.uk/UserDownloads/interactive/ace9952e373440e684e984984721a91d78904/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
+download('https://environment.data.gov.uk/UserDownloads/interactive/844afa0ea3224fad8e32fcd33fa7f485187296/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
 
 ## get Wales coastline, just because map looks silly without it
 download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
@@ -325,7 +325,7 @@ To run, the following columns containing substrate composition data must not con
 * SAND 
 * SILT_CLAY  
 
-The code below demonstrates the how to summarise whether these columns contain NAs, and how to replace NAs as required. Note, this code will only run if using data in the "EDE" file format.
+The code below demonstrates the how to summarise whether these columns contain NAs, and how to replace NAs as required. Note, this code will only run successfully if using data in the "EDE" file format.
 
 ```{r predict, warning=FALSE, message=FALSE, tidy=TRUE}
 
