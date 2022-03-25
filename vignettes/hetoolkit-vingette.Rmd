@@ -1,11 +1,11 @@
 ---
-title: "hetoolkit Vignette"
+title: "hetoolkit-Vignette"
 author: "APEM Ltd"
-output: 
-  html_document:
-    
-    df_print: paged
-    toc: true
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{hetoolkit-Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   chunk_output_type: console
 ---
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 rm(list = ls())
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr, ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny)
+pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr, ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny, downloader)
 
 # Load the package
 devtools::load_all(export_all = FALSE)
@@ -187,7 +187,7 @@ First we download zipped shapefiles for our basemap, and load them in as sf obje
 
 ```{r get_data, message=FALSE, warning=FALSE}
 
-download('https://environment.data.gov.uk/UserDownloads/interactive/844afa0ea3224fad8e32fcd33fa7f485187296/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
+download('https://environment.data.gov.uk/UserDownloads/interactive/4b60d462fd1147509b2c649a3abc4a5a24936/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
 
 ## get Wales coastline, just because map looks silly without it
 download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')

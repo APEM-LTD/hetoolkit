@@ -1,7 +1,7 @@
 #' Import environmental base data
 #'
 #' @description
-#' The `import_env` function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip or read in from a local csv or rds file. The data can be optionally filtered by site ID.
+#' The `import_env` function imports envionmental base data for macroinvertebrate sampling sites from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip or read in from a local csv or rds file. The data can be optionally filtered by site ID.
 #'
 #' @usage
 #' import_env(env_dir = NULL, sites = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
