@@ -47,7 +47,7 @@
 #'    - prop_missing: the proportion of missing flow records (n_data / n_total)
 #'    - n_imputed: the number of flow records that have been imputed (this is calculated only if the imputed_col argument is specified)
 #     - prop_imputed: the proportion of flow records that have been imputed (calculated only if the imputed_col argument is specified)
-#'    - mean: mean flow (min. (min. records required = 2)records required = 2)
+#'    - mean: mean flow (min. records required = 2)
 #'    - sd: the standard deviation of flows (min. records required = 2)
 #'    - Q5: the unstandardised Q5 flow (min. records required = 20)
 #'    - Q10: the unstandardised Q10 flow (min. records required = 10)

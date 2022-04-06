@@ -1,6 +1,6 @@
 #' Impute missing flow data.
 #'
-#' @description This function infills missing records in daily flow time series for one or more sites (gauging stations) using either interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.  Note, it is advisable to consult a hydrologist if your data contains extensive/lengthy gaps.
+#' @description This function infills missing records in daily flow time series for one or more sites (gauging stations) using either interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.  Note, it is advisable to consult a hydrologist when doing any flow imputation, particularly if your data contains extensive/lengthy gaps.
 #'
 #' @usage impute_flow(data, site_col = " flow_site_id", date_col = "date", flow_col = "flow", method = "linear", donor = NULL)
 #'
@@ -383,7 +383,7 @@ impute_flow <- function(data,
 
         # Specify method
         all_flow <- all_flow %>%
-          dplyr::mutate(method = ifelse(imputed == 1, "Exponential", NA))
+          dplyr::mutate(method = ifelse(imputed == 1, "Equipercentile", NA))
 
         # incorporate imputed flow to flow column
         all_flow <- all_flow %>% dplyr::mutate(flow = ifelse(is.na(flow), flow_equipercentile, flow))

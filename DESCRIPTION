@@ -48,7 +48,10 @@ Imports:
     stats,
     rict
 Depends: 
-    R (>= 3.5.0)
+    R (>= 3.5.0),
+    dplyr (>= 1.0.2),
+    lubridate (>= 1.7.9.2),
+    ggplot2 (>= 3.3.3)
 Suggests: 
     testthat (>= 3.0.0),
     knitr,

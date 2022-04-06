@@ -24,8 +24,8 @@ if(!require(pacman)) install.packages("pacman")
 pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr, ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny, downloader)
 
 # Load the package
+library(devtools)
 devtools::load_all(export_all = FALSE)
-
 install_deps()
 
 ```
@@ -187,7 +187,8 @@ First we download zipped shapefiles for our basemap, and load them in as sf obje
 
 ```{r get_data, message=FALSE, warning=FALSE}
 
-download('https://environment.data.gov.uk/UserDownloads/interactive/4b60d462fd1147509b2c649a3abc4a5a24936/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
+# link not working, zip file saved in vignette folder
+#download('https://environment.data.gov.uk/UserDownloads/interactive/3d91bd0c20b74#7b1bd157a32db8aa07598172/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', #destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
 
 ## get Wales coastline, just because map looks silly without it
 download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
@@ -312,9 +313,9 @@ rhs_data
 
 The `predict_indices` function mirrors the functionality of the RICT model available on the MS Azure platform (https://gallery.azure.ai/Experiment/RICT-package-2). Specifically, it uses the environmental data downloaded from EDE to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. No classification is undertaken.
 
-Data validation, transformation (conversion) and predications are done within `predict_indices` using functionality predefined in the AquaMetrics RICT package (https://github.com/aquaMetrics/rict); specifically, the 'rict_predict' function from the aquaMetrics RICT package is applied.
+Data validation, transformation (conversion) and predictions are done within `predict_indices` using functionality predefined in the AquaMetrics RICT package (https://github.com/aquaMetrics/rict); specifically, the 'rict_predict' function from the aquaMetrics RICT package is applied.
 
-The `predict_indices` function can accept environmental data formatted in either of two formats, specified using the 'file_format' agruement:
+The `predict_indices` function can accept environmental data formatted in either of two formats, specified using the 'file_format' argument:
 * "EDE" - environmental data is formatted as downloaded from the EA's Ecology Data Explorer
 * "RICT" - environmental data is in the RICT template format.
 
@@ -325,7 +326,7 @@ To run, the following columns containing substrate composition data must not con
 * SAND 
 * SILT_CLAY  
 
-The code below demonstrates the how to summarise whether these columns contain NAs, and how to replace NAs as required. Note, this code will only run successfully if using data in the "EDE" file format.
+The code below demonstrates how to summarise whether these columns contain NAs, and how to replace NAs as required. Note, this code will only run successfully if using data in the "EDE" file format.
 
 ```{r predict, warning=FALSE, message=FALSE, tidy=TRUE}
 
@@ -392,10 +393,6 @@ The following code demonstrates how to join the expected biology metric scores f
 
 # join expected and observed biology metric scores, by biol_site_id and Season
 biol_all <- dplyr::left_join(biol_data, predict_data, by = c("biol_site_id", "Season"))
-
-biol_all2 <- merge(biol_data, predict_data)
-
-
 
 ```
 
@@ -518,6 +515,8 @@ gridExtra::grid.arrange(a[[1]])
 
 The `impute_flow` function is designed to infill missing records in daily flow time series for one or more sites (gauging stations) using either an interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.
 
+Note, it is advisable to consult a hydrologist when doing any flow imputation, particularly if your data contains extensive/lengthy gaps.
+
 The most straight-forward interpolation can be completed using a 'linear' or 'exponential' method. 
 
 The output dataset is in long format, similar to that produced by `import_flow`.  The output dataset contains an 'imputed' colunm; this is a flag  indicating whether each flow value is original (0) or imputed (1).  Additionally, this function plots up observed and imputed flow values for each site; enabling the user to validate the imputation.  
@@ -534,7 +533,7 @@ flow_data_imputed <- impute_flow(flow_data,
 
 ```
 
-If applying the 'equipercentile' method, an optional 'donor' arguement can be specified.  The 'donor' arguement must be specified in data frame format with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. The function assumes that data for all flow sites specified within the 'donor' data table, including paired donor sites, are contained within the 'flow_data' supplied.  
+If applying the 'equipercentile' method, an optional 'donor' argument can be specified.  The 'donor' argument must be specified in data frame format with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. The function assumes that data for all flow sites specified within the 'donor' data table, including paired donor sites, are contained within the 'flow_data' supplied.  
 
 If flow data for paired donor stations are not already included within the 'flow_data' dataframe, then it will be necessary to appended the donor flow data, as is demonstrated below:
 
@@ -544,7 +543,7 @@ If flow data for paired donor stations are not already included within the 'flow
 donor_mapping <- data.frame(station = ("F3105"), donor_station = ("033014"))
 
 # get a list of donor sites
-donorsites <- unique(donor$donor_station)
+donorsites <- unique(donor_mapping$donor_station)
 
 # download donor flow data
 flow_data_donor <- import_flow(sites = donorsites,
@@ -556,7 +555,7 @@ flow_data_donor <- import_flow(sites = donorsites,
                     col_order = c(1,2,3))
 
 # append donor flow data to the original flow data
-flow_data_all <- flow_data %>% rbind(flow_data_donor)
+flow_data_all <- dplyr::bind_rows(flow_data, flow_data_donor)
 
 # impute flow data using the equipercentile method
 flow_data_imputed <- impute_flow(flow_data_all, 
@@ -698,7 +697,7 @@ Similarly, a `ggpairs` plot can also be used to visualise relationships between 
 
 ```{r ggpairs2, message=FALSE, warning=FALSE}
 
-GGally::ggpairs(all_data, columns=c("LIFE_F_OE", "Q95z", "Q10z", "Q95zLS1", "Q10zLS1"), 
+GGally::ggpairs(all_data, columns=c("LIFE_F_OE", "Q95z_lag0", "Q10z_lag0"), 
                          upper = list(continuous = GGally::wrap("cor")),
                          diag = list(continuous = "densityDiag"),
                          lower = list(continuous = GGally::wrap("points")))
@@ -719,7 +718,7 @@ In this example, the first component (x-axis) can be interpreted as a longitudin
 
 ## Assess coverage of historical flow conditions
 
-A hydro-ecological model has a greater chance of revealing relationships between biology metrics and flow variables of the biology samples span a wide range of flow conditions. Good coverage of historical flow conditions by the biology sample data also means that the calibrated model is likely to be better at predicting biological responses under high and low flow scenarios.
+A hydro-ecological model has a greater chance of revealing relationships between biology metrics and flow variables if the biology samples span a wide range of flow conditions. Good coverage of historical flow conditions by the biology sample data also means that the calibrated model is likely to be better at predicting biological responses under high and low flow scenarios.
 
 The `plot_rngflows` function generates a scatterplot for two flow variables and overlays two convex hulls: one showing the full range of flow conditions experienced historically, and a second convex hull showing the range of flow conditions with associated biology samples. This visualisation helps identify to what extent the available biology data span the full range of full range of flow conditions experienced historically. 
 
@@ -728,9 +727,9 @@ In the following example, the Q95z and Q10z flow statistics have been selected a
 
 ```{r, rngflows1, message=FALSE, warning=FALSE}
 
-plot_rngflows(data = all_data, flow_stats = c("Q95z", "Q10z"), biol_metric = "LIFE_F_OE", wrap_by = NULL, label = "Year")
+plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL, label = "Year")
 
-plot_rngflows(data = all_data, flow_stats = c("Q95z", "Q10z"), biol_metric = "LIFE_F_OE", wrap_by = "biol_site_id", label = "Year")
+plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = "biol_site_id", label = "Year")
 
 ```
 
@@ -738,7 +737,7 @@ plot_rngflows(data = all_data, flow_stats = c("Q95z", "Q10z"), biol_metric = "LI
 
 The `plot_hev` function generates, for one site of interest, a time series plot of biology sample data and flow summary statistics, often referred to by the EA as a hydro-ecological validation (HEV) plot. HEV plots provide a visual assessment of trends in the historical data, and an initial guide to possible relationships that could be explored and quantified within a hydro-ecological model.
 
-Whilst the dataset outputted by the `join_he` function can be used to produce a HEV plot, a better solution is achieved by manually joining the biology and flow datasets as described below. 
+Whilst the dataset outputted by the `join_he` function can be used to produce a HEV plot, a better solution is achieved by via a combination of manual processing and the `add biol` functionality of `join_he`. 
 
 
 ```{r hevdata, message=FALSE, warning=FALSE}
@@ -747,7 +746,7 @@ Whilst the dataset outputted by the `join_he` function can be used to produce a 
 flowstats_1 <- flow_stats[[1]]
 
 # create two-column table mapping biology sites to flow sites
-mapping <- master_data[, c("biol_site_id", "flow_site_id")]
+mapping <- data.frame(master_data[, c("biol_site_id", "flow_site_id")])
 
 # filter biology and flow datasets to sites of interest
 biol_data_hev <- dplyr::filter(biol_all, biol_site_id %in% unique(mapping$biol_site_id))
@@ -756,20 +755,18 @@ flow_data_hev <- dplyr::filter(flowstats_1, flow_site_id %in% unique(mapping$flo
 # create a complete daily time series for each biology site
 hev_data <- expand.grid(
   biol_site_id = unique(biol_data_hev$biol_site_id), 
-  SAMPLE_DATE = seq.Date(as.Date("2011-01-01"), as.Date("2019-12-31"), by="day"), 
+  date = seq.Date(as.Date("2011-01-01"), as.Date("2019-12-31"), by="day"), 
   stringsAsFactors = FALSE)
 
 # create season and water_year columns on which to join the six-monthly flow statistics
-hev_data$Month <- lubridate::month(hev_data$SAMPLE_DATE)
-hev_data$Year <- lubridate::year(hev_data$SAMPLE_DATE)
-hev_data$flow_season <- ifelse((hev_data$Month >= 4) & (hev_data$Month <= 9), "Summer", "Winter")
-hev_data$water_year <- ifelse(hev_data$Month <= 9, hev_data$Year - 1, hev_data$Year)
+hev_data$Month <- lubridate::month(hev_data$date)
+hev_data$Year <- lubridate::year(hev_data$date)
 
 # join biology and flow data
 hev_data <- hev_data %>%
-  left_join(mapping, by = "biol_site_id") %>%
-  left_join(biol_data_hev, by = c("biol_site_id", "SAMPLE_DATE", "Year")) %>%
-  left_join(flow_data_hev, by = c("flow_site_id", "water_year", "flow_season" = "season")) 
+  left_join(biol_data_hev, by = c("biol_site_id", "date", "Year"))
+
+hev_data <- join_he(biol_data = hev_data, flow_stats = flow_data_hev, mapping = mapping, method = "A", join_type = "add_biol")
 
 ```
 
@@ -778,8 +775,8 @@ Using this new `hev_data` dataset, the following example uses `multiplot = TRUE`
 ```{r hevplot1, message=FALSE, warning=FALSE}
 
 plot_hev(data = subset(hev_data, biol_site_id == "34352"), 
-         date_col = "SAMPLE_DATE", 
-         flow_stat = c("Q95z", "Q10z"), 
+         date_col = "date", 
+         flow_stat = c("Q95z_lag0", "Q10z_lag0"), 
          biol_metric = c("LIFE_F_OE", "WHPT_ASPT_OE", "WHPT_NTAXA_OE", "PSI_OE"), 
          multiplot = TRUE)
 
@@ -794,8 +791,8 @@ for(i in mapping$biol_site_id){
   plot_data <- subset(hev_data, biol_site_id == i)
   
   my_hev_plot <- plot_hev(data = plot_data, 
-         date_col = "SAMPLE_DATE", 
-         flow_stat = c("Q95z", "Q10z"), 
+         date_col = "date", 
+         flow_stat = c("Q95z_lag0", "Q10z_lag0"), 
          biol_metric = c("LIFE_F_OE"), 
          clr_by = "biol_site_id")
   
@@ -814,7 +811,7 @@ To interactively examine time series relationships for different metrics and sit
 
 Once the biology and flow data has been assembled and explored, spatial and temporal variation in a biological metric of interest can be modelled as a function of one or more flow summary statistics to reveal potential hydro-ecological relationships. For datasets comprising multiple sites, linear mixed-effects models have the ability to describe a 'global' relationship that applies across all sites, whilst also quantifying the degree of variability in this relationship from site to site. 
 
-The following example illustrates a mixed-effects model fitted to autumn macroinvertebrate data using the `lmer` function from the `lme4` package. The model includes three variables representing high and low flows in different antecedent periods (Q95z, Q10z and Q95zLS1), and Q95z also has a random (site-specific) slope.
+The following example illustrates a mixed-effects model fitted to autumn macroinvertebrate data using the `lmer` function from the `lme4` package. The model includes three variables representing high and low flows in different antecedent periods (Q95z, Q10z), and Q95z also has a random (site-specific) slope.
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -861,7 +858,7 @@ cv_full[1]
 ```{r cv2, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop random slope
-model_1 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + Q10z + Q95zLS1 + (1 | biol_site_id), data = autumn_data, REML = FALSE)
+model_1 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z_lag0 + Q10z_lag0 + (1 | biol_site_id), data = autumn_data, REML = FALSE)
 
 cv_1 <- model_cv(model = model_1, data = autumn_data, group = "biol_site_id", k = 5, r = 20, control = my_control)
 
@@ -877,7 +874,7 @@ cv_1[1]
 ```{r cv3, echo=TRUE, message=FALSE, warning=FALSE, results=FALSE}
 
 # drop Q95zLS1 term
-model_2 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z + Q10z + (Q95z | biol_site_id), data = autumn_data, REML = FALSE)
+model_2 <- model_full <- lme4::lmer(LIFE_F_OE ~ Q95z_lag0 + Q10z_lag0 + (Q95z_lag0 | biol_site_id), data = autumn_data, REML = FALSE)
 
 cv_2 <- model_cv(model = model_2, data = autumn_data, group = "biol_site_id", k = 5, r = 20, control = my_control)
 
@@ -1005,7 +1002,7 @@ sjPlot::plot_model(model = model_3,
 
 ```{r message=FALSE, warning=FALSE}
 
-visreg::visreg(model_3, "Q95z", ylab = "LIFE_F_OE")
+visreg::visreg(model_3, "Q95z_lag0", ylab = "LIFE_F_OE")
        
 ```
 
@@ -1013,7 +1010,7 @@ visreg::visreg(model_3, "Q95z", ylab = "LIFE_F_OE")
 
 ```{r message=FALSE, warning=FALSE}
 
-visreg::visreg(model_2, "Q95z", by = "biol_site_id", ylab = "LIFE_F_OE")
+visreg::visreg(model_2, "Q95z_lag0", by = "biol_site_id", ylab = "LIFE_F_OE")
 
 ```
 
@@ -1039,7 +1036,7 @@ plot_predictions(data = autumn_data,
                   biol_metric = "LIFE_F_OE",
                   time_col = "Year",
                   site_col = "biol_site_id",
-                  flow_stat = c("Q95z", "Q10z"),
+                  flow_stat = c("Q95z_lag0", "Q10z_lag0"),
                   pred_col = c("fit", "lwr", "upr"),
                   ncol = 4)
 

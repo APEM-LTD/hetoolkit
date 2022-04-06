@@ -271,7 +271,7 @@ plot_heatmap <- function(data,
 ## helper functions
 
 g_legend <- function(a_gplot){
-  tmp <- ggplot2::ggplot_gtable(ggplot_build(a_gplot))
+  tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(a_gplot))
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
   legend <- tmp$grobs[[leg]]
   legend
