@@ -4,8 +4,8 @@ author: "APEM Ltd"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{hetoolkit-Vignette}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---
