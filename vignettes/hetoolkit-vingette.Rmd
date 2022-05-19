@@ -14,19 +14,25 @@ editor_options:
 
 knitr::opts_chunk$set(echo = TRUE)
 
-```
-
-```{r load packages, message=FALSE, warning=FALSE, include=FALSE, message=FALSE, tidy=TRUE}
-
 rm(list = ls())
 
-if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr, ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny, downloader)
+```
 
-# Load the package
+# Installation
+
+```{r load packages, message=FALSE, warning=FALSE, include=TRUE, message=FALSE, tidy=TRUE}
+
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr, ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny, downloader, remotes)
+
+# for development
+#install.packages("devtools")
 library(devtools)
 devtools::load_all(export_all = FALSE)
-install_deps()
+#install_deps()
+# for public version (once live)
+#remotes::install_github("APEM-LTD/hetoolkit")
+#library(hetoolkit)
 
 ```
 
@@ -38,6 +44,7 @@ The `hetoolkit` package comprises a collection of 20 functions for assembling, p
 * `import_hde` for importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE);
 * `import_flowfiles` for importing flow data from local files;
 * `import_flow` for importing flow data from a mix of the above sources; 
+* `impute_flow` for infilling missing records in daily flow time series for one or more sites (gauging stations) using either an interpolation or an equipercentile  method.
 * `import_inv` for importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer;
 * `import_env` for importing environmental base data from the EA Ecology and Fish Data Explorer;
 * `import_rhs` for importing River Habitat Survey (RHS) data from the EA's Open Data portal;
