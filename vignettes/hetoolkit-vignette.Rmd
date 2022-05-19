@@ -23,7 +23,7 @@ rm(list = ls())
 ```{r load packages, message=FALSE, warning=FALSE, include=TRUE, message=FALSE, tidy=TRUE}
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, insight, lubridate, tictoc, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, readr, htmlTable, tibbletime, devtools, roxygen2, downloader, shiny, plotly, RColorBrewer, ggnewscale, ggplot2, fasstr, lme4, sjmisc, RcppRoll, mgcv, viridis, gridExtra, naniar, purrr, ggfortify, plyr, GGally, forcats, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, shiny, downloader, remotes)
+pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, plyr, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr)
 
 # for development
 #install.packages("devtools")
@@ -339,8 +339,8 @@ The code below demonstrates how to summarise whether these columns contain NAs, 
 
 # check substrate variables for presence of NAs
 env_data %>%
-  select(BOULDERS_COBBLES, PEBBLES_GRAVEL, SAND, SILT_CLAY) %>%  
-  summarise_all(funs(sum(is.na(.))))
+  dplyr::select(BOULDERS_COBBLES, PEBBLES_GRAVEL, SAND, SILT_CLAY) %>%  
+  summarise_all(~sum(is.na(.)))
 
 # replace NAs, if required
 env_data$BOULDERS_COBBLES[is.na(env_data$BOULDERS_COBBLES)] <- 0

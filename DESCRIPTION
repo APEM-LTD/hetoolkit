@@ -60,4 +60,4 @@ Config/testthat/edition: 3
 Remotes: github::aquaMetrics/rict,
          github::strengejacke/sjPlot,
          github::strengejacke/sjstats
-VignetteBuilder: knitr
+VignetteBuilder: knitr, rmarkdown
