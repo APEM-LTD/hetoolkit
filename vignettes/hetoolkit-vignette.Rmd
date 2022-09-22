@@ -1,7 +1,12 @@
 ---
 title: "hetoolkit-Vignette"
 author: "APEM Ltd"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    
+    df_print: paged
+    toc: true
+  
 vignette: >
   %\VignetteIndexEntry{hetoolkit-Vignette}
   %\VignetteEncoding{UTF-8}
@@ -23,7 +28,7 @@ rm(list = ls())
 ```{r load packages, message=FALSE, warning=FALSE, include=TRUE, message=FALSE, tidy=TRUE}
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, plyr, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr)
+pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, plyr, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS)
 
 # for development
 #install.packages("devtools")
@@ -244,7 +249,7 @@ Any additional environmental data in a separate Excel file can be appended to th
 # bind 2 env data sets - one from EDE and one local file
 
 # drop any unwanted variables/columns from the download file
-drops_env <- c("AGENCY_AREA", "CATCHMENT", "WATERBODY_TYPE", "WATERBODY_TYPE_DESCRIPTION", "SITE_VERSION", "NGR_10_FIG", "FULL_EASTING", "FULL_NORTHING", "BASE_DATA_DATE", "MIN_SAMPLE_DATE", "MAX_SAMPLE_DATE", "COUNT_OF_SAMPLES", "ECN_SITE", "INV", "ECN_SITE_INV")
+drops_env <- c("AGENCY_AREA", "REPORTING_AREA", "CATCHMENT", "WATERBODY_TYPE", "WATERBODY_TYPE_DESCRIPTION", "SITE_VERSION", "NGR_10_FIG", "FULL_EASTING", "FULL_NORTHING", "BASE_DATA_DATE", "MIN_SAMPLE_DATE", "MAX_SAMPLE_DATE", "COUNT_OF_SAMPLES", "ECN_SITE", "INV", "ECN_SITE_INV")
 
 # drop unwanted variables
 env_data <- env_data[ , !(names(env_data) %in% drops_env)]
