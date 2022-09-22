@@ -4,7 +4,6 @@
 # hetoolkit
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 ## Overview
@@ -13,38 +12,38 @@ The `hetoolkit` package comprises a collection of 20 functions for
 assembling, processing, visualising and modelling hydro-ecological data.
 These are:
 
-  - `import_nrfa` for importing flow data from the National River Flow
+-   `import_nrfa` for importing flow data from the National River Flow
     Archive (NRFA);
-  - `import_hde` for importing flow data from the Environment Agency
+-   `import_hde` for importing flow data from the Environment Agency
     (EA) Hydrology Data Explorer (HDE);
-  - `import_flowfiles` for importing flow data from local files;
-  - `import_flow` for importing flow data from a mix of the above
+-   `import_flowfiles` for importing flow data from local files;
+-   `import_flow` for importing flow data from a mix of the above
     sources;
-  - `import_inv` for importing macroinvertebrate sampling data from the
+-   `import_inv` for importing macroinvertebrate sampling data from the
     EA Ecology and Fish Data Explorer;
-  - `import_env` for importing environmental base data from the EA
+-   `import_env` for importing environmental base data from the EA
     Ecology and Fish Data Explorer;
-  - `import_rhs` for importing River Habitat Survey (RHS) data from the
+-   `import_rhs` for importing River Habitat Survey (RHS) data from the
     EA’s Open Data portal;
-  - `predict_indices` for calculating expected scores for
+-   `predict_indices` for calculating expected scores for
     macroinvertebrate indices using the RICT model (FBA 2020);
-  - `calc_flowstats` and `calc_rfrstats` for calculating summary
+-   `calc_flowstats` and `calc_rfrstats` for calculating summary
     statistics describing historical flow conditions;
-  - `join_he` for joining the above datasets;
-  - `plot_heatmap` for visualising and summarising gaps in time series
+-   `join_he` for joining the above datasets;
+-   `plot_heatmap` for visualising and summarising gaps in time series
     data;
-  - `plot_hev` and `shiny_hev` for producing time series plots of
+-   `plot_hev` and `shiny_hev` for producing time series plots of
     biology and flow data;
-  - `plot_sitepca` for summarising environmental characteristics of
+-   `plot_sitepca` for summarising environmental characteristics of
     biological sampling sites;
-  - `plot_rngflows` for Visualising the range of flow conditions
+-   `plot_rngflows` for Visualising the range of flow conditions
     experienced historically at a site;
-  - `model_cv` and `model_logocv` for performing cross-validation on
+-   `model_cv` and `model_logocv` for performing cross-validation on
     linear mixed-effects models and hierarchical generalized additive
     models;
-  - `diag_lmer` for generating a variety of diagnostic plots for a
+-   `diag_lmer` for generating a variety of diagnostic plots for a
     mixed-effects regression (lmer) model; and
-  - `plot_predictions` for visualising the time series predictions from
+-   `plot_predictions` for visualising the time series predictions from
     a hydro-ecological model.
 
 ## Installation
@@ -68,7 +67,7 @@ information please contact Mike Dunbar at the Environment Agency.
 
 Further information on the functions contained within the package,
 including examples, can be found in the `HE Toolkit - Vingette` at
-<https://apem-ltd.github.io/hetoolkit/>.
+<https://apem-ltd.github.io/hetoolkit_updated/>.
 
 ## Reporting Bugs
 
@@ -99,5 +98,6 @@ the EA reserves the right to update the software as needed pursuant to
 further analysis and review. No warranty, expressed or implied, is made
 by the EA as to the functionality of the software and related material
 nor shall the fact of release constitute any such warranty. Furthermore,
-the software is released on condition that the EA shall not be held liable
-for any damages resulting from its authorized or unauthorized use.
+the software is released on condition that the EA shall not be held
+liable for any damages resulting from its authorized or unauthorized
+use.
