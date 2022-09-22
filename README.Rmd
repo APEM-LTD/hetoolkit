@@ -58,7 +58,7 @@ The `hetoolkit` package was developed by APEM LTD on behalf on the Environment A
 
 ## Examples
 
-Further information on the functions contained within the package, including examples, can be found in the `HE Toolkit - Vingette` at https://apem-ltd.github.io/hetoolkit/.
+Further information on the functions contained within the package, including examples, can be found in the `HE Toolkit - Vingette` at https://apem-ltd.github.io/hetoolkit_updated/.
 
 ## Reporting Bugs
 
