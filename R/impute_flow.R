@@ -9,7 +9,7 @@
 #' @param date_col Name of column in data containing date of flow record. Default = "date".  Dates must be in “yyyy-mm-dd” format.
 #' @param flow_col Name of column in data containing the measured  flow data. Default = "flow".
 #' @param method Imputation method: "linear" (default), "exponential" or "equipercentile".
-#' @param donor – A tibble or data frame with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. Subsequent columns are ignored. Default = NULL. Only used when method = "equipercentile".
+#' @param donor – A tibble or data frame with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. Subsequent columns are ignored. Default = NULL. Only used when method = "equipercentile".  Note, the date ranges of the donor site and the flow site of interest must overlap by a minimum of 365 records (i.e. 1 year).
 #'
 #' @details
 #' This function is intended for imputing gauged daily flow data only; it cannot be used to impute sub-daily data, and is not designed for data on coarser time steps (e.g. 10-daily or monthly).
