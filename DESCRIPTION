@@ -46,7 +46,7 @@ Imports:
     plotly,
     zoo,
     stats,
-    rict
+    ggpubr
 Depends: 
     R (>= 3.5.0),
     dplyr (>= 1.0.2),
@@ -58,6 +58,5 @@ Suggests:
     rmarkdown
 Config/testthat/edition: 3
 Remotes: github::aquaMetrics/rict,
-         github::strengejacke/sjPlot,
          github::strengejacke/sjstats
 VignetteBuilder: knitr, rmarkdown

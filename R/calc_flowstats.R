@@ -196,7 +196,7 @@ calc_flowstats <- function(data,
   if(is.null(win_step) == FALSE && grepl(matches[1], win_step) == TRUE){""} else {
     if(is.null(win_step) == FALSE && grepl(matches[2], win_step) == TRUE){""} else {
       if(is.null(win_step) == FALSE && grepl(matches[3], win_step) == TRUE){""} else {
-        if(is.null(win_width) == FALSE && grepl(matches[4], win_width) == TRUE){""} else {
+        if(is.null(win_step) == FALSE && grepl(matches[4], win_step) == TRUE){""} else {
           stop("win_step must be in day, month, or year format")
         }
       }

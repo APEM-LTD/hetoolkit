@@ -20,12 +20,13 @@ knitr::opts_chunk$set(
 
 ## Overview 
 
-The `hetoolkit` package comprises a collection of 20 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:
+The `hetoolkit` package comprises a collection of 21 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:
 
 * `import_nrfa` for importing flow data from the National River Flow Archive (NRFA);
 * `import_hde` for importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE);
 * `import_flowfiles` for importing flow data from local files;
-* `import_flow` for importing flow data from a mix of the above sources; 
+* `import_flow` for importing flow data from a mix of the above sources;
+* `impute_flow` for infilling missing records in daily flow time series for one or more sites (gauging stations) using either an interpolation or an equipercentile  method.
 * `import_inv` for importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer;
 * `import_env` for importing environmental base data from the EA Ecology and Fish Data Explorer;
 * `import_rhs` for importing River Habitat Survey (RHS) data from the EA's Open Data portal;
@@ -38,7 +39,11 @@ The `hetoolkit` package comprises a collection of 20 functions for assembling, p
 * `plot_rngflows` for Visualising the range of flow conditions experienced historically at a site;
 * `model_cv` and `model_logocv` for performing cross-validation on linear mixed-effects models and hierarchical generalized additive models;
 * `diag_lmer` for generating a variety of diagnostic plots for a mixed-effects regression (lmer) model; and
-* `plot_predictions` for visualising the time series predictions from a hydro-ecological model.
+* `plot_predictions` for visualising the time series predictions from a hydro-ecological model/
+
+The deprecated versions of three functions are retained for back-compatibility. These are:
+
+* `calc_flowstats_old`, `predict_indices_old` and `join_he_old`, prevuious versions 
 
 ## Installation
 
@@ -55,6 +60,14 @@ library(hetoolkit)
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the Environment Agency. Version 1.0.0 was released in May 2021. For further information please contact Mike Dunbar at the Environment Agency.
+
+## Change history
+
+Version | Date    | Details
+--------|---------|---------------
+1.0.0   | 05-2021 | New release
+2.0.0   | TBC     | Added new function impute_flows/
+                    Major updates to calc_flowstats, predict_indices and join_he
 
 ## Examples
 
