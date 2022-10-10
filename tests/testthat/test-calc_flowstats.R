@@ -461,7 +461,10 @@ test_that("correct end date is generated (based on win_start, win_width, win_ste
                                win_step = "6 months",
                                win_width = "6 months")
 
-  result <- max(flow_stats[[1]]$end_date)
+  flow_stats1 <-flow_stats[[1]] %>%
+    dplyr::filter(start_date <= lubridate::ymd(20220101))
+
+  result <- max(flow_stats1$end_date)
   compared <- max(expected$end_date)
 
   expect_equivalent(result, compared)
@@ -576,7 +579,7 @@ test_that("different flow stats produced when ref_col is/isn't applied", {
 
 test_that("stats are are NA if n_data is not sufficient", {
 
- data_short <- readRDS("short_data.rds")
+ data_short <- readRDS("short_data1.rds")
 
  test1 <-  calc_flowstats(data = data_short,
                            site_col = "site",

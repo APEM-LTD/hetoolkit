@@ -42,9 +42,12 @@ These are:
     linear mixed-effects models and hierarchical generalized additive
     models;
 -   `diag_lmer` for generating a variety of diagnostic plots for a
-    mixed-effects regression (lmer) model; and
+    mixed-effects regression (lmer) model;
 -   `plot_predictions` for visualising the time series predictions from
-    a hydro-ecological model.
+    a hydro-ecological model;
+-   `impute_flow` for infilling missing records in daily flow time series for one or more sites (gauging stations)       using either an interpolation or an equipercentile  method; and
+-   `calc_flowstats_old`, `predict_indices_old` and `join_he_old`, previous versions of these functions
+    for back-compatibility;
 
 ## Installation
 
@@ -62,6 +65,14 @@ library(hetoolkit)
 The `hetoolkit` package was developed by APEM LTD on behalf on the
 Environment Agency. Version 1.0.0 was released in May 2021. For further
 information please contact Mike Dunbar at the Environment Agency.
+
+## Change log
+
+Version | Date     | Change
+--------|----------|----------
+1.0     | 05-2021  | New version
+2.0     | TBC      | New function impute_flows added.\
+                     Major updates to calc_flowstats, predict_indices and join_he.
 
 ## Examples
 
