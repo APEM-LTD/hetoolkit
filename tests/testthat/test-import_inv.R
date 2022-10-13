@@ -55,6 +55,7 @@ test_that("end_date filter works", {
 test_that("import_inv constructs 'tibble' as expected", {
           result <- import_inv(sites = "34330")
           compared <- tibble::as_tibble(readRDS("INV_OPEN_DATA_METRICS_F.rds"))
+          result <- result[1:53,]
           expect_equivalent(result, compared)
           })
 

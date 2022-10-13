@@ -28,7 +28,9 @@ rm(list = ls())
 ```{r load packages, message=FALSE, warning=FALSE, include=TRUE, message=FALSE, tidy=TRUE}
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, plyr, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS)
+pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, remotes)
+
+remotes::install_github("aquaMetrics/rict")
 
 # for development
 #install.packages("devtools")
@@ -43,7 +45,7 @@ devtools::load_all(export_all = FALSE)
 
 # Introduction
 
-The `hetoolkit` package comprises a collection of 20 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:
+The `hetoolkit` package comprises a collection of 21 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:
 
 * `import_nrfa` for importing flow data from the National River Flow Archive (NRFA);
 * `import_hde` for importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE);
@@ -200,7 +202,7 @@ First we download zipped shapefiles for our basemap, and load them in as sf obje
 ```{r get_data, message=FALSE, warning=FALSE}
 
 # link not working, zip file saved in vignette folder
-#download('https://environment.data.gov.uk/UserDownloads/interactive/3d91bd0c20b74#7b1bd157a32db8aa07598172/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', #destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
+#download('https://environment.data.gov.uk/UserDownloads/interactive/7bba3d47789b4687a098b526dd7509fa118716/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
 
 ## get Wales coastline, just because map looks silly without it
 download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
