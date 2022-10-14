@@ -8,7 +8,7 @@
 
 ## Overview
 
-The `hetoolkit` package comprises a collection of 20 functions for
+The `hetoolkit` package comprises a collection of 21 functions for
 assembling, processing, visualising and modelling hydro-ecological data.
 These are:
 
@@ -19,6 +19,9 @@ These are:
 -   `import_flowfiles` for importing flow data from local files;
 -   `import_flow` for importing flow data from a mix of the above
     sources;
+-   `impute_flow` for infilling missing records in daily flow time
+    series for one or more sites (gauging stations) using either an
+    interpolation or an equipercentile method.
 -   `import_inv` for importing macroinvertebrate sampling data from the
     EA Ecology and Fish Data Explorer;
 -   `import_env` for importing environmental base data from the EA
@@ -42,12 +45,14 @@ These are:
     linear mixed-effects models and hierarchical generalized additive
     models;
 -   `diag_lmer` for generating a variety of diagnostic plots for a
-    mixed-effects regression (lmer) model;
+    mixed-effects regression (lmer) model; and
 -   `plot_predictions` for visualising the time series predictions from
-    a hydro-ecological model;
--   `impute_flow` for infilling missing records in daily flow time series for one or more sites (gauging stations)       using either an interpolation or an equipercentile  method; and
--   `calc_flowstats_old`, `predict_indices_old` and `join_he_old`, previous versions of these functions
-    for back-compatibility;
+    a hydro-ecological model/
+
+The deprecated versions of three functions are retained for
+back-compatibility. These are:
+
+-   `calc_flowstats_old`, `predict_indices_old` and `join_he_old`
 
 ## Installation
 
@@ -60,19 +65,50 @@ install_github("APEM-LTD/hetoolkit")
 library(hetoolkit)
 ```
 
+As an alternative, the ‘remotes’ package can be used:
+
+``` r
+install.packages("remotes")
+library(remotes)
+remotes::install_github("APEM-LTD/hetoolkit_updated")
+library(hetoolkit)
+```
+
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
 Environment Agency. Version 1.0.0 was released in May 2021. For further
 information please contact Mike Dunbar at the Environment Agency.
 
-## Change log
+## Change history
 
-Version | Date     | Change
---------|----------|----------
-1.0     | 05-2021  | New version
-2.0     | TBC      | New function impute_flows added.\
-                     Major updates to calc_flowstats, predict_indices and join_he.
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 30%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Version</th>
+<th>Date</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1.0.0</td>
+<td>May-2021</td>
+<td>New release</td>
+</tr>
+<tr class="even">
+<td>2.0.0</td>
+<td>TBC</td>
+<td>Added new function impute_flows<br />
+Major updates to calc_flowstats, predict_indices and join_he</td>
+</tr>
+</tbody>
+</table>
 
 ## Examples
 

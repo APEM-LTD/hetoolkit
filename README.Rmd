@@ -43,7 +43,7 @@ The `hetoolkit` package comprises a collection of 21 functions for assembling, p
 
 The deprecated versions of three functions are retained for back-compatibility. These are:
 
-* `calc_flowstats_old`, `predict_indices_old` and `join_he_old`, prevuious versions 
+* `calc_flowstats_old`, `predict_indices_old` and `join_he_old` 
 
 ## Installation
 
@@ -57,17 +57,27 @@ library(hetoolkit)
 
 ```
 
+As an alternative, the 'remotes' package can be used:
+
+``` r
+install.packages("remotes")
+library(remotes)
+remotes::install_github("APEM-LTD/hetoolkit_updated")
+library(hetoolkit)
+
+```
+
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the Environment Agency. Version 1.0.0 was released in May 2021. For further information please contact Mike Dunbar at the Environment Agency.
 
 ## Change history
 
-Version | Date    | Details
---------|---------|---------------
-1.0.0   | 05-2021 | New release
-2.0.0   | TBC     | Added new function impute_flows/
-                    Major updates to calc_flowstats, predict_indices and join_he
+Version | Date     | Details
+--------|----------|---------------
+1.0.0   | May-2021 | New release
+2.0.0   | TBC      | Added new function impute_flows\
+                     Major updates to calc_flowstats, predict_indices and join_he
 
 ## Examples
 
