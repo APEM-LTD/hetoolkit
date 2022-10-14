@@ -2,11 +2,11 @@
 title: "hetoolkit-Vignette"
 author: "APEM Ltd"
 output: 
+  
   html_document:
     
     df_print: paged
     toc: true
-  
 vignette: >
   %\VignetteIndexEntry{hetoolkit-Vignette}
   %\VignetteEncoding{UTF-8}
@@ -535,7 +535,7 @@ The most straight-forward interpolation can be completed using a 'linear' or 'ex
 
 The output dataset is in long format, similar to that produced by `import_flow`.  The output dataset contains an 'imputed' colunm; this is a flag  indicating whether each flow value is original (0) or imputed (1).  Additionally, this function plots up observed and imputed flow values for each site; enabling the user to validate the imputation.  
 
-Flow interpolation using the 'linear' method is demonstated below:
+Flow interpolation using the 'linear' method is demonstrated below:
 
 ```{r impute flow, warning=FALSE, message=FALSE, tidy=TRUE}
 
