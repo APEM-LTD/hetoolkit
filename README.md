@@ -61,8 +61,8 @@ To install the latest release of `hetoolkit` use the following code:
 ``` r
 install.packages("devtools")
 library(devtools)
-install_github("APEM-LTD/hetoolkit")
-library(hetoolkit)
+install_github("APEM-LTD/hetoolkit_updated")
+library(hetoolkitUpdated)
 ```
 
 As an alternative, the ‘remotes’ package can be used:
@@ -71,7 +71,7 @@ As an alternative, the ‘remotes’ package can be used:
 install.packages("remotes")
 library(remotes)
 remotes::install_github("APEM-LTD/hetoolkit_updated")
-library(hetoolkit)
+library(hetoolkitUpdated)
 ```
 
 ## Development
