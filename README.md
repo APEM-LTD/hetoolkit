@@ -54,6 +54,12 @@ back-compatibility. These are:
 
 -   `calc_flowstats_old`, `predict_indices_old` and `join_he_old`
 
+## WORKFLOW
+
+The different functions link together as shown in the flwo chart below:
+
+![image info](./FlowChart_v01.png)
+
 ## Installation
 
 To install the latest release of `hetoolkit` use the following code:
