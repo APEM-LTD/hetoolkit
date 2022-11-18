@@ -200,17 +200,17 @@ env_data
 First we download zipped shapefiles for our basemap, and load them in as sf objects. The zipped shapefiles are left in the users project / working directory. The England map is of EA public facing area boundaries. The additional map covering the Wales coastline comes from the ESRC UK Data Service.
 
 ```{r get_data, message=FALSE, warning=FALSE}
-
-# link not working, zip file saved in vignette folder
-#download('https://environment.data.gov.uk/UserDownloads/interactive/7bba3d47789b4687a098b526dd7509fa118716/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
-
-## get Wales coastline, just because map looks silly without it
-download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
-
-## load in the shapefiles to R objects and remove seaward parts
-EA.areas <- read_sf('/vsizip/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip/data/Administrative_Boundaries_Environment_Agency_and_Natural_England_Public_Face_Areas.shp')
-wales <- read_sf('/vsizip/Wales_ol_2001.zip')
-EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
+# 
+# # link not working, zip file saved in vignette folder
+# #download('https://environment.data.gov.uk/UserDownloads/interactive/7bba3d47789b4687a098b526dd7509fa118716/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
+# 
+# ## get Wales coastline, just because map looks silly without it
+# download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
+# 
+# ## load in the shapefiles to R objects and remove seaward parts
+# EA.areas <- read_sf('/vsizip/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip/data/Administrative_Boundaries_Environment_Agency_and_Natural_England_Public_Face_Areas.shp')
+# wales <- read_sf('/vsizip/Wales_ol_2001.zip')
+# EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
 
 ```
 
@@ -219,12 +219,12 @@ EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
 We use the environmental base data that we have downloaded from the Ecology and Fish Data Explorer using `import_env`, this gives us their NGRs. We translate the NGRs to full eastings / northings and use this to turn the base data frame into a sf point object for plotting. 
 
 ```{r processing, message=FALSE, warning=FALSE}
-
-## translate NGRs to full easting / northing
-temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "BNG") %>% as_tibble()
-
-## make an sf point object to plot with geom_sf but retain the easting and northing column required by geom_text_repel
-env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords =  c("easting", "northing"), crs = 27700, remove = FALSE) 
+# 
+# ## translate NGRs to full easting / northing
+# temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "BNG") %>% as_tibble()
+# 
+# ## make an sf point object to plot with geom_sf but retain the easting and northing column required by geom_text_repel
+# env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords =  c("easting", "northing"), crs = 27700, remove = FALSE) 
 
 ```
 
@@ -233,13 +233,13 @@ env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords =  c("easting", 
 Finally we use ggplot with geom_sf() to plot the points and ggrepel::geom_text_repel() to plot the labels. 
 
 ```{r map, message=FALSE, warning=FALSE}
-basemap <- ggplot() + geom_sf(mapping = aes(), data = EA.areas.land) + 
-  geom_sf(mapping = aes(), data = wales) 
-
-basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
-  geom_text_repel(data = env_sf, aes(x=easting, y=northing, label = biol_site_id), col = "blue") +
-  coord_sf(datum = sf::st_crs(27700)) 
-  
+# basemap <- ggplot() + geom_sf(mapping = aes(), data = EA.areas.land) + 
+#   geom_sf(mapping = aes(), data = wales) 
+# 
+# basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
+#   geom_text_repel(data = env_sf, aes(x=easting, y=northing, label = biol_site_id), col = "blue") +
+#   coord_sf(datum = sf::st_crs(27700)) 
+#   
 ```
 
 ## Optional: Join additional environmental data
@@ -247,32 +247,32 @@ basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
 Any additional environmental data in a separate Excel file can be appended to the EDE download. The additional data must have the same column names as the EDE download file. 
 
 ```{r env_drops, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
-
-# bind 2 env data sets - one from EDE and one local file
-
-# drop any unwanted variables/columns from the download file
-drops_env <- c("AGENCY_AREA", "REPORTING_AREA", "CATCHMENT", "WATERBODY_TYPE", "WATERBODY_TYPE_DESCRIPTION", "SITE_VERSION", "NGR_10_FIG", "FULL_EASTING", "FULL_NORTHING", "BASE_DATA_DATE", "MIN_SAMPLE_DATE", "MAX_SAMPLE_DATE", "COUNT_OF_SAMPLES", "ECN_SITE", "INV", "ECN_SITE_INV")
-
-# drop unwanted variables
-env_data <- env_data[ , !(names(env_data) %in% drops_env)]
-
-# read-in environmental data in excel format
-env_data_excel <- read_excel("data/Env_Additonal_Sites.xlsx")
-
-# format columns
-env_data_excel <- env_data_excel %>% dplyr::mutate(
-  biol_site_id = as.character(biol_site_id),
-  WATER_BODY = as.character(WATER_BODY),
-  NGR_PREFIX = as.character(NGR_PREFIX),
-  EASTING = as.character(EASTING),
-  NORTHING = as.character(NORTHING),
-  WFD_WATERBODY_ID = as.character(WFD_WATERBODY_ID))
-
-# convert to tibble format
-env_data_excel <- as_tibble(env_data_excel)
-
-# join datasets
-env_data <- rbind(env_data, env_data_excel)
+# 
+# # bind 2 env data sets - one from EDE and one local file
+# 
+# # drop any unwanted variables/columns from the download file
+# drops_env <- c("AGENCY_AREA", "REPORTING_AREA", "CATCHMENT", "WATERBODY_TYPE", "WATERBODY_TYPE_DESCRIPTION", "SITE_VERSION", "NGR_10_FIG", "FULL_EASTING", "FULL_NORTHING", "BASE_DATA_DATE", "MIN_SAMPLE_DATE", "MAX_SAMPLE_DATE", "COUNT_OF_SAMPLES", "ECN_SITE", "INV", "ECN_SITE_INV")
+# 
+# # drop unwanted variables
+# env_data <- env_data[ , !(names(env_data) %in% drops_env)]
+# 
+# # read-in environmental data in excel format
+# env_data_excel <- read_excel("data/Env_Additonal_Sites.xlsx")
+# 
+# # format columns
+# env_data_excel <- env_data_excel %>% dplyr::mutate(
+#   biol_site_id = as.character(biol_site_id),
+#   WATER_BODY = as.character(WATER_BODY),
+#   NGR_PREFIX = as.character(NGR_PREFIX),
+#   EASTING = as.character(EASTING),
+#   NORTHING = as.character(NORTHING),
+#   WFD_WATERBODY_ID = as.character(WFD_WATERBODY_ID))
+# 
+# # convert to tibble format
+# env_data_excel <- as_tibble(env_data_excel)
+# 
+# # join datasets
+# env_data <- rbind(env_data, env_data_excel)
 
 ```
 
@@ -607,7 +607,9 @@ flow_data$flow[flow_data$flow <= 0] <- NA
 flow_stats <- calc_flowstats(data = flow_data,
                            site_col = "flow_site_id",
                            date_col = "date",
-                           flow_col = "flow")
+                           flow_col = "flow",
+                           win_width = "6 months",
+                           win_step = "6 months")
 
 ```
 
@@ -815,6 +817,66 @@ for(i in mapping$biol_site_id){
 }
 
 ```
+
+The example above shows the standard HEV plot, using non-overlapping 6-month (winter and summer) windows. By changing the inputs to the calc_flowstats function, HEV plots with different window widths can be also be plotted. The example below shows the same data but displayed with 12-month windows. The call to calc_flowstats used for this is:
+
+``` {r hevplot3, eval = FALSE}
+# calculate flow statistics
+flow_stats <- calc_flowstats(data = flow_data,
+                           site_col = "flow_site_id",
+                           date_col = "date",
+                           flow_col = "flow",
+                           win_width = "6 months",
+                           win_step = "6 months")`
+```
+
+```{r  message=FALSE, warning=FALSE, echo = FALSE}
+
+# calculate flow statistics
+flow_stats_2 <- calc_flowstats(data = flow_data,
+                           site_col = "flow_site_id",
+                           date_col = "date",
+                           flow_col = "flow",
+                           win_width = "12 months",
+                           win_step = "12 months")
+
+# Regenerate HEV plot
+
+# get output from calc_flowstats
+flowstats_2 <- flow_stats_2[[1]]
+
+# create two-column table mapping biology sites to flow sites
+mapping <- data.frame(master_data[, c("biol_site_id", "flow_site_id")])
+
+# filter biology and flow datasets to sites of interest
+biol_data_hev_2 <- dplyr::filter(biol_all, biol_site_id %in% unique(mapping$biol_site_id))
+flow_data_hev_2 <- dplyr::filter(flowstats_2, flow_site_id %in% unique(mapping$flow_site_id))
+
+# create a complete daily time series for each biology site
+hev_data_2 <- expand.grid(
+  biol_site_id = unique(biol_data_hev_2$biol_site_id), 
+  date = seq.Date(as.Date("2011-01-01"), as.Date("2019-12-31"), by="day"), 
+  stringsAsFactors = FALSE)
+
+# create season and water_year columns on which to join the six-monthly flow statistics
+hev_data_2$Month <- lubridate::month(hev_data_2$date)
+hev_data_2$Year <- lubridate::year(hev_data_2$date)
+
+# join biology and flow data
+hev_data_2 <- hev_data_2 %>%
+  left_join(biol_data_hev_2, by = c("biol_site_id", "date", "Year"))
+
+hev_data_2 <- join_he(biol_data = hev_data_2, flow_stats = flow_data_hev_2, mapping = mapping, method = "A", join_type = "add_biol")
+
+
+plot_hev(data = subset(hev_data_2, biol_site_id == "34352"), 
+         date_col = "date", 
+         flow_stat = c("Q95z_lag0", "Q10z_lag0"), 
+         biol_metric = c("LIFE_F_OE", "WHPT_ASPT_OE", "WHPT_NTAXA_OE", "PSI_OE"), 
+         multiplot = TRUE)
+
+```
+
 
 To interactively examine time series relationships for different metrics and sites, use the `shiny_hev` function, which launches a HEV plot within a shiny app.
 
@@ -1055,4 +1117,3 @@ plot_predictions(data = autumn_data,
                   ncol = 4)
 
 ```
-
