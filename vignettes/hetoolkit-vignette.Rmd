@@ -7,6 +7,7 @@ output:
     
     df_print: paged
     toc: true
+    toc_float: true
 vignette: >
   %\VignetteIndexEntry{hetoolkit-Vignette}
   %\VignetteEncoding{UTF-8}
@@ -743,7 +744,7 @@ In the following example, the Q95z and Q10z flow statistics have been selected a
 
 ```{r, rngflows1, message=FALSE, warning=FALSE}
 
-plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL, label = "Year")
+plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL)
 
 plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = "biol_site_id", label = "Year")
 

@@ -74,9 +74,12 @@ plot_rngflows <- function(data, flow_stats, biol_metric, wrap_by = NULL, label =
         stop("'biol_metric' is not found in the data")
         }
   # stop if label is not found in the dataframe
-      if(!(label %in% names(data))){
-        stop("'label' is not found in the data")
+      if(!is.null(label)) {
+        if(!(label %in% names(data)) & !is.null(label)){
+          stop("'label' is not found in the data")
         }
+      }
+
   # stop if wrap by is not found in the dataframe
       if(!is.null(wrap_by) && !(wrap_by %in% names(data))){
         stop("'wrap_by' is not found in the data")
@@ -90,7 +93,12 @@ plot_rngflows <- function(data, flow_stats, biol_metric, wrap_by = NULL, label =
     data$x <- dplyr::pull(data, flow_stats[1])
     data$y <- dplyr::pull(data, flow_stats[2])
     data$biol <- dplyr::pull(data, biol_metric)
-    data$z <- dplyr::pull(data, label)
+    if (!is.null(label)) {
+      data$z <- dplyr::pull(data, label)
+    } else {
+      data$z <- NA_integer_
+    }
+    #data$z <- dplyr::pull(data, label)
     if(!is.null(wrap_by)){data$wrap <- dplyr::pull(data, wrap_by)}
 
   ## stop if flow statistics are not numeric

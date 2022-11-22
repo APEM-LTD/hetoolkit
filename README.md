@@ -56,7 +56,7 @@ back-compatibility. These are:
 
 ## WORKFLOW
 
-The different functions link together as shown in the flwo chart below:
+The different functions link together as shown in the flow chart below:
 
 ![image info](./FlowChart_v01.png)
 
@@ -110,8 +110,9 @@ information please contact Mike Dunbar at the Environment Agency.
 <tr class="even">
 <td>2.0.0</td>
 <td>TBC</td>
-<td>Added new function impute_flows<br />
-Major updates to calc_flowstats, predict_indices and join_he</td>
+<td>Added new function impute_flows.<br />
+Major updates to calc_flowstats, predict_indices and join_he.<br />
+Bug fixes and vignette updates.</td>
 </tr>
 </tbody>
 </table>
