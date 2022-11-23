@@ -15,8 +15,7 @@
 #'               save_dir = getwd()
 #'               )
 #'
-#' @param data Name of dataframe or tibble containing the flow data to be processed.
-#' Must be in long format (i.e. separate columns for site_id, date, and each flow scenario).
+#' @param data Name of dataframe or tibble containing the flow data to be processed. Must be in wide format (i.e. separate columns for site_id, date, and each flow scenario).
 #' @param site_col Name of column in data containing unique flow site id.
 #' @param date_col Name of column in data containing date of flow record in the format of yyyy/mm/dd. See examples for a simple example to reformating the date if needed.
 #' @param flow_col Name of column in data containing flow values for the scenario of interest
