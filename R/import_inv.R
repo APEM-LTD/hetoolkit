@@ -41,9 +41,6 @@
 #' #                  save = TRUE)
 
 
-
-# usethis::usepackage("dplyr", "tictoc", "downloader", "utils", "readr", "tibbletime")
-
 import_inv <- function(biol_dir = NULL,
                            sites = NULL,
                            start_date = NULL,
@@ -66,10 +63,8 @@ import_inv <- function(biol_dir = NULL,
   if(is.null(biol_dir) == TRUE) {
 
     # Download biology data from EDE
-    tictoc::tic()
     downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.csv.gz",
                          dest = "INV_OPEN_DATA_METRICS.csv.gz", mode="wb")
-    tictoc::toc()
 
     col_types <- readr::cols(
       REPLICATE_CODE = readr::col_character()

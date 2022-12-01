@@ -44,7 +44,6 @@ Imports:
     stringr (>= 1.4.0),
     tibble (>= 3.0.6),
     tibbletime (>= 0.1.6),
-    tictoc (>= 1.0),
     tidyr (>= 1.1.2),
     viridis (>= 0.5.1),
     zoo

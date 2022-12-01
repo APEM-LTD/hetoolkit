@@ -57,11 +57,9 @@ import_env <- function(env_dir = NULL,
 
   if(is.null(env_dir) == TRUE) {
 
-    # Download envrionmental data from EDE
-    tictoc::tic()
+    # Download environmental data from EDE
     downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_SITE.csv.gz",
                          dest = "INV_OPEN_DATA_SITE.csv.gz", mode="wb")
-    tictoc::toc()
 
     # read csv convert to integers, dates, factors
     inv_sites <- readr::read_csv("INV_OPEN_DATA_SITE.csv.gz",
