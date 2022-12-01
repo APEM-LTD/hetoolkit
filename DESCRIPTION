@@ -49,14 +49,14 @@ Imports:
     viridis (>= 0.5.1),
     zoo
 Depends: 
-    R (>= 3.5.0),
     dplyr (>= 1.0.2),
+    ggplot2 (>= 3.3.3),
     lubridate (>= 1.7.9.2),
-    ggplot2 (>= 3.3.3)
+    R (>= 3.5.0)
 Suggests: 
-    testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Remotes: github::aquaMetrics/rict,
          github::strengejacke/sjstats
