@@ -736,8 +736,6 @@ validateEnvData <- function (data) {
 
 #' Converts OS Grid Reference to BNG/WGS coordinates.
 #'
-#' @author Claudia Vitolo
-#'
 #' @description This function converts an Ordnance Survey (OS) grid reference to
 #' easting/northing or latitude/longitude coordinates.
 #'
