@@ -755,7 +755,7 @@ CalcFlowStats <- function (flowts) {
     dplyr::summarise(n_data = sum(!is.na(flow)),
                      n_missing = sum(is.na(flow)),
                      n_total = n_missing + n_data,
-                     prop_missing = n_missing / n_data)
+                     prop_missing = n_missing / n_total)
 
   # remove NAs and calculate flow stats for each site by time period (win_no)
   flowts <- flowts %>%
