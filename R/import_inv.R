@@ -4,9 +4,9 @@
 #' The `import_inv` function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from <https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip> or read in from a local csv or rds file. The data can be optionally filtered by site ID and sample date.
 #'
 #' @usage
-#' import_inv(biol_dir = NULL, sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
+#' import_inv(source = "parquet", sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd()biol_dir = NULL)
 #'
-#' @param biol_dir Path to local .csv or .rds file containing biology data; or NULL to download directly from EDE. Default = NULL.
+#' @param source File format for the download from EDE OR path to local .csv or .rds file containing biology data. Default = "parquet".
 #' @param sites Vector of site ids to filter by.
 #' @param start_date Start date for data extraction (YYYY-MM-DD format). Default = NULL.
 #' @param end_date End date for data extraction (YYYY-MM-DD format). Default = NULL.
@@ -14,13 +14,14 @@
 #' @param save_dir Path to folder where biology data is to be saved. Default = Current working directory.
 #' @param save_dwnld Specifies whether or not downloaded biology data should be saved. Default = FALSE.
 #' @param dwnld_format string specifying the file format for the downloaded from EDE. Can be either "parquet" or "csv". default = "parquet"
+#' @param biol_dir Deprecated. Path to local .csv or .rds file containing biology data; or NULL to download directly from EDE. Default = NULL.
 #'
 #' @details
 #' If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_ALL.RDS. If saving after filtering on site or date, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_F.RDS.
 #'
 #'  Downloaded raw data files (in .csv and .parquet format) will be automatically removed from the working directory following completed execution of the function.
 #'
-#'  The function will modify the output from EDE, renaiming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
+#'  The function will modify the output from EDE, renaming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
 #'
 #' @return Tibble containing biology data
 #'
@@ -42,14 +43,14 @@
 #' #                  save = TRUE)
 
 
-import_inv <- function(biol_dir = NULL,
+import_inv <- function(source = "parquet",
                            sites = NULL,
                            start_date = NULL,
                            end_date = NULL,
                            save = FALSE,
                            save_dwnld = FALSE,
                            save_dir = getwd(),
-                           dwnld_format = "parquet"){
+                           biol_dir = NULL){
 
   # Errors
   if(is.null(sites) == FALSE && is.vector(sites) == FALSE)
@@ -61,13 +62,12 @@ import_inv <- function(biol_dir = NULL,
   if(file.exists(save_dir) == FALSE) {stop("Specified save directory does not exist")}
   if(is.logical(save) == FALSE) {stop("Save is not logical")}
   if(is.logical(save_dwnld) == FALSE) {stop("Save_dwnld is not logical")}
-  if(dwnld_format %in% c("parquet", "csv") == FALSE)
-    {stop("Download format must be parquet or csv")}
+  if(source %in% c("parquet", "csv") == FALSE | grepl(".csv", source) == FALSE)
+    {stop("Download format must be parquet or csv, or a valid filepath must be specified")}
 
-  if(is.null(biol_dir) == TRUE) {
+  #if(is.null(biol_dir) == TRUE) {
 
-    if(dwnld_format == "parquet") {
-
+    if(source == "parquet") {
       # Download biology data from EDE
       downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.parquet",
                            destfile = 'INV_OPEN_DATA_SITE.parquet',
@@ -91,7 +91,7 @@ import_inv <- function(biol_dir = NULL,
       }
     }
 
-    if(dwnld_format == "csv") {
+    if(source == "csv") {
 
       # Download biology data from EDE
       downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.csv.gz",
@@ -115,27 +115,29 @@ import_inv <- function(biol_dir = NULL,
 
     }
 
-  }
+  #}
 
   # Read-in csv option
-  if(is.null(biol_dir) == FALSE && grepl("csv", biol_dir) == TRUE){
+  if((is.null(biol_dir) == FALSE && grepl("csv", biol_dir) == TRUE) || (grepl(".csv", source) == TRUE)) {
 
-    if(file.exists(biol_dir) == FALSE)
+    if(file.exists(source) == FALSE || file.exists(biol_dir) == FALSE)
       {stop("Specified file directory does not exist")}
 
     # readcsv
+    inv_metrics <- readr::read_csv(source)
     inv_metrics <- readr::read_csv(biol_dir)
 
 
   }
 
     # Read-in rds option
-    if(is.null(biol_dir) == FALSE && grepl("rds", biol_dir) == TRUE){
+  if((is.null(biol_dir) == FALSE && grepl("rds", biol_dir) == TRUE) || (grepl("rds", source) == TRUE)) {
 
-    if(file.exists(biol_dir) == FALSE)
+    if(file.exists(source) == FALSE || file.exists(biol_dir) == FALSE)
       {stop("Specified file directory does not exist")}
 
     # readcsv
+    inv_metrics <- readr::read_rds(source)
     inv_metrics <- readr::read_rds(biol_dir)
 
 
@@ -163,8 +165,8 @@ import_inv <- function(biol_dir = NULL,
     WATERBODY_TYPE = factor(WATERBODY_TYPE)
   )
 
-  # convert to date (csv only)
-  if(dwnld_format == "csv") {
+  # convert to date (skip for parquet)
+  if(source != "parquet") {
     inv_metrics_f <- inv_metrics %>%
       dplyr::mutate(SAMPLE_DATE = lubridate::dmy(SAMPLE_DATE),
                     DATE_OF_ANALYSIS = lubridate::dmy(DATE_OF_ANALYSIS))
@@ -200,8 +202,8 @@ import_inv <- function(biol_dir = NULL,
   # save copy to disk in rds format if needed
   if (save == TRUE) {saveRDS(inv_metrics_f1, paste0(save_dir, "/INV_OPEN_DATA_METRICS_F.rds"))}
 
-  if(dwnld_format == "parquet") {file.remove("INV_OPEN_DATA_SITE.parquet")}
-  if(dwnld_format == "csv") {file.remove("INV_OPEN_DATA_METRICS.csv.gz")}
+  if(source == "parquet") {file.remove("INV_OPEN_DATA_SITE.parquet")}
+  if(source == "csv") {file.remove("INV_OPEN_DATA_METRICS.csv.gz")}
 
   inv_metrics_f1 <- inv_metrics_f1 %>% dplyr::rename(biol_site_id = SITE_ID)
 
