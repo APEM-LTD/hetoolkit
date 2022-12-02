@@ -19,7 +19,7 @@ Imports:
     dplyr (>= 1.0.2),
     fasstr (>= 0.3.2),
     forcats (>= 0.5.1),
-    ggfortify (>=0.4.14),
+    ggfortify (>= 0.4.14),
     ggplot2 (>= 3.3.3),
     ggpubr,
     ggrepel (>= 0.9.1),
