@@ -4,19 +4,19 @@
 #'
 #' @usage calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = “imputed”, win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, standardise = FALSE, ref_col = NULL)
 #'
-#'@param data Tibble or data frame containing the flow data to be processed. Must be in long format and contain, as a minimum site id, date and flow (e.g. as output by the import_flow() function).
-#'@param site_col Name of column in data containing unique flow site id. Default = "flow_site_id".
-#'@param date_col Name of column in data containing date of flow record. Default = "date".  Dates must be in “yyyy-mm-dd” format.
-#'@param flow_col Name of column in data containing flow data for processing (character). Default = "flow".
-#'@param imputed_col Name of optional column in data specifying whether each flow value is measured (0) or imputed (1).  Default = NULL.
-#'@param win_start Start date of first time window (in yyyy-mm-dd format). Default = "1995-04-01".
-#'@param win_width Width of the time window, in days, weeks, months or years  (see ?seq.Date for options). Default = "6 months".
-#'@param win_step The increment by which the time window moves, in days, weeks, months or years (see ?seq.Date for options). Default = "6 months".
-#'@param q_low Qx flow threshold (between 1 and 99, as an integer) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).
-#'@param q_high Qx flow threshold (between 1 and 99, as an integer) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).
-#'@param date_range Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years (i.e c(01-01-2000, 31-12-2020))
-#'@param scaling Should the time series flow data be scaled by the long-term mean flow  at each site? Default = FALSE.
-#'@param ref_col Name of column in dataset containing reference flow scenario against which selected flow statistics are z-score standardised. Default = NULL.
+#' @param data Tibble or data frame containing the flow data to be processed. Must be in long format and have, as a minimum, separate columns containing site id, date and flow (e.g. as output by the import_flow() function). If flow estimates are available for different abstraction or climate scenarios, then these must be in separate columns (see `ref_col` argument).
+#' @param site_col Name of column in data containing unique flow site id. Default = "flow_site_id".
+#' @param date_col Name of column in data containing date of flow record. Default = "date".  Dates must be in “yyyy-mm-dd” format.
+#' @param flow_col Name of column in data containing flow data for processing (character). Default = "flow".
+#' @param imputed_col Name of optional column in data specifying whether each flow value is measured (0) or imputed (1).  Default = NULL.
+#' @param win_start Start date of first time window (in yyyy-mm-dd format). Default = "1995-04-01".
+#' @param win_width Width of the time window, in days, weeks, months or years  (see ?seq.Date for options). Default = "6 months".
+#' @param win_step The increment by which the time window moves, in days, weeks, months or years (see ?seq.Date for options). Default = "6 months".
+#' @param q_low Qx flow threshold (between 1 and 99, as an integer) defining low flow events. Default = 95 (representing the long-term Q95 flow at each site).
+#' @param q_high Qx flow threshold (between 1 and 99, as an integer) defining high flow events. Default = 70 (representing the long-term Q70 flow at each site).
+#' @param date_range Optional vector of two dates (in yyyy-mm-dd format) defining the period of flow data to be analysed. Default = NULL . Flow records outside this range are excluded. For unbiased calculation of long-term flow statistics, it is advisable that this range spans a whole number of years (i.e c(01-01-2000, 31-12-2020))
+#' @param scaling Should the time series flow data be scaled by the long-term mean flow  at each site? Default = FALSE.
+#' @param ref_col Name of column in dataset containing reference flow scenario against which selected flow statistics are z-score standardised. Default = NULL.
 
 #' @details
 #'
@@ -755,7 +755,7 @@ CalcFlowStats <- function (flowts) {
     dplyr::summarise(n_data = sum(!is.na(flow)),
                      n_missing = sum(is.na(flow)),
                      n_total = n_missing + n_data,
-                     prop_missing = n_missing / n_data)
+                     prop_missing = n_missing / n_total)
 
   # remove NAs and calculate flow stats for each site by time period (win_no)
   flowts <- flowts %>%
