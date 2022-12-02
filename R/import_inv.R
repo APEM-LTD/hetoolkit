@@ -13,7 +13,6 @@
 #' @param save Specifies if filtered biology data should be saved as rds file (for future use). Default = FALSE.
 #' @param save_dir Path to folder where biology data is to be saved. Default = Current working directory.
 #' @param save_dwnld Specifies whether or not downloaded biology data should be saved. Default = FALSE.
-#' @param dwnld_format string specifying the file format for the downloaded from EDE. Can be either "parquet" or "csv". default = "parquet"
 #' @param biol_dir Deprecated. Path to local .csv or .rds file containing biology data; or NULL to download directly from EDE. Default = NULL.
 #'
 #' @details
