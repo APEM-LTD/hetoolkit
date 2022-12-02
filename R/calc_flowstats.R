@@ -974,11 +974,9 @@ CreateFlowStats <- function(stats_data, long.data, station_data, original_data, 
     dplyr::do(find_doy(.,  "high", 30))
   colnames(doy2) <- c("site", "win_no", "max_doy", "min_30day_doy")
   minmax_doy <- dplyr::full_join(doy1, doy2, by=c("site", "win_no"))
-  }
-
-  else {
+  } else {
     minmax_doy <- thres_data %>% dplyr::group_by(site, win_no) %>%
-      dplyr::mutate(min_doy = NA,
+      dplyr::summarise(min_doy = NA,
                      min_7day_doy = NA,
                      max_doy = NA,
                      min_30day_doy = NA)
