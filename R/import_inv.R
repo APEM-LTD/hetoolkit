@@ -13,11 +13,12 @@
 #' @param save Specifies if filtered biology data should be saved as rds file (for future use). Default = FALSE.
 #' @param save_dir Path to folder where biology data is to be saved. Default = Current working directory.
 #' @param save_dwnld Specifies whether or not downloaded biology data should be saved. Default = FALSE.
+#' @param dwnld_format string specifying the file format for the downloaded from EDE. Can be either "parquet" or "csv". default = "parquet"
 #'
 #' @details
 #' If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_ALL.RDS. If saving after filtering on site or date, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_F.RDS.
 #'
-#'  Downloaded raw data files (in .csv and .zip format) will be automatically removed from the working directory following completed execution of the function.
+#'  Downloaded raw data files (in .csv and .parquet format) will be automatically removed from the working directory following completed execution of the function.
 #'
 #'  The function will modify the output from EDE, renaiming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
 #'
@@ -41,16 +42,14 @@
 #' #                  save = TRUE)
 
 
-
-# usethis::usepackage("dplyr", "tictoc", "downloader", "utils", "readr", "tibbletime")
-
 import_inv <- function(biol_dir = NULL,
                            sites = NULL,
                            start_date = NULL,
                            end_date = NULL,
                            save = FALSE,
                            save_dwnld = FALSE,
-                           save_dir = getwd()){
+                           save_dir = getwd(),
+                           dwnld_format = "parquet"){
 
   # Errors
   if(is.null(sites) == FALSE && is.vector(sites) == FALSE)
@@ -62,28 +61,57 @@ import_inv <- function(biol_dir = NULL,
   if(file.exists(save_dir) == FALSE) {stop("Specified save directory does not exist")}
   if(is.logical(save) == FALSE) {stop("Save is not logical")}
   if(is.logical(save_dwnld) == FALSE) {stop("Save_dwnld is not logical")}
+  if(dwnld_format %in% c("parquet", "csv") == FALSE)
+    {stop("Download format must be parquet or csv")}
 
   if(is.null(biol_dir) == TRUE) {
 
-    # Download biology data from EDE
-    tictoc::tic()
-    downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.csv.gz",
-                         dest = "INV_OPEN_DATA_METRICS.csv.gz", mode="wb")
-    tictoc::toc()
+    if(dwnld_format == "parquet") {
 
-    col_types <- readr::cols(
-      REPLICATE_CODE = readr::col_character()
-    )
+      # Download biology data from EDE
+      downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.parquet",
+                           destfile = 'INV_OPEN_DATA_SITE.parquet',
+                           mode = 'wb')
 
-    # readcsv
-    inv_metrics <- readr::read_csv("INV_OPEN_DATA_METRICS.csv.gz",
-                                  col_types = col_types)
+      col_types <- readr::cols(
+        REPLICATE_CODE = readr::col_character()
+      )
 
-    # Optional download
-    if(isTRUE(save_dwnld) == TRUE){
+      # read parquet
+      inv_metrics <- arrow::read_parquet("INV_OPEN_DATA_SITE.parquet",
+                                         col_select = NULL,
+                                         as_data_frame = TRUE)
 
-      saveRDS(inv_metrics, paste0(save_dir,
-                                  "/INV_OPEN_DATA_METRICS_ALL.rds"))
+      # Optional download
+      if(isTRUE(save_dwnld) == TRUE){
+
+        saveRDS(inv_metrics, paste0(save_dir,
+                                    "/INV_OPEN_DATA_METRICS_ALL.rds"))
+
+      }
+    }
+
+    if(dwnld_format == "csv") {
+
+      # Download biology data from EDE
+      downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.csv.gz",
+                           dest = "INV_OPEN_DATA_METRICS.csv.gz", mode="wb")
+
+      col_types <- readr::cols(
+        REPLICATE_CODE = readr::col_character()
+      )
+
+      # readcsv
+      inv_metrics <- readr::read_csv("INV_OPEN_DATA_METRICS.csv.gz",
+                                     col_types = col_types)
+
+      # Optional download
+      if(isTRUE(save_dwnld) == TRUE){
+
+        saveRDS(inv_metrics, paste0(save_dir,
+                                    "/INV_OPEN_DATA_METRICS_ALL.rds"))
+
+      }
 
     }
 
@@ -121,14 +149,12 @@ import_inv <- function(biol_dir = NULL,
     SAMPLE_ID = as.character(SAMPLE_ID),
     SAMPLE_VERSION = as.integer(SAMPLE_VERSION),
     #  REPLICATE_CODE = col_character(),
-    SAMPLE_DATE = lubridate::dmy(SAMPLE_DATE),
     SAMPLE_TYPE = factor(SAMPLE_TYPE),
     SAMPLE_TYPE_DESCRIPTION = factor(SAMPLE_TYPE_DESCRIPTION),
     SAMPLE_METHOD = factor(SAMPLE_METHOD),
     SAMPLE_METHOD_DESCRIPTION = factor(SAMPLE_METHOD_DESCRIPTION),
     SAMPLE_REASON = factor(SAMPLE_REASON),
     ANALYSIS_ID = as.integer(ANALYSIS_ID),
-    DATE_OF_ANALYSIS = lubridate::dmy(DATE_OF_ANALYSIS),
     ANALYSIS_TYPE = factor(ANALYSIS_TYPE),
     ANALYSIS_TYPE_DESCRIPTION = factor(ANALYSIS_TYPE_DESCRIPTION),
     ANALYSIS_METHOD = factor(ANALYSIS_METHOD),
@@ -136,6 +162,13 @@ import_inv <- function(biol_dir = NULL,
     IS_THIRD_PARTY_DATA = factor(IS_THIRD_PARTY_DATA),
     WATERBODY_TYPE = factor(WATERBODY_TYPE)
   )
+
+  # convert to date (csv only)
+  if(dwnld_format == "csv") {
+    inv_metrics_f <- inv_metrics %>%
+      dplyr::mutate(SAMPLE_DATE = lubridate::dmy(SAMPLE_DATE),
+                    DATE_OF_ANALYSIS = lubridate::dmy(DATE_OF_ANALYSIS))
+  }
 
   # Filter by sites (vector of specified Site IDs)
   inv_metrics_f1 <- dplyr::filter(inv_metrics_f, SITE_ID %in% sites)
@@ -167,7 +200,8 @@ import_inv <- function(biol_dir = NULL,
   # save copy to disk in rds format if needed
   if (save == TRUE) {saveRDS(inv_metrics_f1, paste0(save_dir, "/INV_OPEN_DATA_METRICS_F.rds"))}
 
-  file.remove("INV_OPEN_DATA_METRICS.csv.gz")
+  if(dwnld_format == "parquet") {file.remove("INV_OPEN_DATA_SITE.parquet")}
+  if(dwnld_format == "csv") {file.remove("INV_OPEN_DATA_METRICS.csv.gz")}
 
   inv_metrics_f1 <- inv_metrics_f1 %>% dplyr::rename(biol_site_id = SITE_ID)
 

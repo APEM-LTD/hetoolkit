@@ -46,7 +46,9 @@ Imports:
     plotly,
     zoo,
     stats,
-    ggpubr
+    ggpubr,
+    ggfortify (>= 0.4.14),
+    arrow (>= 10.0.0)
 Depends: 
     R (>= 3.5.0),
     dplyr (>= 1.0.2),
