@@ -29,7 +29,7 @@ rm(list = ls())
 ```{r load packages, message=FALSE, warning=FALSE, include=TRUE, message=FALSE, tidy=TRUE}
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, remotes)
+pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, remotes, geojsonio, mapview)
 
 remotes::install_github("aquaMetrics/rict")
 
@@ -123,7 +123,7 @@ Below, we use our list `biolsites` to filter the data from EDE.
 ```{r bio, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # Import biology data from EDE
-biol_data <- import_inv(sites = biolsites, start_date = "2010-01-01", end_date = "2020-12-31")
+biol_data <- import_inv(sites = biolsites, start_date = "2010-01-01", end_date = "2020-12-31", dwnld_format = "parquet")
 
 ```
 
@@ -198,49 +198,36 @@ env_data
 
 ### Get data
 
-First we download zipped shapefiles for our basemap, and load them in as sf objects. The zipped shapefiles are left in the users project / working directory. The England map is of EA public facing area boundaries. The additional map covering the Wales coastline comes from the ESRC UK Data Service.
+First we download data for our basemap. The England map is of EA public facing area boundaries.
+
+We use the environmental base data that we have downloaded from the Ecology and Fish Data Explorer using `import_env`, this gives us their NGRs. We translate the NGRs to full latitude / longitude (WGS84) and match this back to the env_data so we have information to include in the plot. 
 
 ```{r get_data, message=FALSE, warning=FALSE}
-# 
-# # link not working, zip file saved in vignette folder
-# #download('https://environment.data.gov.uk/UserDownloads/interactive/7bba3d47789b4687a098b526dd7509fa118716/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip', destfile = 'EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip')
-# 
-# ## get Wales coastline, just because map looks silly without it
-# download('https://borders.ukdataservice.ac.uk/ukborders/easy_download/prebuilt/shape/Wales_ol_2001.zip', destfile = 'Wales_ol_2001.zip')
-# 
-# ## load in the shapefiles to R objects and remove seaward parts
-# EA.areas <- read_sf('/vsizip/EA_AdminBoundEAandNEpublicFaceAreas_SHP_Full.zip/data/Administrative_Boundaries_Environment_Agency_and_Natural_England_Public_Face_Areas.shp')
-# wales <- read_sf('/vsizip/Wales_ol_2001.zip')
-# EA.areas.land <- EA.areas %>% dplyr::filter(seaward == 'No')
 
-```
+# Get EA public facing area boundaries
+url_request <- "https://environment.data.gov.uk/arcgis/rest/services/EA/AdminBoundEAandNEpublicFaceAreas/FeatureServer/0/query?where=seaward='No'&outFields=*&f=geojson"
+ea.areas <- st_read(url_request)
 
-### Data processing
+## Convert national grid ref (NGR) to full lat / long from env_data (from import_env function)
+## WGS84 is lat/long. 
+temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "WGS84") %>% as_tibble()
 
-We use the environmental base data that we have downloaded from the Ecology and Fish Data Explorer using `import_env`, this gives us their NGRs. We translate the NGRs to full eastings / northings and use this to turn the base data frame into a sf point object for plotting. 
-
-```{r processing, message=FALSE, warning=FALSE}
-# 
-# ## translate NGRs to full easting / northing
-# temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "BNG") %>% as_tibble()
-# 
-# ## make an sf point object to plot with geom_sf but retain the easting and northing column required by geom_text_repel
-# env_sf <- st_as_sf(bind_cols(temp.eastnorths, env_data), coords =  c("easting", "northing"), crs = 27700, remove = FALSE) 
+## match to back to env data to give details on map
+env_data_map <- cbind(env_data, temp.eastnorths) %>%
+  dplyr::select(AGENCY_AREA, WATER_BODY, CATCHMENT, WATERBODY_TYPE, biol_site_id, lat, lon)
 
 ```
 
 ### Create the map
 
-Finally we use ggplot with geom_sf() to plot the points and ggrepel::geom_text_repel() to plot the labels. 
+Finally we use mapview to plot the EA areas and points indicating the sample sites. The points and polygons are labelled with the biology sample site ID and the EA area code respectively. More data for each site is available by clicking on the point. 
 
 ```{r map, message=FALSE, warning=FALSE}
-# basemap <- ggplot() + geom_sf(mapping = aes(), data = EA.areas.land) + 
-#   geom_sf(mapping = aes(), data = wales) 
-# 
-# basemap + geom_sf(data = env_sf, col = "blue", size = 1.5) +
-#   geom_text_repel(data = env_sf, aes(x=easting, y=northing, label = biol_site_id), col = "blue") +
-#   coord_sf(datum = sf::st_crs(27700)) 
-#   
+
+## Create map
+mapview(ea.areas, alpha.regions = 0.2, label=ea.areas$code) +
+  mapview(env_data_map, xcol = "lon", ycol = "lat", label=env_data_map$biol_site_id, grid = FALSE)
+
 ```
 
 ## Optional: Join additional environmental data
@@ -744,9 +731,27 @@ In the following example, the Q95z and Q10z flow statistics have been selected a
 
 ```{r, rngflows1, message=FALSE, warning=FALSE}
 
-plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL)
+all.combinations <- expand.grid(biol_site_id = unique(biol_data$biol_site_id), Year = min(biol_data$Year):max(biol_data$Year), Season = c("Spring", "Autumn"), stringsAsFactors = FALSE)
+dim(all.combinations)
+
+biol_data1 <- all.combinations %>%
+  left_join(biol_all)
+
+
+mapping <- master_data[, c("biol_site_id", "flow_site_id")]
+
+join_data <- join_he(biol_data = biol_data1, flow_stats = flowstats_1, mapping = mapping, lags = c(0, 1), method = "A", join_type = "add_biol")
+
+#Original code
+plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL, label = "Year")
 
 plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = "biol_site_id", label = "Year")
+
+
+
+plot_rngflows(data = join_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL, label = "Year")
+
+plot_rngflows(data = join_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = "biol_site_id", label = "Year")
 
 ```
 
