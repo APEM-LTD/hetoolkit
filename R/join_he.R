@@ -11,7 +11,7 @@
 #' @param mapping Data frame or tibble containing paired biology sites IDs and flow site IDs. Must contain columns named biol_site_id and flow_site_id. These columns must not contain any NAs. Default = `NULL`, which assumes that paired biology and flow sites have identical ids, so mapping is not required.
 #' @param method Choice of method for linking biology samples to flow statistics for antecedent time periods. Using method = "A" (default), lag 0 is defined for each biology sample as the most recently finished flow time period; using method = "B", lag 0 is defined as the most recently started flow time period. See below for details.
 #' @param lags Vector of lagged flow time periods of interest. Values must be zero or positive, with larger values representing longer time lags (i.e. an increasing time gap between the flow time period and the biology sample date). Default = 0. See below for details.
-#' @param join_type To add flow statistics to each biology sample, choose "add_flows" (default); this produces a dataset of biological metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. To add biology sample data to flow statistics for each time period, choose "add_biol"; this produces a time series of flow statistics with associated biological metrics which can be used, for example, to assess the coverage of historical flow conditions using the `plot_rngflows` function.
+#' @param join_type To add flow statistics to each biology sample, choose "add_flows" (default); this produces a dataset of biology metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. To add biology sample data to flow statistics for each time period, choose "add_biol"; this produces a time series of flow statistics with associated biological metrics which can be used, for example, to assess the coverage of historical flow conditions using the `plot_rngflows` function.
 #'
 #' @details
 #' `biol_data` and `flow_stats` may contain more sites than listed in `mapping`, but any sites not listed in `mapping` will be filtered out. If `mapping = NULL`, then biology site and flow sites with matching ids will be paired automatically.
@@ -25,7 +25,7 @@
 #' As a second example, suppose we again have a biology sample dated 15 September 2020 and that flow statistics are available for a sequence of overlapping 6 month periods (i.e. February to July 2020, March to August 2020, April to September 2020, and so on). Using `method = "A"`, the Lag 0 period for that biology sample would be March to August 2020 (the most recently finished time period), the Lag 1 period would be February to July 2020, the Lag 2 period would be January to June 2020, and so on. Similarly, using `method ="B"`, the Lag 0 period for that biology sample would be September 2000 to February 2021 (the most recently started time period), the Lag 1 period would be 1 August 2000 to January 2021, the Lag 2 period would be July to December 2020, and so on.
 #'
 #' Note that if using `join_type = "add_biol"`, a flow period becomes replicated if it has 2+ biology samples within it. To avoid this happening, summarise (e.g. average) the replicate biology samples within each time window before applying `join_he`. See below for an example.
-
+#'
 #' @return `join_he` returns a tibble containing the linked biology data and flow statistics.
 #'
 #' @export
@@ -55,7 +55,8 @@
 #' # view data
 #' flow_stats; biol_data
 #'
-#' # add flow statistics to each biology sample (mapping = NULL because biology and flow sites have identical ids )
+#' # add flow statistics to each biology sample using method A
+#' # mapping = NULL because biology and flow sites have identical ids
 #' join_he(biol_data = biol_data,
 #'         flow_stats = flow_stats,
 #'         mapping = NULL,
@@ -63,11 +64,28 @@
 #'         lags = c(0,1),
 #'         join_type = "add_flows")
 #'
-#' # add biology sample data to flow statistics for each time period
-#' join_he(biol_data = biol_data1,
+#' # add flow statistics to each biology sample using method B
+#' # mapping = NULL because biology and flow sites have identical ids
+#' join_he(biol_data = biol_data,
+#'         flow_stats = flow_stats,
+#'         mapping = NULL,
+#'         method = "B",
+#'         lags = c(0,1),
+#'         join_type = "add_flows")
+#'
+#' # add biology sample data to flow statistics for each time period using method A
+#' join_he(biol_data = biol_data,
 #'         flow_stats = flow_stats,
 #'         mapping = NULL,
 #'         method = "A",
+#'         lags = c(0,1),
+#'         join_type = "add_biol")
+#'
+#' # add biology sample data to flow statistics for each time period using method B
+#' join_he(biol_data = biol_data,
+#'         flow_stats = flow_stats,
+#'         mapping = NULL,
+#'         method = "B",
 #'         lags = c(0,1),
 #'         join_type = "add_biol")
 #'
