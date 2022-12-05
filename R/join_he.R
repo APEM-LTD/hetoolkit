@@ -36,7 +36,7 @@
 #' # create flow stats from synthetic flow data
 #' set.seed(123)
 #' flow_data <- data.frame(flow_site_id = rep("A0001", 365),
-#'                         date = seq(lubridate::ymd('2021-01-01'), lubridate::ymd('2021-12-31'), by = '1 day'),
+#'                         date = seq(as.Date("2021-01-01"), as.Date("2021-12-31"), by = "1 day"),
 #'                         flow = rnorm(365, 10, 2))
 #' flow_stats <- calc_flowstats(data = flow_data,
 #'                              site_col = "flow_site_id",
@@ -49,7 +49,7 @@
 #'
 #' # create synthetic biology data
 #' biol_data <- data.frame(biol_site_id = rep("A0001", 2),
-#'                         date = c(lubridate::ymd('2021-04-15'), lubridate::ymd('2021-09-15')),
+#'                         date = as.Date(c("2021-04-15", "2021-09-15")),
 #'                         metric = c(0.8, 0.7))
 #'
 #' # view data
@@ -73,7 +73,7 @@
 #'
 #' # using join_type = "add_biol", a flow period becomes replicated if it has 2+ biology samples
 #' biol_data2 <- data.frame(biol_site_id = rep("A0001", 3),
-#'                          date = c(lubridate::ymd('2021-04-15'), lubridate::ymd('2021-09-15'), lubridate::ymd('2021-09-17')),
+#'                          date = as.Date(c("2021-04-15", "2021-09-15", "2021-09-17")),
 #'                          metric = c(0.8, 0.7, 0.6))
 #' join_he(biol_data = biol_data2,
 #'         flow_stats = flow_stats,
