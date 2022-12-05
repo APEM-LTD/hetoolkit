@@ -108,29 +108,43 @@ import_inv <- function(source = "parquet",
 
         saveRDS(inv_metrics, paste0(save_dir,
                                     "/INV_OPEN_DATA_METRICS_ALL.rds"))
+
+    }
+
+  }
+
+  # Read-in file from source
+  if(is.null(source) == TRUE) {source = "Null"}
+  if(source %in% c("parquet", "csv") == FALSE) {
+
+    if(file.exists(source) == FALSE) {stop("Specified file directory does not exist")}
+
+    # csv format
+    if(grepl("\\.csv$", source) == TRUE) {
+      inv_metrics <- readr::read_csv(source)
+    }
+
+    # rds format
+    if(grepl("\\.rds$", source) == TRUE) {
+      inv_metrics <- readr::read_rds(source)
     }
   }
 
-  # Read-in file
-  if(is.null(source) == TRUE) {source = "Null"}
+  # Read-in file from biol_dir
+  if(is.null(biol_dir) == FALSE) {
 
-  # Set path from source (default) or biol_dir
-  if(source %in% c("parquet", "csv") == FALSE) {
-    path <- source
-  } else {
-    path <- biol_dir
-  }
+    if(file.exists(biol_dir) == FALSE) {stop("Specified file directory does not exist")}
 
-  if(file.exists(path) == FALSE) {stop("Specified file directory does not exist")}
+    # csv format
+    if (grepl("\\.csv$", biol_dir) == TRUE) {
+      inv_metrics <- readr::read_csv(biol_dir)
+    }
 
-  # csv format
-  if(grepl("\\.csv$", path) == TRUE) {
-    inv_metrics <- readr::read_csv(path)
-  }
+    # rds format
+    if(grepl("\\.rds$", biol_dir) == TRUE) {
+      inv_metrics <- readr::read_rds(biol_dir)
+    }
 
-  # rds format
-  if(grepl("\\.rds$", path) == TRUE) {
-    inv_metrics <- readr::read_rds(path)
   }
 
   if(is.null(sites) == FALSE) {
