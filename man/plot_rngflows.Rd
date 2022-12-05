@@ -39,4 +39,24 @@ plot_rngflows generates a scatterplot for two flow variables (such as those prod
 #               biol_metric = "LIFE_F_OE",
 #               wrap_by = "biol_site_id",
 #               label = "Year")
+
+## Example 3: Create biology records for each time step (uses join_he function)
+# all.combinations <- expand.grid(biol_site_id = unique(biol_data$biol_site_id),
+#                                 Year = min(biol_data$Year):max(biol_data$Year),
+#                                 Season = c("Spring", "Autumn"),
+#                                 stringsAsFactors = FALSE)
+# biol_data <- all.combinations \%>\%
+#   left_join(biol_data)
+# mapping <- master_data[, c("biol_site_id", "flow_site_id")]
+# join_data <- join_he(biol_data = biol_data,
+#                      flow_stats = flowstats,
+#                      mapping = mapping,
+#                      lags = c(0, 1),
+#                      method = "A",
+#                      join_type = "add_biol")
+# plot_rngflows(data = all_data,
+#               flow_stats = c("Q95z", "Q10z"),
+#               biol_metric = "LIFE_F_OE",
+#               wrap_by = "biol_site_id",
+#               label = "Year")
 }

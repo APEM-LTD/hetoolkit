@@ -4,10 +4,10 @@
 \alias{import_inv}
 \title{Import macroinvertebrate data in Ecology Data Explorer (EDE) format}
 \usage{
-import_inv(biol_dir = NULL, sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
+import_inv(source = "parquet", sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd()biol_dir = NULL)
 }
 \arguments{
-\item{biol_dir}{Path to local .csv or .rds file containing biology data; or NULL to download directly from EDE. Default = NULL.}
+\item{source}{File format for the download from EDE OR path to local .csv or .rds file containing biology data. Default = "parquet".}
 
 \item{sites}{Vector of site ids to filter by.}
 
@@ -20,6 +20,8 @@ import_inv(biol_dir = NULL, sites = NULL, start_date = NULL, end_date = NULL, sa
 \item{save_dwnld}{Specifies whether or not downloaded biology data should be saved. Default = FALSE.}
 
 \item{save_dir}{Path to folder where biology data is to be saved. Default = Current working directory.}
+
+\item{biol_dir}{Deprecated. Path to local .csv or .rds file containing biology data; or NULL to download directly from EDE. Default = NULL.}
 }
 \value{
 Tibble containing biology data
@@ -30,9 +32,9 @@ The \code{import_inv} function imports macroinvertebrate sampling data from the 
 \details{
 If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_ALL.RDS. If saving after filtering on site or date, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_F.RDS.
 
-Downloaded raw data files (in .csv and .zip format) will be automatically removed from the working directory following completed execution of the function.
+Downloaded raw data files (in .csv and .parquet format) will be automatically removed from the working directory following completed execution of the function.
 
-The function will modify the output from EDE, renaiming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
+The function will modify the output from EDE, renaming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
 }
 \examples{
 # Download data for all sites and save as .rds file for future use:
