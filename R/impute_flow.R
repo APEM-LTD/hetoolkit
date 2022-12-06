@@ -50,28 +50,28 @@
 #'
 #' @examples
 #' ## impute flow statistics using 'linear' method
-#' impute_flow(data_impute,
+#' impute_flow(data = data_impute,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "linear")
 #'
 #' ## impute flow statistics using 'exponential' method
-#' impute_flow(data_impute,
+#' impute_flow(data = data_impute,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "exponential")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-#' impute_flow(data_equipercentile,
+#' impute_flow(data = data_equipercentile,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
 #'             method = "equipercentile")
 #'
 #' impute flow statistics using 'equipercentile' method, without specifying the donor station to be used
-#' impute_flow(data_equipercentile,
+#' impute_flow(data = data_equipercentile,
 #'             site_col = "flow_site_id",
 #'             date_col = "date",
 #'             flow_col = "flow",
@@ -143,7 +143,7 @@ impute_flow <- function(data,
     data_f$date <- dplyr::pull(data_f, date_col)
     data_f$flow <- dplyr::pull(data_f, flow_col)
 
-    if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date yyyymmdd format")}
+    if(lubridate::is.Date(data$date) == FALSE) {stop("date_col must be of date (yyyy-mm-dd) format")}
 
     # check whether full dataset is NAs
     # skip site if only NAs
