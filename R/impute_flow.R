@@ -4,21 +4,12 @@
 #'
 #' @usage impute_flow(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", method = "linear", donor = NULL)
 #'
-<<<<<<< HEAD
 #' @param data A tibble or data frame containing the data to be imputed, plus flow data for donor sites.
 #' @param site_col Name of column in `data` containing unique flow site id. Default = "flow_site_id". Site ids are coerced to a character vector.
 #' @param date_col Name of column in `data` containing the date of each flow record. Default = "date".  Dates must be in "yyyy-mm-dd" format.
 #' @param flow_col Name of column in `data` containing the measured flow data. Default = "flow".
 #' @param method Imputation method: "linear" (default), "exponential" or "equipercentile". See below for details.
 #' @param donor – A tibble or data frame with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. Subsequent columns are ignored. Default = NULL. Only used when `method = equipercentile`.  Note, the date ranges of the donor site and the flow site of interest must overlap by a minimum of 365 records (i.e. 1 year).
-=======
-#' @param data A tibble or data frame containing the flow data to be imputed. Include all sites, not just those with missing data, especially if using the equipercentile method.
-#' @param site_col Name of column in `data` containing unique flow site id. Default = "flow_site_id". Site ids are coerced to a character vector.
-#' @param date_col Name of column in `data` containing date of flow record. Default = "date".  Dates must be in "yyyy-mm-dd" format.
-#' @param flow_col Name of column in `data` containing the measured  flows. Default = "flow".
-#' @param method Imputation method: "linear" (default), "exponential" or "equipercentile".
-#' @param donor – A tibble or data frame with at least two columns: the first a list of flow sites requiring imputation, and the second a list of paired donor sites. Subsequent columns are ignored. Default = NULL. Only used when method = "equipercentile".  Note, the date ranges of the donor site and the flow site of interest must overlap by a minimum of 365 records (i.e. 1 year).
->>>>>>> 3b9077f9b146610fb1734495f08fc32285577a1f
 #'
 #' @details
 #' This function is intended for imputing gauged daily flow data only; it cannot be used to impute sub-daily data, and is not designed for data on coarser time steps (e.g. 10-daily or monthly).
