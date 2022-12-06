@@ -275,6 +275,11 @@ join_he <- function(biol_data,
       biol_data_2 <- biol_data %>%
         dplyr::left_join(mapping, by = "biol_site_id")
 
+      if(join_type == "add_biol") {
+        flow_stats_all <- flow_stats_all %>%
+          dplyr::left_join(mapping, by = "flow_site_id")
+      }
+
       # index biology and flow stats to find the nearest flow window and create date_list
       date_indx <- survival::neardate(biol_data_2$flow_site_id, flow_stats$flow_site_id,
                                       biol_data_2$date, flow_stats$end_date, best = "prior",
@@ -297,7 +302,7 @@ join_he <- function(biol_data,
       if(join_type == "add_biol"){
 
       # join biology data to flow stats
-      join_data <- flow_stats_all %>% dplyr::left_join(biol_data_3, by = c("flow_site_id","win_no"))
+      join_data <- flow_stats_all %>% dplyr::left_join(biol_data_3, by = c("biol_site_id", "flow_site_id", "win_no"))
 
       }
 
@@ -309,6 +314,11 @@ join_he <- function(biol_data,
     # add mapping
     biol_data_2 <- biol_data %>%
       dplyr::left_join(mapping, by = "biol_site_id")
+
+    if(join_type == "add_biol") {
+      flow_stats_all <- flow_stats_all %>%
+        dplyr::left_join(mapping, by = "flow_site_id")
+    }
 
     # index biology and flow stats to find the nearest flow window and create date_list
     date_indx <- survival::neardate(biol_data_2$flow_site_id, flow_stats$flow_site_id,
@@ -332,12 +342,12 @@ join_he <- function(biol_data,
     if(join_type == "add_biol"){
 
       # join biology data to flow stats
-      join_data <- flow_stats_all %>% dplyr::left_join(biol_data_3, by = c("flow_site_id","win_no"))
+      join_data <- flow_stats_all %>% dplyr::left_join(biol_data_3, by = c("biol_site_id", "flow_site_id", "win_no"))
 
     }
 
 
-    }
+  }
 
 
   return(join_data)
