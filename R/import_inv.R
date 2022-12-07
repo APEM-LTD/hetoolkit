@@ -61,8 +61,8 @@ import_inv <- function(source = "parquet",
   if(file.exists(save_dir) == FALSE) {stop("Specified save directory does not exist")}
   if(is.logical(save) == FALSE) {stop("Save is not logical")}
   if(is.logical(save_dwnld) == FALSE) {stop("Save_dwnld is not logical")}
-  if(is.null(source) == FALSE && source %in% c("parquet", "csv") == FALSE){
-    if (grepl(source,"\\.csv$|\\.rds$") == FALSE)
+  if(is.null(source) == FALSE && source %in% c("parquet", "csv") == FALSE && grepl(source,"\\.csv$|\\.rds$") == FALSE){
+    #if (grepl(source,"\\.csv$|\\.rds$") == FALSE)
     {stop("Download format must be parquet or csv, or a valid filepath must be specified (.csv or .rds)")}}
 
   if(is.null(biol_dir) == FALSE)
