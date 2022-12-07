@@ -162,6 +162,7 @@ get_hde_flows <- function(my.station, global.stations, min.date, max.date = date
   }
 
   flush.console()
+  file.remove("temp_download.csv")
 
   return(flow.series)
 
@@ -184,6 +185,8 @@ get_hde_stations <- function(){
     tidyr::separate(measures, c("col1", "col2"), sep = "\\|", fill = 'right') %>%
     tidyr::pivot_longer(cols = c(col1, col2), names_to = 'col') %>%
     dplyr::filter(stringr::str_detect(value, '86400'))
+
+  file.remove("stations.csv")
 
   return(stations)
 
