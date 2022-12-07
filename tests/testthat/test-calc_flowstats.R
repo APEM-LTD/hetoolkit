@@ -552,30 +552,44 @@ test_that("different flow stats produced when ref_col is/isn't applied", {
 })
 
 
-#test_that("min_7day etc are NA if data is not daily", {
+test_that("min_7day etc are NA if data is not daily", {
 
- # data_calcfs <- readRDS("data_calcfs.rds")
-#
-  #data_calcfs$month <- lubridate::floor_date(data_calcfs$date, "month")
+  data_calcfs <- readRDS("testdata_calcfs_nonconsec.rds")
 
-  #my_data <- data_calcfs %>%
-  #            group_by(site) %>%
-  #            summarise(flow = mean(flow),
- #                       month = mean(month))
-#
- # test1 <-  calc_flowstats(data = my_data,
-#                           site_col = "site",
-  #                         date_col = "month",
- #                          flow_col = "flow")
-#
-#
- # test1_data <- test1[[1]]
- # test <- isTRUE(TRUE %in% is.na(test1$min_7day))
+  data_calcfs$month <- lubridate::floor_date(data_calcfs$Date, "month")
+  data_calcfs$site <- factor(data_calcfs$flow_site_id, levels = unique(data_calcfs$flow_site_id))
 
-#  testthat::expect_false(test)
+  test1 <-  calc_flowstats(data = data_calcfs,
+                           site_col = "site",
+                           date_col = "month",
+                           flow_col = "Historical")
 
-#})
 
+  test1_data <- test1[[1]]
+  test <- isTRUE(TRUE %in% is.na(test1$min_7day))
+
+  testthat::expect_false(test)
+
+})
+
+test_that("results are processed corrctly if data is not daily", {
+
+  data_calcfs <- readRDS("testdata_calcfs_nonconsec.rds")
+
+  data_calcfs$site <- factor(data_calcfs$flow_site_id, levels = unique(data_calcfs$flow_site_id))
+
+  test1 <-  calc_flowstats(data = data_calcfs,
+                           site_col = "site",
+                           date_col = "Date",
+                           flow_col = "Historical")
+
+
+  test1_data <- test1[[1]]
+  results <- readRDS("testdata_calcfs_nonconsec_results.rds")
+
+  testthat::expect_equivalent(test1_data, results)
+
+})
 
 test_that("stats are are NA if n_data is not sufficient", {
 
