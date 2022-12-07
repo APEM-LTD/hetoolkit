@@ -311,8 +311,9 @@ impute_flow <- function(data,
         donor_flow$flow_site <- donor_flow[,1]
         donor_flow$donor_site <- donor_flow[,2]
 
-        if(unique(original_flow$site) %in% unique(donor_flow$flow_site) == FALSE)
-        {warning(paste("A donor site was not specified for site", sep = "-", i))
+        if(unique(original_flow$site) %in% unique(donor_flow$flow_site) == FALSE){
+          if(sum(is.na(original_flow$flow)) > 0)
+          {warning(paste("A donor site was not specified for site", sep = "-", i))}
 
           all_flow <- original_flow
           all_flow$imputed <- 0
