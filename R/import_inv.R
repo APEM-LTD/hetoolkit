@@ -61,10 +61,10 @@ import_inv <- function(source = "parquet",
   if(file.exists(save_dir) == FALSE) {stop("Specified save directory does not exist")}
   if(is.logical(save) == FALSE) {stop("Save is not logical")}
   if(is.logical(save_dwnld) == FALSE) {stop("Save_dwnld is not logical")}
-  if(source %in% c("parquet", "csv") == FALSE | grepl(".csv", source) == FALSE)
+  if(is.null(source) == FALSE && source %in% c("parquet", "csv") == FALSE && grepl(source,"\\.csv$|\\.rds$") == FALSE)
     {stop("Download format must be parquet or csv, or a valid filepath must be specified")}
 
-  #if(is.null(biol_dir) == TRUE) {
+  if(is.null(source) == FALSE) {
 
     if(source == "parquet") {
       # Download biology data from EDE
@@ -114,33 +114,41 @@ import_inv <- function(source = "parquet",
 
     }
 
-  #}
-
-  # Read-in csv option
-  if((is.null(biol_dir) == FALSE && grepl("csv", biol_dir) == TRUE) || (grepl(".csv", source) == TRUE)) {
-
-    if(file.exists(source) == FALSE || file.exists(biol_dir) == FALSE)
-      {stop("Specified file directory does not exist")}
-
-    # readcsv
-    inv_metrics <- readr::read_csv(source)
-    inv_metrics <- readr::read_csv(biol_dir)
-
-
   }
 
-    # Read-in rds option
-  if((is.null(biol_dir) == FALSE && grepl("rds", biol_dir) == TRUE) || (grepl("rds", source) == TRUE)) {
+  # Read-in file from source
+  if(is.null(source) == TRUE) {source = "Null"}
+  if(source %in% c("parquet", "csv") == FALSE) {
 
-    if(file.exists(source) == FALSE || file.exists(biol_dir) == FALSE)
-      {stop("Specified file directory does not exist")}
+    if(file.exists(source) == FALSE) {stop("Specified file directory does not exist")}
 
-    # readcsv
-    inv_metrics <- readr::read_rds(source)
-    inv_metrics <- readr::read_rds(biol_dir)
-
-
+    # csv format
+    if(grepl("\\.csv$", source) == TRUE) {
+      inv_metrics <- readr::read_csv(source)
     }
+
+    # rds format
+    if(grepl("\\.rds$", source) == TRUE) {
+      inv_metrics <- readr::read_rds(source)
+    }
+  }
+
+  # Read-in file from biol_dir
+  if(is.null(biol_dir) == FALSE) {
+
+    if(file.exists(biol_dir) == FALSE) {stop("Specified file directory does not exist")}
+
+    # csv format
+    if (grepl("\\.csv$", biol_dir) == TRUE) {
+      inv_metrics <- readr::read_csv(biol_dir)
+    }
+
+    # rds format
+    if(grepl("\\.rds$", biol_dir) == TRUE) {
+      inv_metrics <- readr::read_rds(biol_dir)
+    }
+
+  }
 
   if(is.null(sites) == FALSE) {
 
