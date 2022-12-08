@@ -57,7 +57,7 @@ predict_indices <- function(env_data,
   # check substrate variables for presence of NAs
     raw.input.data %>%
       dplyr::select(BOULDERS_COBBLES, PEBBLES_GRAVEL, SAND, SILT_CLAY) %>%
-      summarise_all(funs(sum(is.na(.))))
+      dplyr::summarise(across(.fns = (~sum(is.na(.x)))))
 
     # replace NAs, if required
     raw.input.data$BOULDERS_COBBLES[is.na(raw.input.data$BOULDERS_COBBLES)] <- 0
