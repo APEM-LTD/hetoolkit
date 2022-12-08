@@ -18,7 +18,7 @@
 #' @details
 #' If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_ALL.RDS. If saving after filtering on site or date, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_F.RDS.
 #'
-#'  Downloaded raw data files (in .csv and .parquet format) will be automatically removed from the working directory following completed execution of the function.
+#'  Downloaded raw data files (in .parquet and .csv format) will be automatically removed from the working directory following completed execution of the function.
 #'
 #'  The function will modify the output from EDE, renaming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
 #'
@@ -30,14 +30,17 @@
 #' # Download data for all sites and save as .rds file for future use:
 #' # import_inv(save_dwnld = TRUE, save_dir = "mydata")
 #'
+#' # Download data for all sites in .csv format:
+#' # import_inv(source = "csv")
+#'
 #' # Read in local .rds file and filter on selected sites and dates:
-#' # import_inv(biol_dir = "mydata/INV_OPEN_DATA_METRICS_ALL.rds",
+#' # import_inv(source = "mydata/INV_OPEN_DATA_METRICS_ALL.rds",
 #' #                  sites = c("34310", "34343"),
 #' #                  start_date = "1995-01-01",
 #' #                  end_date = Sys.Date())
 #'
 #' # Read in local .csv file, filter on selected sites, and save results as rds file:
-#' # import_inv(biol_dir = "mydata/INV_OPEN_DATA_METRICS.csv",
+#' # import_inv(source = "mydata/INV_OPEN_DATA_METRICS.csv",
 #' #                  sites = c("34310", "34343"),
 #' #                  save = TRUE)
 
@@ -63,6 +66,11 @@ import_inv <- function(source = "parquet",
   if(is.logical(save_dwnld) == FALSE) {stop("Save_dwnld is not logical")}
   if(is.null(source) == FALSE && source %in% c("parquet", "csv") == FALSE && grepl(source,"\\.csv$|\\.rds$") == FALSE)
     {stop("Download format must be parquet or csv, or a valid filepath must be specified")}
+  if(is.null(biol_dir) == FALSE && is.null(source) == FALSE) {stop("Set source = NULL if using biol_dir")}
+
+  if(is.null(biol_dir) == FALSE)
+    {warning("In function import_inv, biol_dir argument deprecated. File paths can be specified using source.")}
+
 
   if(is.null(source) == FALSE) {
 
@@ -117,8 +125,9 @@ import_inv <- function(source = "parquet",
   }
 
   # Read-in file from source
-  if(is.null(source) == TRUE) {source = "Null"}
-  if(source %in% c("parquet", "csv") == FALSE) {
+  #if(is.null(source) == TRUE) {source = "Null"}
+  #if(source %in% c("parquet", "csv") == FALSE) {
+  if(is.null(source) == FALSE && grepl(source,"\\.csv$|\\.rds$")) {
 
     if(file.exists(source) == FALSE) {stop("Specified file directory does not exist")}
 

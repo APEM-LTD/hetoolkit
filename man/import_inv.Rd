@@ -32,7 +32,7 @@ The \code{import_inv} function imports macroinvertebrate sampling data from the 
 \details{
 If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_ALL.RDS. If saving after filtering on site or date, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_F.RDS.
 
-Downloaded raw data files (in .csv and .parquet format) will be automatically removed from the working directory following completed execution of the function.
+Downloaded raw data files (in .parquet and .csv format) will be automatically removed from the working directory following completed execution of the function.
 
 The function will modify the output from EDE, renaming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
 }
@@ -40,14 +40,17 @@ The function will modify the output from EDE, renaming "SITE_ID" as "biol_site_i
 # Download data for all sites and save as .rds file for future use:
 # import_inv(save_dwnld = TRUE, save_dir = "mydata")
 
+# Download data for all sites in .csv format:
+# import_inv(source = "csv")
+
 # Read in local .rds file and filter on selected sites and dates:
-# import_inv(biol_dir = "mydata/INV_OPEN_DATA_METRICS_ALL.rds",
+# import_inv(source = "mydata/INV_OPEN_DATA_METRICS_ALL.rds",
 #                  sites = c("34310", "34343"),
 #                  start_date = "1995-01-01",
 #                  end_date = Sys.Date())
 
 # Read in local .csv file, filter on selected sites, and save results as rds file:
-# import_inv(biol_dir = "mydata/INV_OPEN_DATA_METRICS.csv",
+# import_inv(source = "mydata/INV_OPEN_DATA_METRICS.csv",
 #                  sites = c("34310", "34343"),
 #                  save = TRUE)
 }

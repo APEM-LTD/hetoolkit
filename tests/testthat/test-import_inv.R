@@ -23,6 +23,17 @@ expect_error(import_inv(sites = "34330",
                             save_dwnld = "hello"),
              "Save_dwnld is not logical")
 
+expect_error(import_inv(source = "hello"),
+             "Download format must be parquet or csv, or a valid filepath must be specified")
+
+expect_error(import_inv(source = "parquet",
+                        biol_dir = "INV_OPEN_DATA_METRICS_F.rds"),
+             "Set source = NULL if using biol_dir")
+
+expect_warning(import_inv(source = NULL,
+                          biol_dir = "INV_OPEN_DATA_METRICS_F.rds"),
+               "In function import_inv, biol_dir argument deprecated. File paths can be specified using source.")
+
 # Test start date
 
 test_that("start_date filter works", {
