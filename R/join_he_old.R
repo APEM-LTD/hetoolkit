@@ -1,20 +1,20 @@
 #' Link biology data to six-monthly flow statistics for paired biology and flow sites.
 #'
 #' @description
-#' The join_he function links biology data to six-monthly flow statistics (from calc_flowstats) to create dataset for hydro-ecological modelling. Includes option to lag selected flow statistics.
+#' The join_he function links biology data to six-monthly flow statistics (from `calc_flowstats`) to create a dataset for hydro-ecological modelling. Includes option to lag selected flow statistics.
 #'
 #' @usage
 #' join_he(biol_data = biol_data, flow_stats = flow_stats, mapping = NULL, LS1 = FALSE, LS2 = FALSE, lag_vars = c("Q10z", "Q95z"))
 #'
 #' @param biol_data Data frame or tibble containing the processed biology data. Must contain the following columns: biol_site_id, Year and Season. Seasons must be named "Spring" and "Autumn". See Details below.
-#' @param flow_stats Data frame (first element of list returned by the 'calc_flowstats' function), containing the processed flow statistics. Must contain the following columns: flow_site_id, water_year and season.
+#' @param flow_stats Data frame (first element of list returned by the `calc_flowstats` function), containing the processed flow statistics. Must contain the following columns: flow_site_id, water_year and season.
 #' @param mapping Data frame or tibble containing paired biology and flow site IDs. Must contain columns named biol_site_id and flow_site_id. These columns must not contain any NAs. Default = NULL, used when paired biology and flow sites are assumed to have identical ids, and so mapping not required.
 #' @param LS1 Logical value indicating whether or not to also link biology samples to flow statistics for the summer period of the previous year. Default = FALSE.
 #' @param LS2 Logical value indicating whether or not to also link biology samples to flow statistics for the summer period of the year before last. Default = FALSE.
 #' @param lag_vars List of flow variables from 'flow_stats' to be lagged if LS1 and/or LS2 = TRUE. Default = two commonly-used flow statistics: Q10z and Q95z.
 #'
 #' @details
-#' join_he is not intended to join biology data to residual flow ratio statistics (from calc_rfrstats) because these are on an annual time step, rather than six-monthly, and therefore easy to join manually.
+#' join_he is not intended to join biology data to residual flow ratio statistics (from `calc_rfrstats`) because these are on an annual time step, rather than six-monthly, and therefore easy to join manually.
 #'
 #' 'biol_data' and 'flow_stats' may contain more sites than listed in 'mapping', but any sites not listed in 'mapping' will be filtered out.
 #'
