@@ -15,7 +15,7 @@ plot_heatmap(data, x, y, fill, colour = "viridis", lab.x = x, lab.y = y, lab.leg
 
 \item{fill}{Name of column containing variable to be plotted (e.g. flow, WHPT O/E) (continuous variate, integer, or double).}
 
-\item{colour}{A character string indicating the colorramp option to use. Limited to the four viridis package options: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D") or "cividis" (or "E"). Default = "viridis".}
+\item{colour}{A character string indicating the colorramp option to use. Limited to the five viridis package options: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D") or "cividis" (or "E"). Default = "viridis".}
 
 \item{lab.x}{Character string to be used on the y axis. Default is name of y variable.}
 
@@ -53,4 +53,85 @@ Large datasets may be difficult to visualise clearly using a single heatmap, and
 If x (or y) is a time series, the user should check that the time series is complete - e.g. a complete sequence of dates should be present in the data, even if the fill variable is NA on some dates. See example below illustration use of expand.grid prior to remedy gaps prior to executing the function.
 
 The examples below illustrate how the data can be aggregated (e.g. to different time steps, e.g. year, season, month) and summarised (e.g. using mean, min, max, sd, count) prior to executing the function to explore patterns and gaps in the data.
+}
+\examples{
+
+# read in example mean daily flow dataset
+ df <- readRDS("data/FLOW_DATA.rds")
+
+# set the date column data to date format
+ df$date <- lubridate::date(df$date)
+
+# Basic application: plotting flow rate by site and date, providing tables of proportion of missing flow values by date and site along with the heatmap plot
+
+ a <- plot_heatmap(data = flow_data, x = "date", y = "flow_site_id", fill = "flow")
+
+# view heatmap
+ a[[1]]
+# amend ggplot elements, such as the title
+ a[[1]] + labs(title = "this adds a new title to the plot")
+# tibble table of missing flow values by date (variable x)
+ a[[2]]
+# tibble table of missing flow values by site (variable y)
+ a[[3]]
+
+# setting dual = TRUE added a marginal histogram displaying \% missingness
+ a <- plot_heatmap(data = df, x = "date", y = "sites", fill = "flow", limits = TRUE, dual= TRUE)
+
+# to plot this device, the code needed is slightly different:
+ gridExtra::grid.arrange(a[[1]])
+
+# Presence-absence heatmap plot, showing whether or not flow was measured on each date at each site. Using dual=TRUE includes a marginal barchart to visualise, for each site, the proportion of days that do not have a daily flow value.
+
+ df$presence <- "1"
+ df$presence[is.na(df$flow)]<- NA
+ a <- plot_heatmap(data = df, x = "date", y = "sites", fill = "presence", dual = TRUE)
+ gridExtra::grid.arrange(a[[1]])
+
+# Identifying missing variables.
+# If certain dates are completely missing from an input dataset, they will not show in the heatmap plot unless they are explicitly added as missing values. In this example we expand the x time step to include missing days and re-plot to demonstrate how this can be accounted for. If not using some form of date, a list of unique options of x and or y will need to be specified as a vector similar to that produced by unique(df$sites).
+
+# artificially remove some specific days from the data
+ temp1 <- df[!df$date \%in\% lubridate::date(c("2000-02-07", "2000-02-08", "2000-12-12", "2001-09-19")),]
+
+# use expand.grid() to re-create the missing days
+ new <- expand.grid(date = seq(min(temp1$date, na.rm=TRUE), max(temp1$date, na.rm=TRUE), 1), sites = unique(temp1$sites))
+
+# join the flow data to the new expanded grid to generate NA flow values on the four missing days
+ temp <- dplyr::full_join(temp1, new, by=c("date","sites"))
+ temp[temp$date \%in\% lubridate::date(c("2000-02-07","2000-02-08", "2000-12-12","2001-09-19")),]
+ temp <- temp[order(temp$date),]
+
+# heatmap showing missing daily flow records (zoom in RStudio to see all four missing days)
+ a <- plot_heatmap(data = temp, x = "date", y = "sites", fill = "flow")
+ a[[1]]
+
+ rm(list= c("new","temp", "temp1"))
+
+# Calculate and then plot monthly mean flows
+
+# artificially remove some data
+ temp <- df
+ temp$flow[temp$date \%in\% lubridate::date(c("2000-02-07","2000-02-08","2000-12-12","2001-09-19"))] <- NA
+ temp$flow[temp$sites \%in\% c("SS60F015","029004") & temp$date \%in\% lubridate::date(c("2000-01-02","2001-06-22","2001-10-12"))] <- NA
+
+# calculate monthly mean flows
+ temp$month <- lubridate::month(df$date)
+ temp$year <- lubridate::year(df$date)
+ temp1 <- temp \%>\% dplyr::group_by(month, year, sites) \%>\%
+ dplyr::summarise(across(.cols= "flow", list(mean = ~mean(flow, na.rm = TRUE), missing = ~length(which(is.na(flow))), total = ~length(flow), perc_missing = ~(length(which(is.na(flow)))/length(flow))*100), .names = "{.fn}"))
+ temp1$yy_mm <- paste(temp1$year,temp1$month,sep="_")
+
+# heatmap showing monthly mean flows
+ a <- plot_heatmap(data = temp1, x = "yy_mm", y = "sites", fill = "mean",dual = TRUE)
+ gridExtra::grid.arrange(a[[1]])
+
+# heatmap showing percentage completeness of the daily flow data in each month
+ a <- plot_heatmap(data = temp1, x = "yy_mm", y = "sites", fill = "perc_missing")
+ a[[1]]
+
+# every month has a mean flow, so no missing records at this time step
+ a[[3]]
+
+ rm(list=c("temp","temp1"))
 }
