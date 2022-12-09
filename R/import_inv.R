@@ -1,81 +1,102 @@
-#' Import macroinvertebrate data in Ecology Data Explorer (EDE) format
+#' Import macroinvertebrate data from Ecology Data Explorer (EDE)
 #'
 #' @description
-#' The `import_inv` function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from <https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip> or read in from a local csv or rds file. The data can be optionally filtered by site ID and sample date.
+#' The `import_inv` function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer (EDE). The data can either be downloaded automatically in .parquet or .csv format, or read in from a previously saved .csv or .rds file. The data can be optionally filtered by site ID and sample date, and the filtered data saved as a .rds file.
 #'
 #' @usage
-#' import_inv(source = "parquet", sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd()biol_dir = NULL)
+#' import_inv(source = "parquet", sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd(), biol_dir = NULL)
 #'
-#' @param source File format for the download from EDE OR path to local .csv or .rds file containing biology data. Default = "parquet".
+#' @param source Specify source of macroinvertebrate data: "parquet" or "csv" to automatically download data from EDE, or provide path to local .csv or .rds file. (Alternatively set `source = NULL` and instead use deprecated `biol_dir` argument to provide path to local .csv or .rds file). Default = "parquet".
 #' @param sites Vector of site ids to filter by.
-#' @param start_date Start date for data extraction (YYYY-MM-DD format). Default = NULL.
-#' @param end_date End date for data extraction (YYYY-MM-DD format). Default = NULL.
-#' @param save Specifies if filtered biology data should be saved as rds file (for future use). Default = FALSE.
-#' @param save_dir Path to folder where biology data is to be saved. Default = Current working directory.
-#' @param save_dwnld Specifies whether or not downloaded biology data should be saved. Default = FALSE.
-#' @param biol_dir Deprecated. Path to local .csv or .rds file containing biology data; or NULL to download directly from EDE. Default = NULL.
+#' @param start_date Required start date (in `yyyy-mm-dd` format); older records are filtered out. Default = `NULL` to keep all available data.
+#' @param end_date Required end date (in `yyyy-mm-dd` format); more recent records are filtered out. Default = `NULL` to keep all available data.
+#' @param save Specifies whether (`TRUE`) or not (`FALSE`) the filtered data should be saved as an rds file (for future use, or audit trail). Default = `FALSE`.
+#' @param save_dir Path to folder where downloaded and/or filtered data are to be saved. Default = Current working directory.
+#' @param save_dwnld Specifies whether (`TRUE`) or not (`FALSE`) the unfiltered parquet or csv file download should be saved. Default = `FALSE`.
+#' @param biol_dir Deprecated. Path to local .csv or .rds file containing macroinvertebrate data. Default = `NULL` (download data from EDE).
 #'
 #' @details
-#' If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_ALL.RDS. If saving after filtering on site or date, the name of the rds file is hard-wired to: INV_OPEN_DATA_METRICS_F.RDS.
+#' If automatically downloading data from EDE, the parquet file format is faster to download than csv, and has data types pre-formatted.
 #'
-#'  Downloaded raw data files (in .parquet and .csv format) will be automatically removed from the working directory following completed execution of the function.
+#' If saving a copy of the downloaded data, the name of the rds file is hard-wired to `INV_OPEN_DATA_METRICS_ALL.RDS`. If saving after filtering on site and/or date, the name of the rds file is hard-wired to `INV_OPEN_DATA_METRICS_F.RDS`.
 #'
-#'  The function will modify the output from EDE, renaming "SITE_ID" as "biol_site_id" (standardised column header for biology sites).
+#' Downloaded raw data files (in .parquet and .csv format) will be automatically removed from the working directory following completed execution of the function.
 #'
-#' @return Tibble containing biology data
+#' The function automatically modifies the output from EDE, renaming "SITE_ID" to "biol_site_id" (`hetoolkit`'s standardised column header for biology site ids).
+#'
+#' @return Tibble containing imported macroinvertebrate data.
 #'
 #' @export
 #'
 #' @examples
-#' # Download data for all sites and save as .rds file for future use:
-#' # import_inv(save_dwnld = TRUE, save_dir = "mydata")
 #'
-#' # Download data for all sites in .csv format:
-#' # import_inv(source = "csv")
+#' # Bulk download of EDE data for all sites in parquet format and save as .rds file for future use:
+#' import_inv(save_dwnld = TRUE, save_dir = "mydata")
 #'
-#' # Read in local .rds file and filter on selected sites and dates:
-#' # import_inv(source = "mydata/INV_OPEN_DATA_METRICS_ALL.rds",
-#' #                  sites = c("34310", "34343"),
-#' #                  start_date = "1995-01-01",
-#' #                  end_date = Sys.Date())
+#' # Bulk download of EDE data for all sites in parquet format:
+#' import_inv(source = "csv")
 #'
-#' # Read in local .csv file, filter on selected sites, and save results as rds file:
-#' # import_inv(source = "mydata/INV_OPEN_DATA_METRICS.csv",
-#' #                  sites = c("34310", "34343"),
-#' #                  save = TRUE)
+#' # Read in local .rds file and filter on selected sites and dates (up to the present day):
+#' import_inv(source = "mydata/INV_OPEN_DATA_METRICS_ALL.rds",
+#'                  sites = c("34310", "34343"),
+#'                  start_date = "1995-01-01",
+#'                  end_date = Sys.Date())
+#'
+#' # Read in local .csv file, filter on selected sites, and save the result as a .rds file:
+#' import_inv(source = "mydata/INV_OPEN_DATA_METRICS.csv",
+#'            sites = c("34310", "34343"),
+#'            save = TRUE,
+#'            save_dir = "mydata/")
 
 
 import_inv <- function(source = "parquet",
-                           sites = NULL,
-                           start_date = NULL,
-                           end_date = NULL,
-                           save = FALSE,
-                           save_dwnld = FALSE,
-                           save_dir = getwd(),
-                           biol_dir = NULL){
+                       sites = NULL,
+                       start_date = NULL,
+                       end_date = NULL,
+                       save = FALSE,
+                       save_dwnld = FALSE,
+                       save_dir = getwd(),
+                       biol_dir = NULL){
 
-  # Errors
+  ## Errors and warnings
+
   if(is.null(sites) == FALSE && is.vector(sites) == FALSE)
     {stop("If specified, sites must be a vector")}
+
   if(is.null(start_date) == FALSE && IsDate(start_date, "%Y-%m-%d") == FALSE)
     {stop("Date should be in YYYY-MM-DD format")}
+
   if(is.null(end_date) == FALSE && IsDate(end_date, "%Y-%m-%d") == FALSE)
     {stop("Date should be in YYYY-MM-DD format")}
-  if(file.exists(save_dir) == FALSE) {stop("Specified save directory does not exist")}
-  if(is.logical(save) == FALSE) {stop("Save is not logical")}
-  if(is.logical(save_dwnld) == FALSE) {stop("Save_dwnld is not logical")}
+
+  if(file.exists(save_dir) == FALSE)
+    {stop("Specified save directory does not exist")}
+
+  if(is.logical(save) == FALSE)
+    {stop("Save is not logical")}
+
+  if(is.logical(save_dwnld) == FALSE)
+    {stop("Save_dwnld is not logical")}
+
   if(is.null(source) == FALSE && source %in% c("parquet", "csv") == FALSE && grepl(source,"\\.csv$|\\.rds$") == FALSE)
-    {stop("Download format must be parquet or csv, or a valid filepath must be specified")}
-  if(is.null(biol_dir) == FALSE && is.null(source) == FALSE) {stop("Set source = NULL if using biol_dir")}
+    {stop("Download format must be parquet or csv, or a valid filepath must be specified (.csv or .rds)")}
+
+  if(is.null(biol_dir) == FALSE)
+    {warning("In function import_inv, biol_dir argument deprecated. File paths can be specified using source.")}
+
+  if(is.null(biol_dir) == FALSE && is.null(source) == FALSE)
+    {stop("Set source = NULL if using biol_dir")}
 
   if(is.null(biol_dir) == FALSE)
     {warning("In function import_inv, biol_dir argument deprecated. File paths can be specified using source.")}
 
 
+  ## Download data
+
   if(is.null(source) == FALSE) {
 
     if(source == "parquet") {
-      # Download biology data from EDE
+      # Download macroinvertebrate data from EDE
       downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.parquet",
                            destfile = 'INV_OPEN_DATA_SITE.parquet',
                            mode = 'wb')
@@ -89,18 +110,11 @@ import_inv <- function(source = "parquet",
                                          col_select = NULL,
                                          as_data_frame = TRUE)
 
-      # Optional download
-      if(isTRUE(save_dwnld) == TRUE){
-
-        saveRDS(inv_metrics, paste0(save_dir,
-                                    "/INV_OPEN_DATA_METRICS_ALL.rds"))
-
-      }
     }
 
     if(source == "csv") {
 
-      # Download biology data from EDE
+      # Download macroinvertebrate data from EDE
       downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.csv.gz",
                            dest = "INV_OPEN_DATA_METRICS.csv.gz", mode="wb")
 
@@ -111,6 +125,7 @@ import_inv <- function(source = "parquet",
       # readcsv
       inv_metrics <- readr::read_csv("INV_OPEN_DATA_METRICS.csv.gz",
                                      col_types = col_types)
+    }
 
       # Optional download
       if(isTRUE(save_dwnld) == TRUE){
@@ -118,13 +133,14 @@ import_inv <- function(source = "parquet",
         saveRDS(inv_metrics, paste0(save_dir,
                                     "/INV_OPEN_DATA_METRICS_ALL.rds"))
 
-      }
-
     }
 
   }
 
   # Read-in file from source
+  if(is.null(source) == TRUE) {source = "Null"}
+  if(source %in% c("parquet", "csv") == FALSE) {
+
   #if(is.null(source) == TRUE) {source = "Null"}
   #if(source %in% c("parquet", "csv") == FALSE) {
   if(is.null(source) == FALSE && grepl(source,"\\.csv$|\\.rds$")) {
@@ -216,7 +232,7 @@ import_inv <- function(source = "parquet",
   }
 
   # save copy to disk in rds format if needed
-  if (save == TRUE) {saveRDS(inv_metrics_f1, paste0(save_dir, "/INV_OPEN_DATA_METRICS_F.rds"))}
+  if(save == TRUE) {saveRDS(inv_metrics_f1, paste0(save_dir, "/INV_OPEN_DATA_METRICS_F.rds"))}
 
   if(source == "parquet") {file.remove("INV_OPEN_DATA_SITE.parquet")}
   if(source == "csv") {file.remove("INV_OPEN_DATA_METRICS.csv.gz")}
