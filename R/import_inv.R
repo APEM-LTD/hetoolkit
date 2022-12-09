@@ -139,11 +139,7 @@ import_inv <- function(source = "parquet",
 
   # Read-in file from source
   if(is.null(source) == TRUE) {source = "Null"}
-  if(source %in% c("parquet", "csv") == FALSE) {
-
-  #if(is.null(source) == TRUE) {source = "Null"}
-  #if(source %in% c("parquet", "csv") == FALSE) {
-  if(is.null(source) == FALSE && grepl(source,"\\.csv$|\\.rds$")) {
+  if(is.null(source) == FALSE && grepl(source,"\\.csv$|\\.rds$") == TRUE) {
 
     if(file.exists(source) == FALSE) {stop("Specified file directory does not exist")}
 
