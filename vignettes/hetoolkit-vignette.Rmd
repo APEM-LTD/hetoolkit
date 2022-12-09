@@ -123,7 +123,7 @@ Below, we use our list `biolsites` to filter the data from EDE.
 ```{r bio, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # Import biology data from EDE
-biol_data <- import_inv(sites = biolsites, start_date = "2010-01-01", end_date = "2020-12-31", dwnld_format = "parquet")
+biol_data <- import_inv(source = "parquet", sites = biolsites, start_date = "2010-01-01", end_date = "2020-12-31")
 
 ```
 
@@ -741,13 +741,6 @@ biol_data1 <- all.combinations %>%
 mapping <- master_data[, c("biol_site_id", "flow_site_id")]
 
 join_data <- join_he(biol_data = biol_data1, flow_stats = flowstats_1, mapping = mapping, lags = c(0, 1), method = "A", join_type = "add_biol")
-
-#Original code
-plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL, label = "Year")
-
-plot_rngflows(data = all_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = "biol_site_id", label = "Year")
-
-
 
 plot_rngflows(data = join_data, flow_stats = c("Q95z_lag0", "Q10z_lag0"), biol_metric = "LIFE_F_OE", wrap_by = NULL, label = "Year")
 
