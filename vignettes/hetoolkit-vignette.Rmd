@@ -542,17 +542,16 @@ If flow data for paired donor stations are not already included within the 'flow
 ```{r append donor flow, warning=FALSE, message=FALSE, tidy=TRUE}
 
 # create 'donor' data frame
-donor_mapping <- data.frame(station = ("F3105"), donor_station = ("033014"))
+donor_mapping <- data.frame(station = c("F3105"), donor_station = c("033014"))
 
 # get a list of donor sites
-donorsites <- unique(donor_mapping$donor_station)
+donorsites <- as.character(unique(donor_mapping$donor_station))
 
 # download donor flow data
 flow_data_donor <- import_flow(sites = donorsites,
                     inputs = "HDE",
                     start_date = "2010-01-01",
                     end_date = "2019-12-31",
-                    dir = "data/wiski",
                     skip_num = 21,
                     col_order = c(1,2,3))
 
@@ -784,11 +783,12 @@ hev_data <- expand.grid(
 hev_data$Month <- lubridate::month(hev_data$date)
 hev_data$Year <- lubridate::year(hev_data$date)
 
-# join biology and flow data
+# join biology data
 hev_data <- hev_data %>%
   left_join(biol_data_hev, by = c("biol_site_id", "date", "Year"))
 
-hev_data <- join_he(biol_data = hev_data, flow_stats = flow_data_hev, mapping = mapping, method = "A", join_type = "add_biol")
+# join flow data
+hev_data <- join_he(biol_data = hev_data, flow_stats = flow_data_hev, mapping = mapping, method = "B", join_type = "add_biol")
 
 ```
 
