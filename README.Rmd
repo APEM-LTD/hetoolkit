@@ -75,7 +75,7 @@ library(hetoolkitUpdated)
 
 ## Development
 
-The `hetoolkit` package was developed by APEM LTD on behalf on the Environment Agency. Version 1.0.0 was released in May 2021. For further information please contact Mike Dunbar at the Environment Agency.
+The `hetoolkit` package was developed by APEM LTD on behalf on the Environment Agency. For further information please contact [Mike Dunbar](mailto:mike.dunbar@environment-agency.gov.uk).
 
 ## Change history
 
@@ -92,7 +92,7 @@ Further information on the functions contained within the package, including exa
 
 ## Reporting Bugs
 
-Please aid future development of the package by reporting bugs via the Issues page on github.
+If you believe you’ve found a bug in `hetoolkit`, please log an issue (and, if possible, a reproducible example) at https://github.com/APEM-LTD/hetoolkit_updated/issues. For more feature requests, feedback and other general queries, please contact the `hetoolkit` development team at APEM via [hetoolkit@apemltd.co.uk](mailto:hetoolkit@apemltd.co.uk).
 
 ## References
 
