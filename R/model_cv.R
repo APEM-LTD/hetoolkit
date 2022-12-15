@@ -1,11 +1,11 @@
 #' Repeated, stratified k-fold cross-validation
 #'
-#' @description model_cv performs repeated, stratified k-fold cross-validation on a linear mixed-effects model (class: lmerMod) or hierarchical generalized additive model (class: gam) model with a single random grouping factor.
+#' @description model_cv performs repeated, stratified k-fold cross-validation on a linear mixed-effects model (class: lmerMod or lmerTest) or hierarchical generalized additive model (class: gam) model with a single random grouping factor.
 #'
 #' @usage
 #' model_cv(model, data, group, k=5, r=1, control=NULL)
 #'
-#' @param model Model object for cross-validation. Supported classes are "lmerMod" (from lme4::lmer) and "gam" (from mgcv::gam)
+#' @param model Model object for cross-validation. Supported classes are "lmerMod" (from lme4::lmer), "lmerTest" (from lmerTest::lmer) and "gam" (from mgcv::gam)
 #' @param data Data frame or tibble containing data used for model calibration. None of the variables used in 'model' can contain NAs.
 #' @param group Name of variable in data used as a random grouping factor in model.
 #' @param k Number of folds. Default = 5.
@@ -67,12 +67,12 @@ model_cv <- function(model, data, group, k=5, r=1, control=NULL){
   ## error messages
 
   # check that all arguments are provided
-  if(missing(model)) {stop("'model' is missing; specify a lmerMod or gam model object for cross-validation")}
+  if(missing(model)) {stop("'model' is missing; specify a lmerMod, lmerTest or gam model object for cross-validation")}
   if(missing(data)) {stop("'data' is missing; specify dataframe or tibble containing data used for model calibration")}
   if(missing(group)) {stop("'group' is missing; specify the name of the random grouping factor in 'model'")}
 
   # check that model is one of supported types
-  if(class(model)[1] %in% c("lmerMod", "gam") == FALSE) {stop("'model' must be a lmerMod or gam object")}
+  if(class(model)[1] %in% c("lmerMod", "lmerTest", "gam") == FALSE) {stop("'model' must be a lmerMod or gam object")}
 
   # check that data is a data frame or tibble
   if(!is.data.frame(data)) {stop("'data' must be a dataframe or tibble")}
@@ -111,7 +111,7 @@ model_cv <- function(model, data, group, k=5, r=1, control=NULL){
   response <- all.vars(frm)[1]
 
   ## extract REML setting (for lmer models only)
-  if(mod_class == "lmerMod"){
+  if(mod_class == "lmerMod" | mod_class == "lmerTest"){
     isREML <- ifelse(lme4::getME(model, "REML")==0, FALSE, TRUE)
   }
 
@@ -137,7 +137,7 @@ model_cv <- function(model, data, group, k=5, r=1, control=NULL){
     # check folds (should be approx equal number in each fold)
     # tapply(dat$folds,list(as.factor(dat$folds)),length)
 
-    if(mod_class == "lmerMod"){
+    if(mod_class == "lmerMod" | mod_class == "lmerTest"){
 
       for(i in 1:k){
         testIndexes <- which(dat$folds==i,arr.ind=TRUE)
