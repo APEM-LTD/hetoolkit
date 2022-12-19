@@ -4,7 +4,7 @@
 \alias{calc_flowstats}
 \title{Calculate a suite of long-term and time-varying flow statistics for one or more sites.}
 \usage{
-calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = “imputed”, win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, standardise = FALSE, ref_col = NULL)
+calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = “imputed”, win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, scaling = FALSE, ref_col = NULL)
 }
 \arguments{
 \item{data}{Tibble or data frame containing the flow data to be processed. Must be in long format and have, as a minimum, separate columns containing site id, date and flow (e.g. as output by the import_flow() function). If flow estimates are available for different abstraction or climate scenarios, then these must be in separate columns (see \code{ref_col} argument).}
@@ -97,12 +97,12 @@ The function returns a list of two data frames. The first data frame contains a 
 \item \code{min}: minimum flow (min. records required = 3)
 \item \code{min_z}: as for q5z (min. records required = 3)
 \item \code{min_doy}: day of year (1-366) of minimum flow (min. records required = 3)
-\item \code{min_7day}: minimum 7-day mean flow (requires daily data; min. records required = 90)
-\item \code{min_7day_z}: as for q5z (requires daily data; min. records required = 90)
-\item \code{min_7day_doy}: day of year (1-366) of midpoint of 7-day minimum flow period (requires daily data; min. records required = 90)
-\item \code{min_30day}: minimum 30-day mean flow (requires daily data; min. records required = 180)
-\item \code{min_30day_z}: as for q5z (requires daily data; min. records required = 180)
-\item \code{min_30day_doy}: day of year of (1-366) of midpoint of 30-day minimum flow period (requires daily data; min. records required = 180)
+\item \code{min_7day}: minimum 7-day mean flow (min. records required = 90)
+\item \code{min_7day_z}: as for q5z (min. records required = 90)
+\item \code{min_7day_doy}: day of year (1-366) of midpoint of 7-day minimum flow period (min. records required = 90)
+\item \code{min_30day}: minimum 30-day mean flow (min. records required = 180)
+\item \code{min_30day_z}: as for q5z (min. records required = 180)
+\item \code{min_30day_doy}: day of year of (1-366) of midpoint of 30-day minimum flow period (min. records required = 180)
 \item \code{max}: maximum flow (min. records required = 3)
 \item \code{max_z}: as for q5z (min. records required = 3)
 \item \code{max_doy}: day of year (1-366) of maximum flow (min. records required = 3)
