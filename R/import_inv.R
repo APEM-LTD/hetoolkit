@@ -6,14 +6,14 @@
 #' @usage
 #' import_inv(source = "parquet", sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd(), biol_dir = NULL)
 #'
-#' @param source Specify source of macroinvertebrate data: "parquet" or "csv" to automatically download data from EDE, or provide path to local .csv or .rds file. (Alternatively set `source = NULL` and instead use deprecated `biol_dir` argument to provide path to local .csv or .rds file). Default = "parquet".
+#' @param source Specify source of macroinvertebrate data: "parquet" or "csv" to automatically download data from EDE, or provide path to local .csv, .rds or .parquet file. (Alternatively set `source = NULL` and instead use deprecated `biol_dir` argument to provide path to local file). Default = "parquet".
 #' @param sites Vector of site ids to filter by.
 #' @param start_date Required start date (in `yyyy-mm-dd` format); older records are filtered out. Default = `NULL` to keep all available data.
 #' @param end_date Required end date (in `yyyy-mm-dd` format); more recent records are filtered out. Default = `NULL` to keep all available data.
 #' @param save Specifies whether (`TRUE`) or not (`FALSE`) the filtered data should be saved as an rds file (for future use, or audit trail). Default = `FALSE`.
 #' @param save_dir Path to folder where downloaded and/or filtered data are to be saved. Default = Current working directory.
-#' @param save_dwnld Specifies whether (`TRUE`) or not (`FALSE`) the unfiltered parquet or csv file download should be saved. Default = `FALSE`.
-#' @param biol_dir Deprecated. Path to local .csv or .rds file containing macroinvertebrate data. Default = `NULL` (download data from EDE).
+#' @param save_dwnld Specifies whether (`TRUE`) or not (`FALSE`) the unfiltered parquet or csv file download should be saved, in .rds format. Default = `FALSE`.
+#' @param biol_dir Deprecated. Path to local .csv, .rds or parquet file containing macroinvertebrate data. Default = `NULL` (download data from EDE).
 #'
 #' @details
 #' If automatically downloading data from EDE, the parquet file format is faster to download than csv, and has data types pre-formatted.
@@ -78,8 +78,9 @@ import_inv <- function(source = "parquet",
   if(is.logical(save_dwnld) == FALSE)
     {stop("Save_dwnld is not logical")}
 
-  if(is.null(source) == FALSE && source %in% c("parquet", "csv") == FALSE && grepl("\\.csv$|\\.rds$", source) == FALSE)
-    {stop("Download format must be parquet or csv, or a valid filepath must be specified (.csv or .rds)")}
+  if(is.null(source) == FALSE && source %in% c("parquet", "csv") == FALSE
+     && grepl("\\.csv$|\\.rds$|\\.parquet$", source) == FALSE)
+    {stop("Download format must be parquet or csv, or a valid filepath must be specified (.csv, .rds or .parquet)")}
 
   if(is.null(biol_dir) == FALSE)
     {warning("In function import_inv, biol_dir argument deprecated. File paths can be specified using source.")}
@@ -139,7 +140,7 @@ import_inv <- function(source = "parquet",
 
   # Read-in file from source
   if(is.null(source) == TRUE) {source = "Null"}
-  if(is.null(source) == FALSE && grepl("\\.csv$|\\.rds$", source) == TRUE) {
+  if(is.null(source) == FALSE && grepl("\\.csv$|\\.rds$|\\.parquet$", source) == TRUE) {
 
     if(file.exists(source) == FALSE) {stop("Specified file directory does not exist")}
 
@@ -151,6 +152,13 @@ import_inv <- function(source = "parquet",
     # rds format
     if(grepl("\\.rds$", source) == TRUE) {
       inv_metrics <- readr::read_rds(source)
+    }
+
+    # parquet format
+    if(grepl("\\.parquet$", source) == TRUE) {
+      inv_metrics <- arrow::read_parquet(source,
+                                         col_select = NULL,
+                                         as_data_frame = TRUE)
     }
   }
 
@@ -167,6 +175,13 @@ import_inv <- function(source = "parquet",
     # rds format
     if(grepl("\\.rds$", biol_dir) == TRUE) {
       inv_metrics <- readr::read_rds(biol_dir)
+    }
+
+    # parquet format
+    if(grepl("\\.parquet$", biol_dir) == TRUE) {
+      inv_metrics <- arrow::read_parquet(biol__dir,
+                                         col_select = NULL,
+                                         as_data_frame = TRUE)
     }
 
   }
@@ -194,7 +209,7 @@ import_inv <- function(source = "parquet",
   )
 
   # convert to date (skip for parquet)
-  if(source != "parquet") {
+  if((source == "parquet" | grepl("\\.parquet$", source)) == FALSE) {
     inv_metrics_f <- inv_metrics %>%
       dplyr::mutate(SAMPLE_DATE = lubridate::dmy(SAMPLE_DATE),
                     DATE_OF_ANALYSIS = lubridate::dmy(DATE_OF_ANALYSIS))
