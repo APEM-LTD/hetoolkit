@@ -67,8 +67,8 @@ To install the latest release of `hetoolkit` use the following code:
 ``` r
 install.packages("devtools")
 library(devtools)
-install_github("APEM-LTD/hetoolkit_updated")
-library(hetoolkitUpdated)
+install_github("APEM-LTD/hetoolkit")
+library(hetoolkit)
 ```
 
 As an alternative, the ‘remotes’ package can be used:
@@ -76,15 +76,15 @@ As an alternative, the ‘remotes’ package can be used:
 ``` r
 install.packages("remotes")
 library(remotes)
-remotes::install_github("APEM-LTD/hetoolkit_updated")
+remotes::install_github("APEM-LTD/hetoolkit")
 library(hetoolkitUpdated)
 ```
 
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
-Environment Agency. Version 1.0.0 was released in May 2021. For further
-information please contact Mike Dunbar at the Environment Agency.
+Environment Agency. For further information please contact [Mike
+Dunbar](mailto:mike.dunbar@environment-agency.gov.uk).
 
 ## Change history
 
@@ -109,13 +109,66 @@ information please contact Mike Dunbar at the Environment Agency.
 </tr>
 <tr class="even">
 <td>2.0.0</td>
-<td>TBC</td>
+<td>Dec-2022</td>
 <td>Added new function impute_flows.<br />
 Major updates to calc_flowstats, predict_indices and join_he.<br />
 Bug fixes and vignette updates.</td>
 </tr>
 </tbody>
 </table>
+
+Full details of changes are listed below:
+
+\*General + Vignette updated to include new functions and reflect other
+changes in v2.0.0. + Created new support pages with guidance on
+installing and using the hetoolkit. + Updated and rationalised the list
+of external package dependencies to speed up installation. + Various
+improvements and updates to function documentation and worked examples.
+
+\*New functions + New function `impute_flow` added, which offers three
+methods for infilling gaps in flow time series data.
+
+\*Changes to functions + Temporary .csv files downloaded by `import_hde`
+are now deleted afterwards. + `import_inv` now includes an option to
+download macroinvertebrate data from Ecology and Fish Data Explorer in
+.parquet format, which is faster than .csv and has data types
+pre-formatted. This is the new default, replacing the old .csv file
+download. New argument `source` added, with options to automatically
+download data from EDE in .parquet or .csv format, or read in a
+previously saved .csv, .rds or .parquet file. The old `biol_dir`
+argument for specifying a local file is deprecated, but retained for
+backwards compatibility. + `predict_indices` updated to utilise the
+`rict_predict` function from the `rict` package
+(<https://github.com/aquaMetrics/rict>), thereby eliminating the risk of
+divergence between the `hetoolkit` and `rict` packages. The former
+function has been re-named to `predict_indices_old` for backwards
+compatibility. + `calc_flowstats` has been completely re-written to
+provide much greater flexibility for characterising antecedent flows.
+Rather than use fixed, 6-month winter and summer periods, the new
+function uses a user-defined moving window, and calculates a wider range
+of flow statistics (include statistics to quantify the timing, frequency
+and severity of high flow, low flow and dry events, as well as the
+timing and magnitude of maximum and minimum flows). If the required
+minimum number of records is not met, then NAs are returned. The
+long-term flow statistics are now all annual statistics (separate winter
+and summer statistics have been dropped). The former function has been
+re-named to `calc_flowstats_old` for backwards compatibility. +
+`join_he` has been completely re-written to provide much greater
+flexibility when joining flow and biology data. It is now possible to:
+(i) join biology data to flow statistics (as well as join flow
+statistics to biology samples), (ii) join flow statistics that have been
+calculated by `calc_flowstats` for any moving window (not just fixed
+6-month winter and summer periods), and (ii) join flows for any lagged
+time period (not just the summer period of the previous year and the
+year before last). The former function has been re-named to
+`join_he_old` for backwards compatibility.
+
+\*Bug fixes + Fixed issue in `plot_rngflows` to prevent error when z
+variable is unspecified. + Fixed issue in `plot_sitepca` to show labels
+when `plotly = TRUE` + Removed deprecated function in
+`predict_indices` + Check added to `impute_flows` to correct warning
+message appearance when donor sites specified + `calc_flowstats` updated
+to deal with non-consecutive flow samples
 
 ## Examples
 
@@ -125,8 +178,11 @@ including examples, can be found in the `HE Toolkit - Vingette` at
 
 ## Reporting Bugs
 
-Please aid future development of the package by reporting bugs via the
-Issues page on github.
+If you believe you’ve found a bug in `hetoolkit`, please log an issue
+(and, if possible, a reproducible example) at
+<https://github.com/APEM-LTD/hetoolkit_updated/issues>. For more feature
+requests, feedback and other general queries, please contact the
+`hetoolkit` development team at APEM via <hetoolkit@apemltd.co.uk>.
 
 ## References
 

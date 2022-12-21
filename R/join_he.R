@@ -240,7 +240,7 @@ join_he <- function(biol_data,
       as.character(lags)
       lag_name <- as.character(paste("lag", sep = "", i))
 
-      # warning if o	A lagged flow period is not available in the flow stats dataset (i.e. the flow data doesn’t extend that far back)
+      # warning if lagged flow period is not available in the flow stats dataset (i.e. the flow data doesn’t extend that far back)
       if(isTRUE(-1 %in% sign(flow_stats_lag$win_no)) == TRUE)
         {warning(paste(lag_name, sep = " ", "may not be available for all flow periods. Flow data doesn’t extend that far back."))}
 
