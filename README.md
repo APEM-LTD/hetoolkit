@@ -119,56 +119,67 @@ Bug fixes and vignette updates.</td>
 
 Full details of changes are listed below:
 
-\*General + Vignette updated to include new functions and reflect other
-changes in v2.0.0. + Created new support pages with guidance on
-installing and using the hetoolkit. + Updated and rationalised the list
-of external package dependencies to speed up installation. + Various
-improvements and updates to function documentation and worked examples.
-
-\*New functions + New function `impute_flow` added, which offers three
-methods for infilling gaps in flow time series data.
-
-\*Changes to functions + Temporary .csv files downloaded by `import_hde`
-are now deleted afterwards. + `import_inv` now includes an option to
-download macroinvertebrate data from Ecology and Fish Data Explorer in
-.parquet format, which is faster than .csv and has data types
-pre-formatted. This is the new default, replacing the old .csv file
-download. New argument `source` added, with options to automatically
-download data from EDE in .parquet or .csv format, or read in a
-previously saved .csv, .rds or .parquet file. The old `biol_dir`
-argument for specifying a local file is deprecated, but retained for
-backwards compatibility. + `predict_indices` updated to utilise the
-`rict_predict` function from the `rict` package
-(<https://github.com/aquaMetrics/rict>), thereby eliminating the risk of
-divergence between the `hetoolkit` and `rict` packages. The former
-function has been re-named to `predict_indices_old` for backwards
-compatibility. + `calc_flowstats` has been completely re-written to
-provide much greater flexibility for characterising antecedent flows.
-Rather than use fixed, 6-month winter and summer periods, the new
-function uses a user-defined moving window, and calculates a wider range
-of flow statistics (include statistics to quantify the timing, frequency
-and severity of high flow, low flow and dry events, as well as the
-timing and magnitude of maximum and minimum flows). If the required
-minimum number of records is not met, then NAs are returned. The
-long-term flow statistics are now all annual statistics (separate winter
-and summer statistics have been dropped). The former function has been
-re-named to `calc_flowstats_old` for backwards compatibility. +
-`join_he` has been completely re-written to provide much greater
-flexibility when joining flow and biology data. It is now possible to:
-(i) join biology data to flow statistics (as well as join flow
-statistics to biology samples), (ii) join flow statistics that have been
-calculated by `calc_flowstats` for any moving window (not just fixed
-6-month winter and summer periods), and (ii) join flows for any lagged
-time period (not just the summer period of the previous year and the
-year before last). The former function has been re-named to
-`join_he_old` for backwards compatibility.
-
-\*Bug fixes + Fixed issue in `plot_rngflows` to prevent error when z
-variable is unspecified. + Fixed issue in `plot_sitepca` to show labels
-when `plotly = TRUE` + Removed deprecated function in
-`predict_indices` + Check added to `impute_flows` to correct warning
-message appearance when donor sites specified + `calc_flowstats` updated
-to deal with non-consecutive flow samples
+-   General
+    -   Vignette updated to include new functions and reflect other
+        changes in v2.0.0.
+    -   Created new support pages with guidance on installing and using
+        the hetoolkit.
+    -   Updated and rationalised the list of external package
+        dependencies to speed up installation.
+    -   Various improvements and updates to function documentation and
+        worked examples.
+-   New functions
+    -   New function `impute_flow` added, which offers three methods for
+        infilling gaps in flow time series data.
+-   Changes to functions
+    -   Temporary .csv files downloaded by `import_hde` are now deleted
+        afterwards.
+    -   `import_inv` now includes an option to download
+        macroinvertebrate data from Ecology and Fish Data Explorer in
+        .parquet format, which is faster than .csv and has data types
+        pre-formatted. This is the new default, replacing the old .csv
+        file download. New argument `source` added, with options to
+        automatically download data from EDE in .parquet or .csv format,
+        or read in a previously saved .csv, .rds or .parquet file. The
+        old `biol_dir` argument for specifying a local file is
+        deprecated, but retained for backwards compatibility.
+    -   `predict_indices` updated to utilise the `rict_predict` function
+        from the `rict` package (<https://github.com/aquaMetrics/rict>),
+        thereby eliminating the risk of divergence between the
+        `hetoolkit` and `rict` packages. The former function has been
+        re-named to `predict_indices_old` for backwards compatibility.
+    -   `calc_flowstats` has been completely re-written to provide much
+        greater flexibility for characterising antecedent flows. Rather
+        than use fixed, 6-month winter and summer periods, the new
+        function uses a user-defined moving window, and calculates a
+        wider range of flow statistics (include statistics to quantify
+        the timing, frequency and severity of high flow, low flow and
+        dry events, as well as the timing and magnitude of maximum and
+        minimum flows). If the required minimum number of records is not
+        met, then NAs are returned. The long-term flow statistics are
+        now all annual statistics (separate winter and summer statistics
+        have been dropped). The former function has been re-named to
+        `calc_flowstats_old` for backwards compatibility.
+    -   `join_he` has been completely re-written to provide much greater
+        flexibility when joining flow and biology data. It is now
+        possible to: (i) join biology data to flow statistics (as well
+        as join flow statistics to biology samples), (ii) join flow
+        statistics that have been calculated by `calc_flowstats` for any
+        moving window (not just fixed 6-month winter and summer
+        periods), and (ii) join flows for any lagged time period (not
+        just the summer period of the previous year and the year before
+        last). The former function has been re-named to `join_he_old`
+        for backwards compatibility.
+-   Bug fixes
+    -   Fixed issue in `plot_rngflows` to prevent error when z variable
+        is unspecified.
+    -   Fixed issue in `plot_sitepca` to show labels when
+        `plotly = TRUE`
+    -   Removed deprecated function in `predict_indices`
+    -   Check added to `impute_flows` to correct warning message
+        appearance when donor sites specified
+    -   `calc_flowstats` updated to deal with non-consecutive flow
+        samples
 
 ## Examples
 
