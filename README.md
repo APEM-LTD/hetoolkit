@@ -77,7 +77,7 @@ As an alternative, the ‘remotes’ package can be used:
 install.packages("remotes")
 library(remotes)
 remotes::install_github("APEM-LTD/hetoolkit")
-library(hetoolkitUpdated)
+library(hetoolkit)
 ```
 
 ## Development
@@ -185,13 +185,13 @@ Full details of changes are listed below:
 
 Further information on the functions contained within the package,
 including examples, can be found in the `HE Toolkit - Vingette` at
-<https://apem-ltd.github.io/hetoolkit_updated/>.
+<https://apem-ltd.github.io/hetoolkit/>.
 
 ## Reporting Bugs
 
 If you believe you’ve found a bug in `hetoolkit`, please log an issue
 (and, if possible, a reproducible example) at
-<https://github.com/APEM-LTD/hetoolkit_updated/issues>. For more feature
+<https://github.com/APEM-LTD/hetoolkit/issues>. For more feature
 requests, feedback and other general queries, please contact the
 `hetoolkit` development team at APEM via <hetoolkit@apemltd.co.uk>.
 
