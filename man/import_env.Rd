@@ -24,7 +24,7 @@ Default = Current working directory.}
 Tibble containing environmental data
 }
 \description{
-The \code{import_env} function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip or read in from a local csv or rds file. The data can be optionally filtered by site ID.
+The \code{import_env} function imports environmental base data for macroinvertebrate sampling sites from the Environment Agency's Ecology and Fish Data Explorer. The data can either be downloaded from https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA.zip or read in from a local csv or rds file. The data can be optionally filtered by site ID.
 }
 \details{
 If saving a copy of the downloaded data, the name of the rds file is hard-wired to: INV_OPEN_DATA_SITES_ALL.rds. If saving after filtering on site, the name of the rds file is hard-wired to: INV_OPEN_DATA_SITE_F.rds.

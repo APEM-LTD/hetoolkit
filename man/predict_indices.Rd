@@ -31,7 +31,7 @@ The function will modify the standard RICT output, renaming "SITE" as "biol_site
 \examples{
 # Generate expected scores for macroinvertebrate indices, using environmental data downloaded from Ecology Data Explorer for site(s) of interest.
 # Save dataset as .RDS file.
-# predict_indices(env_data = env_data,
+ predict_indices(env_data = env_data,
                   file_format = "EDE",
                   save = TRUE)
 }

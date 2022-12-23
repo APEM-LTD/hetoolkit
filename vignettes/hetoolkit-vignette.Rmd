@@ -28,8 +28,11 @@ rm(list = ls())
 
 ```{r load packages, message=FALSE, warning=FALSE, include=TRUE, message=FALSE, tidy=TRUE}
 
+# if(!require(pacman)) install.packages("pacman")
+# pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, geojsonio, mapview)
+
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, remotes, geojsonio, mapview)
+pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, mapview, plyr)
 
 remotes::install_github("aquaMetrics/rict")
 

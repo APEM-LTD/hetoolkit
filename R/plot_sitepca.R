@@ -104,8 +104,8 @@ plot_sitepca<- function(data = NULL,
   loadings = FALSE; loadings.label = FALSE; loadings.label.size = NULL; loadings.colour = NULL; loadings.label.colour = NULL
 
   # settings for using a label instead of a point
-  if(!is.null(label_by)&&plotly==FALSE) {shape = FALSE ; label.size = 3}
-  if(plotly == TRUE) {z = label_by}
+  if(!is.null(label_by)) {shape = FALSE ; label.size = 3}
+  #if(plotly == TRUE) {z = label_by}
 
   # settings for adding eigenvector arrows
   if(eigenvectors==TRUE) {loadings = TRUE; loadings.label = TRUE; loadings.label.size = 3; loadings.colour = 'blue'; loadings.label.colour = "blue"}

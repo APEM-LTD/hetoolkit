@@ -9,7 +9,7 @@ join_he(biol_data, flow_stats, mapping = NULL, method = "A" , lags = 0, join_typ
 \arguments{
 \item{biol_data}{Data frame or tibble containing the processed biology data. Must contain the following columns: biol_site_id and date (in date format).}
 
-\item{flow_stats}{Data frame or tibble containing the calculated time-varying flow statistics, by site and time period and win_no (as produced by the \code{calc_flowstats} function ). Must contain the following columns: flow_site_id, start_date and end_date. The function joins all the variables in \code{flow_stats}, so it is advisable to manually drop any flow statistics which are not of interest before applying the function.}
+\item{flow_stats}{Data frame or tibble containing the calculated time-varying flow statistics, by site and time period and win_no (as produced by the \code{calc_flowstats} function ). Must contain the following columns: \code{flow_site_id}, \code{start_date} and \code{end_date}. The function joins all the variables in \code{flow_stats}, so it is advisable to manually drop any flow statistics which are not of interest before applying the function.}
 
 \item{mapping}{Data frame or tibble containing paired biology sites IDs and flow site IDs. Must contain columns named biol_site_id and flow_site_id. These columns must not contain any NAs. Default = \code{NULL}, which assumes that paired biology and flow sites have identical ids, so mapping is not required.}
 
@@ -17,7 +17,7 @@ join_he(biol_data, flow_stats, mapping = NULL, method = "A" , lags = 0, join_typ
 
 \item{lags}{Vector of lagged flow time periods of interest. Values must be zero or positive, with larger values representing longer time lags (i.e. an increasing time gap between the flow time period and the biology sample date). Default = 0. See below for details.}
 
-\item{join_type}{To add flow statistics to each biology sample, choose "add_flows" (default); this produces a dataset of biological metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. To add biology sample data to flow statistics for each time period, choose "add_biol"; this produces a time series of flow statistics with associated biological metrics which can be used to assess the coverage of historical flow conditions using the \code{plot_rngflows} function .}
+\item{join_type}{To add flow statistics to each biology sample, choose "add_flows" (default); this produces a dataset of biology metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. To add biology sample data to flow statistics for each time period, choose "add_biol"; this produces a time series of flow statistics with associated biological metrics which can be used, for example, to assess the coverage of historical flow conditions using the \code{plot_rngflows} function.}
 }
 \value{
 \code{join_he} returns a tibble containing the linked biology data and flow statistics.
@@ -30,78 +30,94 @@ This function joins biology sample data with time-varying flow statistics for on
 
 The \code{calc_flowstats} function uses a moving window approach to calculate a time-varying flow statistics for a  sequence of time periods which can be either: (i) contiguous (i.e. each time period is followed immediately by the next one), (ii) non-contiguous (i.e. there is a gap between one time period at the next), or (iii) over-lapping (i.e. the next time period stats before the previous one has finished).
 
-To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (method = "A") or most recently started (method = "B") flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on.
+To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (\code{method = "A"}) or most recently started (\code{method = "B"}) flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on.
 
-As an example, suppose we have a biology sample dated 15 September 2020 and that flow statistics are available for a sequence of contiguous 12 month periods (each 1 January to 31 December). Using Method "A", the Lag 0 period for that biology sample would be January to December 2019 (the most recently finished time period), the Lag 1 period would be January to December 2018, the Lag 2 period would be January to December 2017, and so on. Similarly, using Method "B", the Lag 0 period for that biology sample would be January to December 2020 (the most recently started time period), the Lag 1 period would be January to December 2019, the Lag 2 period would be January to December 2018, and so on.
+As an example, suppose we have a biology sample dated 15 September 2020 and that flow statistics are available for a sequence of contiguous 1 month periods (each one a calendar month). Using \code{method = "A"}, the Lag 0 period for that biology sample would be August 2020 (the most recently finished time period), the Lag 1 period would be July 2020, the Lag 2 period would be June 2020, and so on. Similarly, using \code{method = "B"}, the Lag 0 period for that biology sample would be September 2020 (the most recently started time period), the Lag 1 period would be August 2020, the Lag 2 period would be July 2020, and so on.
 
-As a second example, suppose we again have a biology sample dated 15 September 2020 and that flow statistics are available for a sequence of overlapping 6 month periods (i.e. February to July 2020, March to August 2020, April to September 2020, and so on). Using Method "A", the Lag 0 period for that biology sample would be March to August 2020 (the most recently finished time period), the Lag 1 period would be February to July 2020, the Lag 2 period would be January to June 2020, and so on. Similarly, using Method "B", the Lag 0 period for that biology sample would be would be September 2000 to February 2021 (the most recently started time period), the Lag 1 period would be 1 August 2000 to January 2021, the Lag 2 period would be July to December 2020, and so on.
+As a second example, suppose we again have a biology sample dated 15 September 2020 and that flow statistics are available for a sequence of overlapping 6 month periods (i.e. February to July 2020, March to August 2020, April to September 2020, and so on). Using \code{method = "A"}, the Lag 0 period for that biology sample would be March to August 2020 (the most recently finished time period), the Lag 1 period would be February to July 2020, the Lag 2 period would be January to June 2020, and so on. Similarly, using \code{method ="B"}, the Lag 0 period for that biology sample would be September 2000 to February 2021 (the most recently started time period), the Lag 1 period would be 1 August 2000 to January 2021, the Lag 2 period would be July to December 2020, and so on.
+
+Note that if using \code{join_type = "add_biol"}, a flow period becomes replicated if it has 2+ biology samples within it. To avoid this happening, summarise (e.g. average) the replicate biology samples within each time window before applying \code{join_he}. See below for an example.
 }
 \examples{
-## input datasets for a single site
-flows <- data.frame(time_period = c(1,2,3,4), q95 = c(0.2, 0.6, 0.8, 0.5)); flows
-time_period q95
-          1 0.2
-          2 0.6
-          3 0.8
-          4 0.5
 
-biol <- data.frame(id = c(1,2,3), time_period = c(2,4,4), life = c(0.3, 0.9, 0.4)); biol
-id time_period life
-1           2  0.3
-2           4  0.9
-3           4  0.4
 
-## Add flow statistics to each biology sample
-join_he(biol, flows, lags = c(0,1), join_type ="add_flows")
+# create flow stats from synthetic flow data
+set.seed(123)
+flow_data <- data.frame(flow_site_id = rep("A0001", 365),
+                        date = seq(as.Date("2021-01-01"), as.Date("2021-12-31"), by = "1 day"),
+                        flow = rnorm(365, 10, 2))
+flow_stats <- calc_flowstats(data = flow_data,
+                             site_col = "flow_site_id",
+                             date_col = "date",
+                             flow_col = "flow",
+                             win_start =  "2021-01-01",
+                             win_width = "1 month",
+                             win_step =  "1 month")[[1]] \%>\%
+  dplyr::select(flow_site_id, win_no, start_date, end_date, Q95z)
 
-id time_period life q95_0 q95_1
-1           2  0.3   0.6   0.2
-2           4  0.9   0.5   0.8
-3           4  0.4   0.5   0.8
+# create synthetic biology data
+biol_data <- data.frame(biol_site_id = rep("A0001", 2),
+                        date = as.Date(c("2021-04-15", "2021-09-15")),
+                        metric = c(0.8, 0.7))
 
-## Add biology sample data to flow statistics for each time period
-join_he(biol, flows, lags = c(0,1), join_type ="add_biol")
+# view data
+flow_stats; biol_data
 
-time_period q95_0 q95_1 id life
-          1   0.2    NA  NA   NA
-          2   0.6   0.2   1  0.3
-          3   0.8   0.6  NA   NA
-          4   0.5   0.8   2  0.9
-          4   0.5   0.8   3  0.4
-
-## load example datasets
-load(file = "data/biol_data_jhe.rda")
-load(file = "data/flow_stats_jhe.rda")
-load(file = "data/mapping_jhe.rda")
-
-# test 1: method A join
+# add flow statistics to each biology sample using method A
+# mapping = NULL because biology and flow sites have identical ids
 join_he(biol_data = biol_data,
         flow_stats = flow_stats,
-        mapping = mapping,
+        mapping = NULL,
         method = "A",
         lags = c(0,1),
         join_type = "add_flows")
 
-# test 2: method B join
+# add flow statistics to each biology sample using method B
+# mapping = NULL because biology and flow sites have identical ids
 join_he(biol_data = biol_data,
         flow_stats = flow_stats,
-        mapping = mapping,
+        mapping = NULL,
         method = "B",
         lags = c(0,1),
         join_type = "add_flows")
 
-# test 3: automatic mapping
+# add biology sample data to flow statistics for each time period using method A
 join_he(biol_data = biol_data,
         flow_stats = flow_stats,
-        method = "B",
-        lags = c(0,1),
-        join_type = "add_flows")
-
-# test 4: add biol to flows
-join_he(biol_data = biol_data,
-        flow_stats = flow_stats,
-        mapping = mapping,
+        mapping = NULL,
         method = "A",
         lags = c(0,1),
         join_type = "add_biol")
+
+# add biology sample data to flow statistics for each time period using method B
+join_he(biol_data = biol_data,
+        flow_stats = flow_stats,
+        mapping = NULL,
+        method = "B",
+        lags = c(0,1),
+        join_type = "add_biol")
+
+# using join_type = "add_biol", a flow period becomes replicated if it has 2+ biology samples
+biol_data2 <- data.frame(biol_site_id = rep("A0001", 3),
+                         date = as.Date(c("2021-04-15", "2021-09-15", "2021-09-17")),
+                         metric = c(0.8, 0.7, 0.6))
+join_he(biol_data = biol_data2,
+        flow_stats = flow_stats,
+        mapping = NULL,
+        method = "A",
+        lags = c(0,1),
+        join_type = "add_biol")
+
+# average replicate biology samples within each time window before using join_type = "add_biol"
+biol_data3 <- biol_data2 \%>\%
+  mutate(month = lubridate::month(date)) \%>\%
+  dplyr::group_by(biol_site_id, month) \%>\%
+  dplyr::summarise_all(mean)
+join_he(biol_data = biol_data3,
+        flow_stats = flow_stats,
+        mapping = NULL,
+        method = "A",
+        lags = c(0,1),
+        join_type = "add_biol")
+
 }

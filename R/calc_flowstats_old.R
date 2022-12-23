@@ -83,11 +83,11 @@
 #'                 flow_col = "flow")
 #'
 #' ## Calculate a suite of long-term and seasonal flow statistics for all sites listed in site_col, and standardise QXX flow statistics using flow data specified in ref_col:
-#' calc_flowstats(data = data,
-#'                site_col = "flow_site_id",
-#'                date_col = "date",
-#'                flow_col = "HistoricalFlow",
-#'                ref_col = "NaturalisedFlow")
+#' #calc_flowstats(data = data,
+#' #               site_col = "flow_site_id",
+#' #               date_col = "date",
+#' #               flow_col = "HistoricalFlow",
+#' #               ref_col = "NaturalisedFlow")
 
 
 calc_flowstats_old <- function(data,

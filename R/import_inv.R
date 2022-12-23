@@ -31,22 +31,22 @@
 #' @examples
 #'
 #' # Bulk download of EDE data for all sites in parquet format and save as .rds file for future use:
-#' import_inv(save_dwnld = TRUE, save_dir = "mydata")
+#' # import_inv(save_dwnld = TRUE, save_dir = getwd())
 #'
 #' # Bulk download of EDE data for all sites in parquet format:
-#' import_inv(source = "csv")
+#' # import_inv(source = "csv")
 #'
 #' # Read in local .rds file and filter on selected sites and dates (up to the present day):
-#' import_inv(source = "mydata/INV_OPEN_DATA_METRICS_ALL.rds",
-#'                  sites = c("34310", "34343"),
-#'                  start_date = "1995-01-01",
-#'                  end_date = Sys.Date())
+#' # import_inv(source = "data/INV_OPEN_DATA_METRICS_ALL.rds",
+#' #                sites = c("34310", "34343"),
+#' #                start_date = "1995-01-01",
+#' #                end_date = Sys.Date())
 #'
 #' # Read in local .csv file, filter on selected sites, and save the result as a .rds file:
-#' import_inv(source = "mydata/INV_OPEN_DATA_METRICS.csv",
-#'            sites = c("34310", "34343"),
-#'            save = TRUE,
-#'            save_dir = "mydata/")
+#' # import_inv(source = "data/INV_OPEN_DATA_METRICS.csv",
+#' #          sites = c("34310", "34343"),
+#' #          save = TRUE,
+#' #          save_dir = getwd())
 
 
 import_inv <- function(source = "parquet",

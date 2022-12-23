@@ -15,8 +15,7 @@ calc_rfrstats(data = NULL,
               )
 }
 \arguments{
-\item{data}{Name of dataframe or tibble containing the flow data to be processed.
-Must be in long format (i.e. separate columns for site_id, date, and each flow scenario).}
+\item{data}{Name of dataframe or tibble containing the flow data to be processed. Must be in wide format (i.e. separate columns for site_id, date, and each flow scenario).}
 
 \item{site_col}{Name of column in data containing unique flow site id.}
 
