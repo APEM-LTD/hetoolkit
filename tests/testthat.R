@@ -1,4 +1,4 @@
 library(testthat)
-library(hetoolkitUpdated)
+library(hetoolkit)
 
-test_check("hetoolkitUpdated")
+test_check("hetoolkit")

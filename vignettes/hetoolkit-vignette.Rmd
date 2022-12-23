@@ -38,12 +38,12 @@ remotes::install_github("aquaMetrics/rict")
 
 # for development
 #install.packages("devtools")
-library(devtools)
-devtools::load_all(export_all = FALSE)
+#library(devtools)
+#devtools::load_all(export_all = FALSE)
 #install_deps()
 # for public version (once live)
-#remotes::install_github("APEM-LTD/hetoolkit")
-#library(hetoolkit)
+remotes::install_github("APEM-LTD/hetoolkit")
+library(hetoolkit)
 
 ```
 
