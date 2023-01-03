@@ -170,6 +170,9 @@ Full details of changes are listed below:
         just the summer period of the previous year and the year before
         last). The former function has been re-named to `join_he_old`
         for backwards compatibility.
+    -   `model_cv` and `model_logocv` modified to support model class
+        “lmerTest” (from lmerTest::lmer), in addition to “lmerMod” (from
+        lme4::lmer) and “gam” (from mgcv::gam).
 -   Bug fixes
     -   Fixed issue in `plot_rngflows` to prevent error when z variable
         is unspecified.

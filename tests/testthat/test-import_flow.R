@@ -32,19 +32,19 @@ test_that("End date date is in the correct format",{
 
 test_that("Error is produced if start date is in the future",{
   expect_error(import_flow(sites = "1001", inputs= "NRFA",
-                        start_date = "2023-01-01"),
+                        start_date = "2030-01-01"),
                        "Start date given is in the future")
 })
 
 test_that("Error is produced if end date is in the future",{
   expect_error(import_flow(sites = "1001", inputs= "NRFA",
-                           end_date = "2023-01-01"),
+                           end_date = "2030-01-01"),
                "End date given is in the future")
 })
 
 test_that("Error is produced if end date is in the future",{
   expect_error(import_nrfa(sites = "1001",
-                        end_date = "2023-01-01"),
+                        end_date = "2030-01-01"),
                        "End date is in the future")
 })
 

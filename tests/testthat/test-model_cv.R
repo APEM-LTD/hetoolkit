@@ -11,7 +11,7 @@ test_that("model is missing...", {
                         k = 5,
                         r = 1,
                         control = NULL),
-               "'model' is missing; specify a lmerMod or gam model object for cross-validation")
+               "'model' is missing; specify a lmerMod, lmerTest or gam model object for cross-validation")
 })
 
 

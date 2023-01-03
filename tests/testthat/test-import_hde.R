@@ -28,13 +28,13 @@ test_that("end date is in the correct format",{
 })
 
 test_that("error is produced if start date is in the future",{
-  expect_error(import_hde(sites = "F1707", start_date = "2023-01-01"),
+  expect_error(import_hde(sites = "F1707", start_date = "2030-01-01"),
                        "Start date given is in the future")
 })
 
 test_that("error is produced if end date is in the future",{
   expect_error(import_hde(sites = "F1707",
-                        end_date = "2023-01-01"),
+                        end_date = "2030-01-01"),
                        "End date given is in the future")
 })
 

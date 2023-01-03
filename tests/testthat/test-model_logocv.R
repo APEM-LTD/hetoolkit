@@ -9,7 +9,7 @@ test_that("model is missing...", {
   expect_error(model_logocv(data = sleepstudy,
                         group = "Subject",
                         control = NULL),
-               "'model' is missing; specify a lmerMod or gam model object for cross-validation")
+               "'model' is missing; specify a lmerMod, lmerTest or gam model object for cross-validation")
 })
 
 
