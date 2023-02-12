@@ -48,7 +48,7 @@
 #'
 #' # simulate a year of daily flows for three sites
 #' set.seed(3)
-#' flow1 <- arima.sim(model = list(ar = 0.97), n = 365) + 20
+#' flow1 <- arima.sim(model = list(ar = 0.97), n = 365) + 7
 #' flow2 <- flow1 + 3*sin(seq(0,2*pi,length.out=365))
 #' flow3 <- flow1 + 3*cos(seq(0,2*pi,length.out=365))
 #'
@@ -65,7 +65,7 @@
 #'   geom_line()
 #'
 #' # create missing data for site A during January
-#' flow_data$flow[11:20] <- NA
+#' flow_data$flow[c(18:27)] <- NA
 #'
 #' # impute flows using linear method
 #' imp_lin <- impute_flow(data = flow_data,
@@ -104,12 +104,16 @@
 #' # combine four sets of imputation results
 #' imp_all <- cbind(imp = rep(c("imp_lin", "imp_exp", "imp_donerB", "imp_donerC"), each = 365*3), rbind(imp_lin, imp_exp, imp_donorB[,c(1,2,3,6,7)], imp_donorC[,c(1,2,3,6,7)]))
 #'
-#' # compare imputed values for site A
-#' imp_all %>%
+#' # filter data for plotting
+#' imp_plot <- imp_all %>%
 #'   dplyr::filter(flow_site_id == "A") %>%
-#'   dplyr::filter(date >= "2021-01-01" & date <= "2021-01-31") %>%
-#'   ggplot(aes(x = date, y = flow, group = imp, colour = imp)) +
-#'   geom_line()
+#'   dplyr::filter(date >= "2021-01-01" & date <= "2021-01-31")
+#'
+#' # compare imputed values for site A
+#' ggplot() +
+#'  geom_line(data = imp_plot, aes(x = date, y = flow, group = imp, colour = imp)) +
+#'  geom_line(data = flow_data[1:31,], aes(x = date, y = flow), colour = "black") +
+#'  labs(colour = "method")
 #'
 
 impute_flow <- function(data,
