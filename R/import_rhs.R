@@ -6,7 +6,7 @@
 #' @usage
 #' import_rhs(rhs_dir = NULL, surveys = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
 #'
-#' @param rhs_dir Path to local file containing RHS data.
+#' @param rhs_dir Path to local xlsx or rds file containing RHS data. If NULL (default), then RHS data is downloaded from data.gov.uk.
 #' @param surveys Vector of survey ids to filter on.
 #' @param save Specifies if imported RHS data should be saved to working directory
 #'  as rds file (for future use); Default = FALSE.

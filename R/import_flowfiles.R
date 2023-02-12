@@ -9,15 +9,15 @@
 #' @param sites Vector of site IDs (= file names, without file extension). Default = NULL (import all files (of supported formats) in dir).
 #' @param dir Path to folder containing flow files.
 #' @param skip_num Number of rows (including any column headers) to skip before starting to read data. As an example, if the data has three rows of metadata, then a row of column headers, set skip_num = 4.
-#' @param col_order Define numbers of columns containing the date, flow and quality data. If no quality data, the third element can be set to NA.
-#' @param date_format The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the flow file. Default = "dmy". See Details for more information.
+#' @param col_order Position of columns containing the date, flow and quality data. If no quality data, the third element can be set to NA.
+#' @param date_format The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the date column. Default = "dmy". See Details for more information.
 #' @param start_date Start date for flow data extraction (YYYY-MM-DD format). Default = 1985-01-01.
 #' @param end_date End date for flow data extraction (YYYY-MM-DD format). Default = today's date.
 #'
 #' @details
 #' All files must be stored in the same directory and must have the same structure (i.e. the same number of header rows, and with the date, flow and quality columns in the same position) and (with the exception of xls and xlsx files - see below) have the same date format. A mix of different file formats is allowed. Only the first worksheet is imported from xlsx files.
 #'
-#' If 'sites' is not NULL, the function uses the information in 'sites' to search 'dir' for all possible files (e.g. 0130TH.csv, 0130TH.txt, 0130TH.all, 0130TH.xls and 0130TH.xlsx). If 'sites' is not NULL, then all csv, txt, all, xls and xlsx files in 'dir' are imported. All other folders and file types are ignored.
+#' If 'sites' is not NULL, the function uses the information in 'sites' to search 'dir' for all possible files (e.g. 0130TH.csv, 0130TH.txt, 0130TH.all, 0130TH.xls and 0130TH.xlsx). If 'sites' is NULL, then all csv, txt, all, xls and xlsx files in 'dir' are imported. All other folders and file types are ignored.
 #'
 #' If a site has two files in different formats (e.g. 0130TH.csv and 0130TH.all), then the data will be imported from both files. Be aware that this could result in duplicate records in the output file.
 #'
