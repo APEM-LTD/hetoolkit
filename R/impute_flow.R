@@ -58,14 +58,14 @@
 #'                         flow = c(flow1, flow2, flow3),
 #'                         stringsAsFactors=FALSE)
 #'
+#' # create missing data for site A during January
+#' flow_data$flow[c(18:27)] <- NA
+#'
 #' # plot data for January
 #' flow_data %>%
 #'   dplyr::filter(date >= "2021-01-01" & date <= "2021-01-31") %>%
 #'   ggplot(aes(x = date, y = flow, group = flow_site_id, colour = flow_site_id)) +
 #'   geom_line()
-#'
-#' # create missing data for site A during January
-#' flow_data$flow[c(18:27)] <- NA
 #'
 #' # impute flows using linear method
 #' imp_lin <- impute_flow(data = flow_data,
