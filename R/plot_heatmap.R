@@ -38,28 +38,23 @@
 #'
 #' @examples
 #'
-#' # read in example mean daily flow dataset
-#' #df <- readRDS("data/FLOW_DATA.rds")
+#' # read in example dataset of mean daily flows for 20 sites
 #' df <- example_plot_heatmap
 #'
-#' # set the date column data to date format
-#' df$date <- lubridate::date(df$date)
-#'
-#' # Basic application: plotting flow rate by site and date, providing tables of proportion of missing flow values by date and site along with the heatmap plot
-#'
+#' # basic application
 #' a <- plot_heatmap(data = df, x = "date", y = "flow_site_id", fill = "flow")
 #'
-#' # view heatmap
+#' # view heatmap of flows, by site and date
 #' a[[1]]
 #' # amend ggplot elements, such as the title
 #' a[[1]] + labs(title = "this adds a new title to the plot")
-#' # tibble table of missing flow values by date (variable x)
+#' # view tibble of missing flow values by date (variable x)
 #' a[[2]]
-#' # tibble table of missing flow values by site (variable y)
+#' # view tibble of missing flow values by site (variable y)
 #' a[[3]]
 #'
-#' # setting dual = TRUE added a marginal histogram displaying % missingness
-#' a <- plot_heatmap(data = df, x = "date", y = "flow_site_id", fill = "flow", limits = TRUE, dual= TRUE)
+#' # setting dual = TRUE adds a marginal histogram displaying % missingness
+#' a <- plot_heatmap(data = df, x = "date", y = "flow_site_id", fill = "flow", limits = TRUE, dual = TRUE)
 #'
 #' # to plot this device, the code needed is slightly different:
 #' gridExtra::grid.arrange(a[[1]])
