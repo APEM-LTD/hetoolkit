@@ -6,8 +6,7 @@
 #' @usage
 #' import_env(env_dir = NULL, sites = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
 #'
-#' @param env_dir Path to local file containing environmental data;
-#'  NULL if downloading directly from EDE; Default = NULL.
+#' @param env_dir Path to local csv or rds file containing environmental data. If NULL (default), then data is downloaded from data.gov.uk.
 #' @param sites Vector of site ids to filter on.
 #' @param save Specifies if imported environmental data should be saved
 #'  as rds file (for future use); Default = FALSE.
@@ -19,7 +18,7 @@
 #'
 #'  Downloaded raw data files (in .csv and .zip format) will be automatically removed from the working directory following completed execution of the function.
 #'
-#'  The function will modify the output from EDE, renaming `SITE_ID` to `biol_site_id` (standardised column header for biology sites).
+#'  The function will modify the output from EDE, renaming `SITE_ID` to `biol_site_id` (hetoolkit's standardised column header for biology sites).
 #'
 #' @return Tibble containing environmental data
 #'
