@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ## Overview 
 
-The `hetoolkit` package comprises a collection of 21 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:
+The `hetoolkit` package comprises a collection of 22 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:
 
 * `import_nrfa` for importing flow data from the National River Flow Archive (NRFA);
 * `import_hde` for importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE);
@@ -30,6 +30,7 @@ The `hetoolkit` package comprises a collection of 21 functions for assembling, p
 * `import_inv` for importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer;
 * `import_env` for importing environmental base data from the EA Ecology and Fish Data Explorer;
 * `import_rhs` for importing River Habitat Survey (RHS) data from the EA's Open Data portal;
+* `import_wq` for importing water quality data from the EA Water Quality Archive database;
 * `predict_indices` for calculating expected scores for macroinvertebrate indices using the RICT model (FBA 2020);
 * `calc_flowstats` and `calc_rfrstats` for calculating summary statistics describing historical flow conditions;
 * `join_he` for joining the above datasets;
@@ -85,9 +86,16 @@ Version | Date     | Details
 2.0.0   | Dec-2022 | Added new function impute_flows.\
                      Major updates to calc_flowstats, predict_indices and join_he.\
                      Bug fixes and vignette updates.
+2.1.0   | Mar-2023 | Added new function import_wq.\
+                     Minor corrections to documentation (typos, etc).
 
 Full details of changes are listed below:
 
+v2.1.0:
+* New functions
+  + New function `import_wq` added, which allows the download and import of water quality data.
+
+v2.0.0
 * General
   + Vignette updated to include new functions and reflect other changes in v2.0.0. 
   + Created new support pages with guidance on installing and using the hetoolkit.

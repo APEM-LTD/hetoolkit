@@ -8,7 +8,7 @@
 
 ## Overview
 
-The `hetoolkit` package comprises a collection of 21 functions for
+The `hetoolkit` package comprises a collection of 22 functions for
 assembling, processing, visualising and modelling hydro-ecological data.
 These are:
 
@@ -28,6 +28,8 @@ These are:
     Ecology and Fish Data Explorer;
 -   `import_rhs` for importing River Habitat Survey (RHS) data from the
     EA’s Open Data portal;
+-   `import_wq` for importing water quality data from the EA’s Water
+    Quality Archive database;
 -   `predict_indices` for calculating expected scores for
     macroinvertebrate indices using the RICT model (FBA 2020);
 -   `calc_flowstats` and `calc_rfrstats` for calculating summary
@@ -114,20 +116,30 @@ Dunbar](mailto:mike.dunbar@environment-agency.gov.uk).
 Major updates to calc_flowstats, predict_indices and join_he.<br />
 Bug fixes and vignette updates.</td>
 </tr>
+<tr class="odd">
+<td>2.1.0</td>
+<td>Mar-2023</td>
+<td>Added new function import_wq.<br />
+Vignette updates to include the new function.</td>
+</tr>
 </tbody>
 </table>
 
 Full details of changes are listed below:
 
+v2.1.0: \* New functions + New function `import_wq` added, which allows
+the download and import of water quality data.
+
 -   General
-    -   Vignette updated to include new functions and reflect other
-        changes in v2.0.0.
-    -   Created new support pages with guidance on installing and using
-        the hetoolkit.
-    -   Updated and rationalised the list of external package
-        dependencies to speed up installation.
-    -   Various improvements and updates to function documentation and
-        worked examples.
+    -   Vignette updated to include the new function
+
+v2.0.0 \* General + Vignette updated to include new functions and
+reflect other changes in v2.0.0. + Created new support pages with
+guidance on installing and using the hetoolkit. + Updated and
+rationalised the list of external package dependencies to speed up
+installation. + Various improvements and updates to function
+documentation and worked examples.
+
 -   New functions
     -   New function `impute_flow` added, which offers three methods for
         infilling gaps in flow time series data.
