@@ -45,7 +45,9 @@
 #' temp <- import_wq(sites = "SW-60250424")
 #'
 #' # Import previously downloaded data in .csv format:
-#' temp <-import_wq(source = "./Data/example_import_wq.csv"., sites = "SW-60250424", save = FALSE)
+#' \dontrun{
+#' temp <-import_wq(source = "data/example_import_wq.csv", sites = "SW-60250424", save = FALSE)
+#' }
 
 import_wq <- function(source = NULL,
                       sites,
@@ -241,7 +243,7 @@ import_wq <- function(source = NULL,
 
 
   # DELETE DOWNLOADED FILE
-  file.remove("WQ_DATA_DOWNLOAD.csv")
+  if(is.null(source) == TRUE) {file.remove("WQ_DATA_DOWNLOAD.csv")}
 
 
   # RETURN

@@ -54,5 +54,7 @@ Note that the WQ site IDs used in WIMS do not match the biol_site_id or flow_sit
 temp <- import_wq(sites = "SW-60250424")
 
 # Import previously downloaded data in .csv format:
-temp <-import_wq(source = "./Data/example_import_wq.csv", sites = "SW-60250424", save = FALSE)
+\dontrun{
+temp <-import_wq(source = "data/example_import_wq.csv", sites = "SW-60250424", save = FALSE)
+}
 }

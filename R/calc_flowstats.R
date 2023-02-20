@@ -535,7 +535,7 @@ calc_flowstats <- function(data,
 
     # calculate _adj values
     df1_ALL <- dplyr::left_join(x = df1, y = ref_data,
-                                by = c("flow_site_id", "win_no"), na.rm  = TRUE)
+                                by = c("flow_site_id", "win_no"))
 
     # Get Q5z_adj
     Q5 <- df1_ALL$Q5
