@@ -112,6 +112,10 @@ import_wq <- function(source = NULL,
     warning("End date is in the future. End date will be set to the current date")
   }
 
+  if((as.Date(start_date) < as.Date("2000-01-01")) == TRUE) {
+    warning("Data not availble from the WQA database before year 2000")
+  }
+
 
   # SETTINGS
   ## Reset end date if in future
@@ -200,12 +204,30 @@ import_wq <- function(source = NULL,
 
     # csv format
     if(grepl("\\.csv$", source) == TRUE) {
-      wq_metrics <- readr::read_csv(source)
+      wq_metrics <- readr::read_csv(source, show_col_types = FALSE)
     }
 
     # rds format
     if(grepl("\\.rds$", source) == TRUE) {
       wq_metrics <- readr::read_rds(source)
+    }
+
+    # Check file has correct header names. Should match those coming from the database download.
+    exp_names <- c("@id", "sample.samplingPoint", "sample.samplingPoint.notation", "sample.samplingPoint.label", "sample.sampleDateTime",
+                   "determinand.label", "determinand.definition", "determinand.notation", "resultQualifier.notation", "result",
+                   "codedResultInterpretation.interpretation", "determinand.unit.label", "sample.sampledMaterialType.label",
+                   "sample.isComplianceSample", "sample.purpose.label", "sample.samplingPoint.easting", "sample.samplingPoint.northing")
+    err_count = 0
+
+    for (i in exp_names) {
+      if (i %in% names(wq_metrics) == FALSE){
+        err_count <- err_count+1
+        warning(paste0("Required column header missing: ", i))
+      }
+    }
+
+    if ((err_count > 0) == TRUE) {
+      stop("Imported file is missing required column headers.")
     }
 
   }

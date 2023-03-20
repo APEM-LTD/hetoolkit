@@ -864,9 +864,11 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::filter(!is.na(flow)) %>%
     dplyr::mutate(x=flow) %>%
     dplyr::group_by(site) %>%
-    dplyr::summarise(bfi = if(0 %in% x == FALSE ){ bfi= calc_bfi(.$x) }else{ print ("flow contains 0's, returning NA")
-      bfi=NA}) %>%
+    #dplyr::summarise(bfi = if(0 %in% x == FALSE ){ bfi= calc_bfi(.$x) }else{ print ("flow contains 0's, returning NA")
+    #  bfi=NA}) %>%
+    dplyr::summarise(bfi = calc_bfi(x)) %>%
     dplyr::mutate(win_no = "Annual") %>%
+    dplyr::ungroup() %>%
     tidyr::gather(-site, -win_no, key = parameter, value = value)
 
   # calculate long-term flow duration curve percentile 1:99
@@ -1308,10 +1310,10 @@ find_doy <- function(flow_data, type, nday) {
 ##############################################################
 ## check whether a column if formatted as date
 
-IsDate <- function(mydate, date.format = "%d/%m/%y") {
-  tryCatch(!is.na(as.Date(mydate, date.format)),
-           error = function(err) {FALSE})
-}
+# IsDate <- function(mydate, date.format = "%d/%m/%y") {
+#   tryCatch(!is.na(as.Date(mydate, date.format)),
+#            error = function(err) {FALSE})
+# }
 
 
 ##############################################################
