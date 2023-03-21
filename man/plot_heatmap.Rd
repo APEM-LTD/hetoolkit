@@ -17,7 +17,9 @@ plot_heatmap(data, x, y, fill, colour = "viridis", lab.x = x, lab.y = y, lab.leg
 
 \item{colour}{A character string indicating the colorramp option to use. Limited to the five viridis package options: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D") or "cividis" (or "E"). Default = "viridis".}
 
-\item{lab.x}{Character string to be used on the y axis. Default is name of y variable.}
+\item{lab.x}{Character string to be used on the x axis. Default is name of x variable.}
+
+\item{lab.y}{Character string to be used on the y axis. Default is name of y variable.}
 
 \item{lab.legend}{Character string to be used on the legend title. Default is name of fill column variable.}
 
@@ -56,28 +58,23 @@ The examples below illustrate how the data can be aggregated (e.g. to different 
 }
 \examples{
 
-# read in example mean daily flow dataset
-#df <- readRDS("data/FLOW_DATA.rds")
+# read in example dataset of mean daily flows for 20 sites
 df <- example_plot_heatmap
 
-# set the date column data to date format
-df$date <- lubridate::date(df$date)
-
-# Basic application: plotting flow rate by site and date, providing tables of proportion of missing flow values by date and site along with the heatmap plot
-
+# basic application
 a <- plot_heatmap(data = df, x = "date", y = "flow_site_id", fill = "flow")
 
-# view heatmap
+# view heatmap of flows, by site and date
 a[[1]]
 # amend ggplot elements, such as the title
 a[[1]] + labs(title = "this adds a new title to the plot")
-# tibble table of missing flow values by date (variable x)
+# view tibble of missing flow values by date (variable x)
 a[[2]]
-# tibble table of missing flow values by site (variable y)
+# view tibble of missing flow values by site (variable y)
 a[[3]]
 
-# setting dual = TRUE added a marginal histogram displaying \% missingness
-a <- plot_heatmap(data = df, x = "date", y = "flow_site_id", fill = "flow", limits = TRUE, dual= TRUE)
+# setting dual = TRUE adds a marginal histogram displaying \% missingness
+a <- plot_heatmap(data = df, x = "date", y = "flow_site_id", fill = "flow", limits = TRUE, dual = TRUE)
 
 # to plot this device, the code needed is slightly different:
 gridExtra::grid.arrange(a[[1]])

@@ -11,7 +11,7 @@
 #' @param fill Name of column containing variable to be plotted (e.g. flow, WHPT O/E) (continuous variate, integer, or double).
 #' @param colour A character string indicating the colorramp option to use. Limited to the five viridis package options: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D") or "cividis" (or "E"). Default = "viridis".
 #' @param lab.x Character string to be used on the x axis. Default is name of x variable.
-#' @param lab.x Character string to be used on the y axis. Default is name of y variable.
+#' @param lab.y Character string to be used on the y axis. Default is name of y variable.
 #' @param lab.legend Character string to be used on the legend title. Default is name of fill column variable.
 #' @param dual Logical value determining whether or not to include a histogram of % missingness alongside the heatmap. Default = FALSE.
 #' @param list_out logical value specifying whether or not to produce tabular summaries of data completeness. Default = TRUE.
