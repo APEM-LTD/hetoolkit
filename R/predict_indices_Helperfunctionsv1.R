@@ -751,7 +751,7 @@ validateEnvData <- function (data) {
 #' @return vector made of two elements: the easting and northing (by default) or
 #' latitude and longitude coordinates.
 #'
-#' @export
+#'
 #'
 #' @examples
 #' \dontrun{

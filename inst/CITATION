@@ -1,0 +1,12 @@
+citHeader("To cite hetoolkit in publications use: \n\nDunbar, M., Brown, R., Gordon, I., Gallagher, K. and Davey, A. (2023) hetoolkit: Hydro-Ecology Toolkit, R package version 2.1.0. ; https://github.com/APEM-LTD/hetoolkit")
+
+citEntry(
+  entry    = "Misc",
+  title    = "hetoolkit: hetoolkit: Hydro-Ecology Toolkit, R package version 2.1.0",
+  author   = "Mike Dunbar, Rosalind Brown, Iain Gordon, Kayleigh Gallagher, Andrew Davey",
+  year     = 2023,
+  url      = "https://github.com/APEM-LTD/hetoolkit",
+  textVersion = paste(
+
+  )
+)

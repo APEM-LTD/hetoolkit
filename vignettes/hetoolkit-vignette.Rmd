@@ -32,18 +32,18 @@ rm(list = ls())
 # pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, geojsonio, mapview)
 
 if(!require(pacman)) {install.packages("pacman")}
-pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, mapview, plyr, ggfortify)
+pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, mapview, plyr, rnrfa)
 
 remotes::install_github("aquaMetrics/rict")
 
 # for development
 #install.packages("devtools")
 #library(devtools)
-#devtools::load_all(export_all = FALSE)
+devtools::load_all(export_all = FALSE)
 #install_deps()
 # for public version (once live)
-remotes::install_github("APEM-LTD/hetoolkit")
-library(hetoolkit)
+#remotes::install_github("APEM-LTD/hetoolkit")
+#library(hetoolkit)
 
 ```
 

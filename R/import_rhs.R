@@ -54,11 +54,9 @@ import_rhs <- function(rhs_dir = NULL,
   if(is.null(rhs_dir) == TRUE) {
 
     # Down RHS data from open data
-    tictoc::tic()
     downloader::download("https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data",
                          dest = "River_Habitat_Survey_-_Survey_Details_and_Summary_Results_(2).zip",
                          mode="wb")
-    tictoc::toc()
 
     # Unzup file
     utils::unzip ("River_Habitat_Survey_-_Survey_Details_and_Summary_Results_(2).zip")

@@ -324,7 +324,7 @@ calc_flowstats <- function(data,
   STATS1 <- my_data_cf_2 %>% CalcFlowStats()
 
   # calculate long-term flow statistics
-  long_data <- suppressWarnings(CreateLongData(my_data_lt, STATS1))
+  long_data <- suppressWarnings(CreateLongData(flow.data = my_data_lt, statsData = STATS1))
 
   # calculate remaining time-varying flow statistics (durations/events, 7/30-day mins)
   flow_stats <- suppressWarnings(CreateFlowStats(STATS1, long_data, my_data_cf_2, data_1, q_high = q_high, q_low = q_low))
@@ -859,7 +859,6 @@ CreateLongData <- function(flow.data, statsData) {
 
   # calculate base flow index, if any stations have flows with 0's, make that bfi NA
   # if there are no 0s in the flow data then use calc_bfi to calculate base flow index
-  # if flow cantains 0s then return NA
   bfi <- flow_data %>%
     dplyr::filter(!is.na(flow)) %>%
     dplyr::mutate(x=flow) %>%
@@ -883,7 +882,7 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::mutate(parameter=as.character(parameter))
 
   # create a long dataframe containing just means and sd for each Q value, BFI and flow duration curve
-  long_data <- QSTATS1 %>%
+  long_data1 <- QSTATS1 %>%
     dplyr::filter(!is.na("Q30")) %>%
     # make dataframe long
     tidyr::gather(-site, -win_no, key = stat, value = stat_value) %>%  # select just the stats we want
@@ -894,10 +893,26 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::ungroup() %>%
     tidyr::gather(sd, mean, key = id, value = value) %>%                   # gather mean and sd columns into a column with values and key column (ie mean or sd)
     dplyr::do(within(.,  parameter <- paste(stat, id, sep=""))) %>%                     # concatenate stat (ie Q10) and id (ie mean or sd) columns (example: Q10mean, Q70mean)
-    dplyr::select(-stat, -id) %>%
+    dplyr::select(-stat, -id) %>%         # remove the stat and id columns
+    dplyr::mutate(win_no = "Q_Annual")
+
+  # create a long dataframe containing overall mean, min and max flows, an merge with above datasets
+  long_data <- QSTATS1 %>%
+    dplyr::filter(!is.na("Q30")) %>%
+    # make dataframe long
+    tidyr::gather(-site, -win_no, key = stat, value = stat_value) %>%  # select just the stats we want
+    dplyr::filter(stat== "min"| stat== "max" | stat== "mean") %>%
+    dplyr::group_by(stat, site) %>%
+    # calculate the mean each statistic by site
+    dplyr::summarise(mean = mean(stat_value, na.rm=TRUE)) %>%
+    dplyr::ungroup() %>%
+    tidyr::gather(mean, key = id, value = value) %>%                   # gather mean and sd columns into a column with values and key column (ie mean or sd)
+    dplyr::rename(parameter = stat) %>%
+    dplyr::select(-id) %>%
     dplyr::mutate(win_no = "Q_Annual") %>%
+    dplyr::bind_rows(long_data1) %>%
     dplyr::bind_rows(bfi)  %>%
-    dplyr::bind_rows(FlowDurationCurve)      # remove the stat and id columns
+    dplyr::bind_rows(FlowDurationCurve)
 
   return(long_data)
 

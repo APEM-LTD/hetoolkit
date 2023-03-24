@@ -28,7 +28,7 @@ These are:
     Ecology and Fish Data Explorer;
 -   `import_rhs` for importing River Habitat Survey (RHS) data from the
     EA’s Open Data portal;
--   `import_wq` for importing water quality data from the EA’s Water
+-   `import_wq` for importing water quality data from the EA Water
     Quality Archive database;
 -   `predict_indices` for calculating expected scores for
     macroinvertebrate indices using the RICT model (FBA 2020);
@@ -120,7 +120,7 @@ Bug fixes and vignette updates.</td>
 <td>2.1.0</td>
 <td>Mar-2023</td>
 <td>Added new function import_wq.<br />
-Vignette updates to include the new function.</td>
+Minor corrections to documentation (typos, etc).</td>
 </tr>
 </tbody>
 </table>
@@ -130,8 +130,12 @@ Full details of changes are listed below:
 v2.1.0: \* New functions + New function `import_wq` added, which allows
 the download and import of water quality data.
 
--   General
-    -   Vignette updated to include the new function
+-   Bug fixes
+    -   Corrections to calculations for long-term statistics in
+        calc_flowstats, including adding mean, min and max flows.
+    -   Fix to import_inv to resolve error if importing a formatted rds
+        file.
+    -   Removed tictoc package from import_env and import_rhs.
 
 v2.0.0 \* General + Vignette updated to include new functions and
 reflect other changes in v2.0.0. + Created new support pages with
@@ -209,6 +213,19 @@ If you believe you’ve found a bug in `hetoolkit`, please log an issue
 <https://github.com/APEM-LTD/hetoolkit/issues>. For more feature
 requests, feedback and other general queries, please contact the
 `hetoolkit` development team at APEM via <hetoolkit@apemltd.co.uk>.
+
+## Citations
+
+To cite the hetoolkit package in publications please use:
+
+Dunbar, M., Brown, R., Gordon, I., Gallagher, K. and Davey, A. (2023)
+hetoolkit: Hydro-Ecology Toolkit, R package version 2.1.0. ;
+<https://github.com/APEM-LTD/hetoolkit>
+
+For full citation, including BibTex entry, use list(title = “hetoolkit:
+Hydro-Ecology Toolkit”, author = list(list(given = “APEM-Ltd”, family =
+NULL, role = c(“aut”, “cre”), email = “<A.Davey@apemltd.co.uk>”, comment
+= NULL)), year = “2023”, note = “R package version 2.0.0”)
 
 ## References
 
