@@ -82,6 +82,28 @@ remotes::install_github("APEM-LTD/hetoolkit")
 library(hetoolkit)
 ```
 
+It is recommended that you install `hetoolkit` into a blank project and
+use the `renv` package to avoid clashes with previously installed
+versions of dependent packages.
+
+After running the insall_github commands, you may get a message stating
+that some packages have a more recent version available, followed by a
+menu. This appears if any of the dependent packages required for the
+toolkit have a more recent version available than you currently have
+installed. Packages may be updated, however this is not required for the
+hetoolkit package to run.
+
+To skip the updates, either enter 3 in the console or simply press
+return. Note that if you run one of the full code blocks above all at
+once (ie, highlight all four lines and run them together) then this is
+skipped and no updates are made to the packages.
+
+You may also get warning messages regarding unused arguments on
+installing the packages. These relate to arguments in function
+definitions that have been removed from the main body of the function
+but not the definition. These will be removed but in the meantime will
+not affect the running of the toolkit.
+
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
@@ -222,10 +244,7 @@ Dunbar, M., Brown, R., Gordon, I., Gallagher, K. and Davey, A. (2023)
 hetoolkit: Hydro-Ecology Toolkit, R package version 2.1.0. ;
 <https://github.com/APEM-LTD/hetoolkit>
 
-For full citation, including BibTex entry, use list(title = “hetoolkit:
-Hydro-Ecology Toolkit”, author = list(list(given = “APEM-Ltd”, family =
-NULL, role = c(“aut”, “cre”), email = “<A.Davey@apemltd.co.uk>”, comment
-= NULL)), year = “2023”, note = “R package version 2.0.0”)
+For full citation, including BibTex entry, use citation(“hetoolkit”).
 
 ## References
 
