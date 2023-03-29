@@ -142,29 +142,41 @@ Bug fixes and vignette updates.</td>
 <td>2.1.0</td>
 <td>Mar-2023</td>
 <td>Added new function import_wq.<br />
-Minor corrections to documentation (typos, etc).</td>
+Minor corrections to documentation (typos, etc).<br />
+Updates to import_rhs to bring it in line with other import
+functions.</td>
 </tr>
 </tbody>
 </table>
 
 Full details of changes are listed below:
 
-v2.1.0: \* New functions + New function `import_wq` added, which allows
-the download and import of water quality data.
+v2.1.0:  
+\* New functions  
++ New function `import_wq` added, which allows the download and import
+of water quality data.
 
+-   Changes to functions
+    -   `import_rhs`: deprecated rhs_dir argument, use source instead.
+        Function now returns an object, even when no surveys are
+        specified for filtering.
 -   Bug fixes
     -   Corrections to calculations for long-term statistics in
         calc_flowstats, including adding mean, min and max flows.
     -   Fix to import_inv to resolve error if importing a formatted rds
         file.
     -   Removed tictoc package from import_env and import_rhs.
+    -   `import_hde` updated following updates to the HDE
 
-v2.0.0 \* General + Vignette updated to include new functions and
-reflect other changes in v2.0.0. + Created new support pages with
-guidance on installing and using the hetoolkit. + Updated and
-rationalised the list of external package dependencies to speed up
-installation. + Various improvements and updates to function
-documentation and worked examples.
+v2.0.0  
+\* General + Vignette updated to include new functions and reflect other
+changes in v2.0.0.  
++ Created new support pages with guidance on installing and using the
+hetoolkit.  
++ Updated and rationalised the list of external package dependencies to
+speed up installation.  
++ Various improvements and updates to function documentation and worked
+examples.
 
 -   New functions
     -   New function `impute_flow` added, which offers three methods for

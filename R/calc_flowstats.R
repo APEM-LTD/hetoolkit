@@ -321,7 +321,7 @@ calc_flowstats <- function(data,
 
 
   # calculate time-varying flow statistics
-  STATS1 <- my_data_cf_2 %>% CalcFlowStats()
+  STATS1 <- suppressWarnings(my_data_cf_2 %>% CalcFlowStats())
 
   # calculate long-term flow statistics
   long_data <- suppressWarnings(CreateLongData(flow.data = my_data_lt, statsData = STATS1))
@@ -485,7 +485,7 @@ calc_flowstats <- function(data,
     my_data_ref_2 <- my_data_ref %>% dplyr::select(site, date, win_no, flow)
 
     # calculate time varying flow statistics
-    STATS1_ref <- CalcFlowStats(my_data_ref_2)
+    STATS1_ref <- suppressWarnings(CalcFlowStats(my_data_ref_2))
 
     # Get QXz_adj
     # select the data we need from _ref dataset and rename

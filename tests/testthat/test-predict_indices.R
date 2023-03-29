@@ -56,6 +56,7 @@ test_that("predict_indices constructs expected output...'", {
   result <- predict_indices(env_data = env_data)
 
   compared <- readRDS("predict_data_output.rds")
-  expect_equivalent(result, compared)
+  #expect_equivalent(result, compared)
+  expect_equal(result, compared, ignore_attr = TRUE)
 
 })

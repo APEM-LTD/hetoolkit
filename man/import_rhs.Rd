@@ -4,20 +4,20 @@
 \alias{import_rhs}
 \title{Import RHS data}
 \usage{
-import_rhs(rhs_dir = NULL, surveys = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
+import_rhs(source = NULL, surveys = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd(), rhs_dir = NULL)
 }
 \arguments{
-\item{rhs_dir}{Path to local file containing RHS data.}
+\item{source}{Path to local .xlsx or .rds file containing RHS data. If NULL (default), then RHS data is downloaded from data.gov.uk.}
 
-\item{surveys}{Vector of survey ids to filter on.}
+\item{surveys}{Vector of survey ids to filter on. Default = NULL}
 
-\item{save}{Specifies if imported RHS data should be saved to working directory
-as rds file (for future use); Default = FALSE.}
+\item{save}{Specifies whether (TRUE) or not (FALSE) the filtered data should be saved as an .rds file (for future use, or audit trail). Default = FALSE.}
 
-\item{save_dwnld}{Specifies if downloaded RHS data should be saved.}
+\item{save_dwnld}{Specifies whether (TRUE) or not (FALSE) the unfiltered file download should be saved, in .rds format. Default = FALSE.}
 
-\item{save_dir}{Path to folder where RHS data is to be saved;
-Default = Current working directory.}
+\item{save_dir}{Path to folder where RHS data is to be saved. Applies to both filtered and unfiltered data; Default = Current working directory.}
+
+\item{rhs_dir}{Deprecated. Path to local .xlsx or .rds file containing RHS data. If NULL (default), then RHS data is downloaded from data.gov.uk.}
 }
 \value{
 Tibble containing RHS data.
@@ -26,19 +26,23 @@ Tibble containing RHS data.
 The \code{import_rhs} function imports River Habitat Survey (RHS) data. The data can either be downloaded from from data.gov.uk (\url{https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data}) or read in from a local xlsx or rds file. Data can be optionally filtered by survey ID.
 }
 \details{
-If saving a copy of the downloaded data, the name of the rds file is hard-wired to: RHS_survey_summary_ALL.rds. If saving after filtering on site, the name of the rds file is hard-wired to: RHS_survey_summary_F.rds.
+This function downloads all data from the RHS database and optionally filters on a specified set of survey IDs.
 
-Downloaded raw data files (in xlsx and zip format) are automatically removed from the working directory following completed execution of the function.
+The save options allow the raw downloaded file (save_dwnld = TRUE) or the filtered file (save = TRUE) to be saved to the working directory.
+
+If saving a copy of the downloaded data, the name of the .rds file is hard-wired to: RHS_survey_summary_ALL.rds. If saving after filtering on site, the name of the rds file is hard-wired to: RHS_survey_summary_F.rds.
+
+Downloaded raw data files (in .xlsx and .zip format) are automatically removed from the working directory following completed execution of the function.
 }
 \examples{
 # Download data for all surveys and save as .rds file for future use:
 # import_rhs(save_dwnld = TRUE, save_dir = "mydata")
 
 # Read in local .rds file and filter on selected dates:
-# import_env(rhs_dir = "mydata/RHS_survey_summary_ALL.rds",
+# import_env(source = "mydata/RHS_survey_summary_ALL.rds",
 #                  surveys = c("34310", "34343"))
 
 # Read in local .xlsx file and filter on selected sites:
-# import_rhs(rhs_dir = "mydata/RHS_ALL.xlsx",
+# import_rhs(source = "mydata/RHS_ALL.xlsx",
 #                  surveys = c("34310", "34343"))
 }
