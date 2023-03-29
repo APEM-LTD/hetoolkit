@@ -11,7 +11,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     arrow (>= 10.0.0),
     data.table (>= 1.14.0),
@@ -19,7 +19,6 @@ Imports:
     dplyr (>= 1.0.2),
     fasstr (>= 0.3.2),
     forcats (>= 0.5.1),
-    ggfortify (>= 0.4.14),
     ggplot2 (>= 3.3.3),
     ggpubr (>= 0.4.0),
     ggrepel (>= 0.9.1),
@@ -28,7 +27,6 @@ Imports:
     lubridate (>= 1.7.9.2),
     lme4 (>= 1.1.26),
     mgcv (>= 1.8.33),
-    plotly (>= 4.10.1),
     plyr (>= 1.8.6),
     purrr (>= 0.3.4),
     RColorBrewer (>= 1.1.2),
@@ -51,8 +49,10 @@ Imports:
     zoo (>= 1.8-11)
 Depends: 
     dplyr (>= 1.0.2),
+    ggfortify (>= 0.4.14),
     ggplot2 (>= 3.3.3),
     lubridate (>= 1.7.9.2),
+    plotly (>= 4.10.1),
     R (>= 3.5.0)
 Suggests: 
     knitr,

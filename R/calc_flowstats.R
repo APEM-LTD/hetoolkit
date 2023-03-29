@@ -321,10 +321,10 @@ calc_flowstats <- function(data,
 
 
   # calculate time-varying flow statistics
-  STATS1 <- my_data_cf_2 %>% CalcFlowStats()
+  STATS1 <- suppressWarnings(my_data_cf_2 %>% CalcFlowStats())
 
   # calculate long-term flow statistics
-  long_data <- suppressWarnings(CreateLongData(my_data_lt, STATS1))
+  long_data <- suppressWarnings(CreateLongData(flow.data = my_data_lt, statsData = STATS1))
 
   # calculate remaining time-varying flow statistics (durations/events, 7/30-day mins)
   flow_stats <- suppressWarnings(CreateFlowStats(STATS1, long_data, my_data_cf_2, data_1, q_high = q_high, q_low = q_low))
@@ -485,7 +485,7 @@ calc_flowstats <- function(data,
     my_data_ref_2 <- my_data_ref %>% dplyr::select(site, date, win_no, flow)
 
     # calculate time varying flow statistics
-    STATS1_ref <- CalcFlowStats(my_data_ref_2)
+    STATS1_ref <- suppressWarnings(CalcFlowStats(my_data_ref_2))
 
     # Get QXz_adj
     # select the data we need from _ref dataset and rename
@@ -535,7 +535,7 @@ calc_flowstats <- function(data,
 
     # calculate _adj values
     df1_ALL <- dplyr::left_join(x = df1, y = ref_data,
-                                by = c("flow_site_id", "win_no"), na.rm  = TRUE)
+                                by = c("flow_site_id", "win_no"))
 
     # Get Q5z_adj
     Q5 <- df1_ALL$Q5
@@ -859,14 +859,15 @@ CreateLongData <- function(flow.data, statsData) {
 
   # calculate base flow index, if any stations have flows with 0's, make that bfi NA
   # if there are no 0s in the flow data then use calc_bfi to calculate base flow index
-  # if flow cantains 0s then return NA
   bfi <- flow_data %>%
     dplyr::filter(!is.na(flow)) %>%
     dplyr::mutate(x=flow) %>%
     dplyr::group_by(site) %>%
-    dplyr::summarise(bfi = if(0 %in% x == FALSE ){ bfi= calc_bfi(.$x) }else{ print ("flow contains 0's, returning NA")
-      bfi=NA}) %>%
+    #dplyr::summarise(bfi = if(0 %in% x == FALSE ){ bfi= calc_bfi(.$x) }else{ print ("flow contains 0's, returning NA")
+    #  bfi=NA}) %>%
+    dplyr::summarise(bfi = calc_bfi(x)) %>%
     dplyr::mutate(win_no = "Annual") %>%
+    dplyr::ungroup() %>%
     tidyr::gather(-site, -win_no, key = parameter, value = value)
 
   # calculate long-term flow duration curve percentile 1:99
@@ -881,7 +882,7 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::mutate(parameter=as.character(parameter))
 
   # create a long dataframe containing just means and sd for each Q value, BFI and flow duration curve
-  long_data <- QSTATS1 %>%
+  long_data1 <- QSTATS1 %>%
     dplyr::filter(!is.na("Q30")) %>%
     # make dataframe long
     tidyr::gather(-site, -win_no, key = stat, value = stat_value) %>%  # select just the stats we want
@@ -892,10 +893,26 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::ungroup() %>%
     tidyr::gather(sd, mean, key = id, value = value) %>%                   # gather mean and sd columns into a column with values and key column (ie mean or sd)
     dplyr::do(within(.,  parameter <- paste(stat, id, sep=""))) %>%                     # concatenate stat (ie Q10) and id (ie mean or sd) columns (example: Q10mean, Q70mean)
-    dplyr::select(-stat, -id) %>%
+    dplyr::select(-stat, -id) %>%         # remove the stat and id columns
+    dplyr::mutate(win_no = "Q_Annual")
+
+  # create a long dataframe containing overall mean, min and max flows, an merge with above datasets
+  long_data <- QSTATS1 %>%
+    dplyr::filter(!is.na("Q30")) %>%
+    # make dataframe long
+    tidyr::gather(-site, -win_no, key = stat, value = stat_value) %>%  # select just the stats we want
+    dplyr::filter(stat== "min"| stat== "max" | stat== "mean") %>%
+    dplyr::group_by(stat, site) %>%
+    # calculate the mean each statistic by site
+    dplyr::summarise(mean = mean(stat_value, na.rm=TRUE)) %>%
+    dplyr::ungroup() %>%
+    tidyr::gather(mean, key = id, value = value) %>%                   # gather mean and sd columns into a column with values and key column (ie mean or sd)
+    dplyr::rename(parameter = stat) %>%
+    dplyr::select(-id) %>%
     dplyr::mutate(win_no = "Q_Annual") %>%
+    dplyr::bind_rows(long_data1) %>%
     dplyr::bind_rows(bfi)  %>%
-    dplyr::bind_rows(FlowDurationCurve)      # remove the stat and id columns
+    dplyr::bind_rows(FlowDurationCurve)
 
   return(long_data)
 
@@ -1308,10 +1325,10 @@ find_doy <- function(flow_data, type, nday) {
 ##############################################################
 ## check whether a column if formatted as date
 
-IsDate <- function(mydate, date.format = "%d/%m/%y") {
-  tryCatch(!is.na(as.Date(mydate, date.format)),
-           error = function(err) {FALSE})
-}
+# IsDate <- function(mydate, date.format = "%d/%m/%y") {
+#   tryCatch(!is.na(as.Date(mydate, date.format)),
+#            error = function(err) {FALSE})
+# }
 
 
 ##############################################################

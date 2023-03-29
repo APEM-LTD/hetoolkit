@@ -8,7 +8,7 @@
 
 ## Overview
 
-The `hetoolkit` package comprises a collection of 21 functions for
+The `hetoolkit` package comprises a collection of 22 functions for
 assembling, processing, visualising and modelling hydro-ecological data.
 These are:
 
@@ -28,6 +28,8 @@ These are:
     Ecology and Fish Data Explorer;
 -   `import_rhs` for importing River Habitat Survey (RHS) data from the
     EA’s Open Data portal;
+-   `import_wq` for importing water quality data from the EA Water
+    Quality Archive database;
 -   `predict_indices` for calculating expected scores for
     macroinvertebrate indices using the RICT model (FBA 2020);
 -   `calc_flowstats` and `calc_rfrstats` for calculating summary
@@ -80,6 +82,28 @@ remotes::install_github("APEM-LTD/hetoolkit")
 library(hetoolkit)
 ```
 
+It is recommended that you install `hetoolkit` into a blank project and
+use the `renv` package to avoid clashes with previously installed
+versions of dependent packages.
+
+After running the insall_github commands, you may get a message stating
+that some packages have a more recent version available, followed by a
+menu. This appears if any of the dependent packages required for the
+toolkit have a more recent version available than you currently have
+installed. Packages may be updated, however this is not required for the
+hetoolkit package to run.
+
+To skip the updates, either enter 3 in the console or simply press
+return. Note that if you run one of the full code blocks above all at
+once (ie, highlight all four lines and run them together) then this is
+skipped and no updates are made to the packages.
+
+You may also get warning messages regarding unused arguments on
+installing the packages. These relate to arguments in function
+definitions that have been removed from the main body of the function
+but not the definition. These will be removed but in the meantime will
+not affect the running of the toolkit.
+
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
@@ -114,20 +138,46 @@ Dunbar](mailto:mike.dunbar@environment-agency.gov.uk).
 Major updates to calc_flowstats, predict_indices and join_he.<br />
 Bug fixes and vignette updates.</td>
 </tr>
+<tr class="odd">
+<td>2.1.0</td>
+<td>Mar-2023</td>
+<td>Added new function import_wq.<br />
+Minor corrections to documentation (typos, etc).<br />
+Updates to import_rhs to bring it in line with other import
+functions.</td>
+</tr>
 </tbody>
 </table>
 
 Full details of changes are listed below:
 
--   General
-    -   Vignette updated to include new functions and reflect other
-        changes in v2.0.0.
-    -   Created new support pages with guidance on installing and using
-        the hetoolkit.
-    -   Updated and rationalised the list of external package
-        dependencies to speed up installation.
-    -   Various improvements and updates to function documentation and
-        worked examples.
+v2.1.0:  
+\* New functions  
++ New function `import_wq` added, which allows the download and import
+of water quality data.
+
+-   Changes to functions
+    -   `import_rhs`: deprecated rhs_dir argument, use source instead.
+        Function now returns an object, even when no surveys are
+        specified for filtering.
+-   Bug fixes
+    -   Corrections to calculations for long-term statistics in
+        calc_flowstats, including adding mean, min and max flows.
+    -   Fix to import_inv to resolve error if importing a formatted rds
+        file.
+    -   Removed tictoc package from import_env and import_rhs.
+    -   `import_hde` updated following updates to the HDE
+
+v2.0.0  
+\* General + Vignette updated to include new functions and reflect other
+changes in v2.0.0.  
++ Created new support pages with guidance on installing and using the
+hetoolkit.  
++ Updated and rationalised the list of external package dependencies to
+speed up installation.  
++ Various improvements and updates to function documentation and worked
+examples.
+
 -   New functions
     -   New function `impute_flow` added, which offers three methods for
         infilling gaps in flow time series data.
@@ -197,6 +247,16 @@ If you believe you’ve found a bug in `hetoolkit`, please log an issue
 <https://github.com/APEM-LTD/hetoolkit/issues>. For more feature
 requests, feedback and other general queries, please contact the
 `hetoolkit` development team at APEM via <hetoolkit@apemltd.co.uk>.
+
+## Citations
+
+To cite the hetoolkit package in publications please use:
+
+Dunbar, M., Brown, R., Gordon, I., Gallagher, K. and Davey, A. (2023)
+hetoolkit: Hydro-Ecology Toolkit, R package version 2.1.0. ;
+<https://github.com/APEM-LTD/hetoolkit>
+
+For full citation, including BibTex entry, use citation(“hetoolkit”).
 
 ## References
 

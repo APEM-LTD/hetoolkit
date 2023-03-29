@@ -176,7 +176,7 @@ get_hde_flows <- function(my.station, global.stations, min.date, max.date = date
 
 get_hde_stations <- function(){
 
-  stations <- download.file("http://environment.data.gov.uk/hydrology/id/stations.csv", destfile = "stations.csv", mode ="wb")
+  stations <- download.file("http://environment.data.gov.uk/hydrology/id/stations.csv?_limit=9999", destfile = "stations.csv", mode ="wb")
 
   stations <- readr::read_csv("stations.csv")
 

@@ -31,19 +31,19 @@ rm(list = ls())
 # if(!require(pacman)) install.packages("pacman")
 # pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, geojsonio, mapview)
 
-if(!require(pacman)) install.packages("pacman")
-pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, mapview, plyr, ggfortify)
+if(!require(pacman)) {install.packages("pacman")}
+pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, mapview, plyr, rnrfa)
 
 remotes::install_github("aquaMetrics/rict")
 
 # for development
 #install.packages("devtools")
 #library(devtools)
-#devtools::load_all(export_all = FALSE)
+devtools::load_all(export_all = FALSE)
 #install_deps()
 # for public version (once live)
-remotes::install_github("APEM-LTD/hetoolkit")
-library(hetoolkit)
+#remotes::install_github("APEM-LTD/hetoolkit")
+#library(hetoolkit)
 
 ```
 
@@ -93,7 +93,7 @@ master_file$biol_site_id <- as.character(master_file$biol_site_id)
 master_file$rhs_survey_id <- as.character(master_file$rhs_survey_id)
 
 # filter master file for selected sites of interest
-master_data <- master_file %>% filter(biol_site_id %in% c("34310", "34343", "34352", "55287", "55395", "55417", "55673", "55824", "55897", "56065", "56226", "54637", "54769", "54801", "54962", "80998", "56491", "54827", "77216", "52828"))
+master_data <- master_file %>% filter(biol_site_id %in% c("34310", "34343", "34352", "55287", "55395", "55417", "55673", "55824", "55897", "56065", "56226", "54637", "54769", "54801", "80998", "56491", "54827", "77216", "52828"))
 
 # view data
 master_data
@@ -583,6 +583,8 @@ It is primarily designed to work with mean daily flows (e.g. as produced by impo
 
 Regardless, the data should be regularly spaced and the same time step should be used for all sites.
 
+The function also requires site, date and flow data columns to be specified in order to run. The default values for these arguments, "flow_site_id", "date" and "flow" respectively, match the column headers from the outputs of the `import_flow` and `impute_flow` functions. The defaults allow the data from these functions to be passed without editing into `calc_flowstats`, however the names can be changed as normal to match the data supplied.
+
 This is an updated version of the `calc_flowstats` function.  The first iteration of the function, which employs fixed 6-monthly spring and autumn flow periods, remains available using `calc_flowstats_old`.
 
 ```{r calculate flow stats, warning=FALSE, message=FALSE, results=FALSE, tidy=TRUE}
@@ -803,10 +805,14 @@ plot_hev(data = subset(hev_data, biol_site_id == "34352"),
 The `save` argument can be used to export the HEV plot as a .png file. The name of the png file is fixed, however, so to generate a separate png file for each site requires a loop.
 
 ```{r hevplot2, echo=TRUE, message=FALSE, warning=FALSE, fig.show=FALSE, results=FALSE}
-
-for(i in mapping$biol_site_id){
+bsi <- mapping$biol_site_id[1:5]
+#for(i in mapping$biol_site_id){
+for(i in bsi){
   
   plot_data <- subset(hev_data, biol_site_id == i)
+  print(i)
+  max(plot_data$Q95z_lag0, na.rm = TRUE)
+  max(plot_data$Q10z_lag0, na.rm = TRUE)
   
   my_hev_plot <- plot_hev(data = plot_data, 
          date_col = "date", 

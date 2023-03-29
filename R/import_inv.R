@@ -208,11 +208,16 @@ import_inv <- function(source = "parquet",
     WATERBODY_TYPE = factor(WATERBODY_TYPE)
   )
 
-  # convert to date (skip for parquet)
-  if((source == "parquet" | grepl("\\.parquet$", source)) == FALSE) {
+  # Convert SAMPLE_DATE to date
+  if(is.Date(inv_metrics_f$SAMPLE_DATE == FALSE)) {
     inv_metrics_f <- inv_metrics %>%
-      dplyr::mutate(SAMPLE_DATE = lubridate::dmy(SAMPLE_DATE),
-                    DATE_OF_ANALYSIS = lubridate::dmy(DATE_OF_ANALYSIS))
+      dplyr::mutate(SAMPLE_DATE = lubridate::dmy(SAMPLE_DATE))
+  }
+
+  # Convert DATE_OF_ANALYSIS to date
+  if(is.Date(inv_metrics_f$DATE_OF_ANALYSIS == FALSE)) {
+    inv_metrics_f <- inv_metrics %>%
+      dplyr::mutate(DATE_OF_ANALYSIS = lubridate::dmy(DATE_OF_ANALYSIS))
   }
 
   # Filter by sites (vector of specified Site IDs)
