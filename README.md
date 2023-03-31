@@ -60,7 +60,7 @@ back-compatibility. These are:
 
 The different functions link together as shown in the flow chart below:
 
-![image info](./FlowChart_v01.png)
+![image info](./man/figures/FlowChart_v01.png)
 
 ## Installation
 
