@@ -1,4 +1,4 @@
-#' Produces an interactive time series plot of biology and flow data for one site of interest.
+#' Producing interactive time series plots of biology and flow data
 #'
 #' @description
 #' The shiny_hev function launches a shiny app of:

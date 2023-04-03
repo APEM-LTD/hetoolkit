@@ -2,7 +2,7 @@
 #'
 #' @description calc_flowstats uses a time series of measured or modeled flows to calculate a suite of long-term and seasonal (winter and summer) flow statistics for one or more sites (stations). It is primarily designed to work with mean daily flows (e.g. as produced by import_flow), but can also be applied to time series data on a longer (e.g. monthly) time step. Regardless, the data should be regularly spaced and the same time step should be used for all sites.
 #'
-#' @usage calc_flowstats(data = data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", ref_col = NULL)
+#' @usage calc_flowstats_old(data = data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", ref_col = NULL)
 #'
 #' @param data Name of data frame or tibble containing the flow data to be processed.
 #'  Must be in long format and contain columns for flow site id, date and flow (see output from import_flows).
@@ -729,7 +729,7 @@ calc_bfi_old <- function(x) {
 # find_events
 # Required for find_eventDuration
 
-#' find_events(x,threshold)
+# find_events(x,threshold)
 find_events_old <- function(x,threshold,type="high") {
 
   x <- data.frame(flow = x)

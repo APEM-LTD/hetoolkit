@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_rngflows.R
 \name{plot_rngflows}
 \alias{plot_rngflows}
-\title{Visualise the range of flow conditions experienced historically}
+\title{Visualising the range of flow conditions experienced historically at a site}
 \usage{
 plot_rngflows (data, flow_stats, biol_metric, wrap_by = NULL, plotly = FALSE, label = NULL)
 }

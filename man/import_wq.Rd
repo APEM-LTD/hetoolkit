@@ -2,9 +2,9 @@
 % Please edit documentation in R/import_wq.R
 \name{import_wq}
 \alias{import_wq}
-\title{Import water quality data from the Water Quality Archive database}
+\title{Importing water quality data from the EA Water Quality Archive database}
 \usage{
-import_wq <- function(source = NULL, sites, dets = “default”, start_date = "2020-01-01", end_date = Sys.Date(), save = TRUE)
+import_wq(source = NULL, sites, dets = "default", start_date = "2020-01-01", end_date = Sys.Date(), save = TRUE)
 }
 \arguments{
 \item{source}{Either NULL, indicating the data should be downloaded from WIMS; or a path specifying a csv file with the same columns as would be in the downloaded file. Default = NULL.}

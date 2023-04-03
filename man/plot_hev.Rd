@@ -2,9 +2,9 @@
 % Please edit documentation in R/plot_hev.R
 \name{plot_hev}
 \alias{plot_hev}
-\title{Produces a time series plot of biology and flow data for one site of interest.}
+\title{Producing time series plots of biology and flow data}
 \usage{
-plot_hev <- function(data, date_col, flow_stat, biol_metric, multiplot = TRUE, save = FALSE, save_dir = getwd(), clr_by = NULL)
+plot_hev(data, date_col, flow_stat, biol_metric, multiplot = TRUE, save = FALSE, save_dir = getwd(), clr_by = NULL)
 }
 \arguments{
 \item{data}{Data to plot.}

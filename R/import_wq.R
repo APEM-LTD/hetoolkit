@@ -1,10 +1,10 @@
-#' Import water quality data from the Water Quality Archive database
+#' Importing water quality data from the EA Water Quality Archive database
 #'
 #' @description
 #' The `import_wq` function imports water quality (WQ) data from the Environment Agency’s Water Quality Archive database. The data can either be downloaded automatically in .csv format or read in from a previously saved .csv or .rds file. The data can be optionally filtered by WQ site ID, determinand and/or sample date, and the filtered data saved as a .rds file.
 #'
 #' @usage
-#' import_wq <- function(source = NULL, sites, dets = “default”, start_date = "2020-01-01", end_date = Sys.Date(), save = TRUE)
+#' import_wq(source = NULL, sites, dets = "default", start_date = "2020-01-01", end_date = Sys.Date(), save = TRUE)
 #'
 #' @param source Either NULL, indicating the data should be downloaded from WIMS; or a path specifying a csv file with the same columns as would be in the downloaded file. Default = NULL.
 #' @param sites A list containing WQ sites for which data is to be imported.

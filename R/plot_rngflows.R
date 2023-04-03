@@ -1,4 +1,4 @@
-#' Visualise the range of flow conditions experienced historically
+#' Visualising the range of flow conditions experienced historically at a site
 #'
 #' @description plot_rngflows generates a scatterplot for two flow variables (such as those produced by calc_flowstats) and overlays two convex hulls: one showing the full range of flow conditions experienced historically, and a second convex hull showing the range of flow conditions with associated biology records. This allows the user to assess to coverage of the biology data with respect to the historical range of flow conditions.
 #'

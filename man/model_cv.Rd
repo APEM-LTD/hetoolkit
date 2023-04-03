@@ -2,12 +2,12 @@
 % Please edit documentation in R/model_cv.R
 \name{model_cv}
 \alias{model_cv}
-\title{Repeated, stratified k-fold cross-validation}
+\title{Performing cross-validation on linear mixed-effects models and hierarchical generalized additive models}
 \usage{
 model_cv(model, data, group, k=5, r=1, control=NULL)
 }
 \arguments{
-\item{model}{Model object for cross-validation. Supported classes are "lmerMod" (from lme4::lmer) and "gam" (from mgcv::gam)}
+\item{model}{Model object for cross-validation. Supported classes are "lmerMod" (from lme4::lmer), "lmerTest" (from lmerTest::lmer) and "gam" (from mgcv::gam)}
 
 \item{data}{Data frame or tibble containing data used for model calibration. None of the variables used in 'model' can contain NAs.}
 
@@ -24,7 +24,7 @@ Default = NULL.}
 A list of two elements: (i) the RMSE, and (ii) a data frame or tibble containing the input dataset plus r additional columns containing the cross-validation predicted values (named pred_cv#).
 }
 \description{
-model_cv performs repeated, stratified k-fold cross-validation on a linear mixed-effects model (class: lmerMod) or hierarchical generalized additive model (class: gam) model with a single random grouping factor.
+model_cv performs repeated, stratified k-fold cross-validation on a linear mixed-effects model (class: lmerMod or lmerTest) or hierarchical generalized additive model (class: gam) model with a single random grouping factor.
 }
 \details{
 k-fold cross validation is a re-sampling procedure than can be used to evaluate a model’s predictive performance for groups in the calibration dataset. If the grouping factor is Site, then the function evaluates the model’s ability to predict the response at sites in the calibration dataset.

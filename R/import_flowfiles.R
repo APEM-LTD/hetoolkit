@@ -1,4 +1,4 @@
-#' Import mean daily flow data from local files
+#' Importing flow data from local files
 #'
 #' @description
 #' This function imports flow data from one or more local files, one per site, named in the format 'siteID.filextension'. Supported file formats are: csv, txt, all, xls and xlsx.

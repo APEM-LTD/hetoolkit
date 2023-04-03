@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">hetoolkit</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,8 +24,15 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/case_study_1.html">Case Study 1</a>
+    <a class="dropdown-item" href="../articles/case_study_2.html">Case Study 2</a>
+    <a class="dropdown-item" href="../articles/case_study_3.html">Case Study 3</a>
+    <a class="dropdown-item" href="../articles/case_study_4.html">Case Study 4</a>
     <a class="dropdown-item" href="../articles/hetoolkit-vignette.html">hetoolkit-Vignette</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -53,39 +60,29 @@
 
       <dl><dt>
           
-          <code><a href="calc_flowstats.html">calc_flowstats</a></code> 
+          <code><a href="calc_flowstats.html">calc_flowstats()</a></code> 
         </dt>
-        <dd>Calculate a suite of long-term and time-varying flow statistics for one or more sites.</dd>
+        <dd>Calculating summary statistics describing historical flow conditions.</dd>
       </dl><dl><dt>
           
-          <code><a href="calc_flowstats_old.html">calc_flowstats()</a></code> 
+          <code><a href="calc_flowstats_old.html">calc_flowstats_old()</a></code> 
         </dt>
         <dd>Calculate a suite of long-term and seasonal flow statistics for one or more sites.</dd>
       </dl><dl><dt>
           
-          <code><a href="calc_rfrstats.html">calc_rfrstats</a></code> 
+          <code><a href="calc_rfrstats.html">calc_rfrstats()</a></code> 
         </dt>
-        <dd>Calculate residual flow ratios.</dd>
+        <dd>Calculating summary statistics describing historical flow conditions</dd>
       </dl><dl><dt>
           
           <code><a href="diag_lmer.html">diag_lmer()</a></code> 
         </dt>
-        <dd>Diagnostic plots for a mixed-effects (lmer) regression model</dd>
-      </dl><dl><dt>
-          
-          <code><a href="find_events.html">find_events()</a></code> 
-        </dt>
-        <dd>find_events(x,threshold)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="find_events_old.html">find_events_old()</a></code> 
-        </dt>
-        <dd>find_events(x,threshold)</dd>
+        <dd>Generating a variety of diagnostic plots for a mixed-effects regression (lmer) model</dd>
       </dl><dl><dt>
           
           <code><a href="import_env.html">import_env()</a></code> 
         </dt>
-        <dd>Import environmental base data</dd>
+        <dd>Importing environmental base data from the EA Ecology and Fish Data Explorer</dd>
       </dl><dl><dt>
           
           <code><a href="import_flow.html">import_flow()</a></code> 
@@ -95,107 +92,97 @@
           
           <code><a href="import_flowfiles.html">import_flowfiles()</a></code> 
         </dt>
-        <dd>Import mean daily flow data from local files</dd>
+        <dd>Importing flow data from local files</dd>
       </dl><dl><dt>
           
-          <code><a href="import_hde.html">import_hde</a></code> 
+          <code><a href="import_hde.html">import_hde()</a></code> 
         </dt>
-        <dd>Import daily mean flow data from Hydrology Data Explorer (HDE)</dd>
+        <dd>Importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE)</dd>
       </dl><dl><dt>
           
           <code><a href="import_inv.html">import_inv()</a></code> 
         </dt>
-        <dd>Import macroinvertebrate data from Ecology Data Explorer (EDE)</dd>
+        <dd>Importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer</dd>
       </dl><dl><dt>
           
-          <code><a href="import_nrfa.html">import_nrfa</a></code> 
+          <code><a href="import_nrfa.html">import_nrfa()</a></code> 
         </dt>
-        <dd>Import daily mean flow data from the National River Flow Archive (NRFA)</dd>
+        <dd>Importing flow data from the National River Flow Archive (NRFA)</dd>
       </dl><dl><dt>
           
           <code><a href="import_rhs.html">import_rhs()</a></code> 
         </dt>
-        <dd>Import RHS data</dd>
+        <dd>Importing River Habitat Survey (RHS) data from the EA's Open Data portal</dd>
       </dl><dl><dt>
           
-          <code><a href="import_wq.html">import_wq</a></code> 
+          <code><a href="import_wq.html">import_wq()</a></code> 
         </dt>
-        <dd>Import water quality data from the Water Quality Archive database</dd>
+        <dd>Importing water quality data from the EA Water Quality Archive database</dd>
       </dl><dl><dt>
           
           <code><a href="impute_flow.html">impute_flow()</a></code> 
         </dt>
-        <dd>Impute missing flow data.</dd>
+        <dd>Infilling missing records in daily flow time series for one or more sites</dd>
       </dl><dl><dt>
           
           <code><a href="join_he.html">join_he()</a></code> 
         </dt>
-        <dd>Link biology samples with time-varying flow statistics for paired biology and flow sites.</dd>
+        <dd>Linking biology samples with time-varying flow statistics for paired biology and flow sites.</dd>
       </dl><dl><dt>
           
-          <code><a href="join_he_old.html">join_he()</a></code> 
+          <code><a href="join_he_old.html">join_he_old()</a></code> 
         </dt>
         <dd>Link biology data to six-monthly flow statistics for paired biology and flow sites.</dd>
       </dl><dl><dt>
           
           <code><a href="model_cv.html">model_cv()</a></code> 
         </dt>
-        <dd>Repeated, stratified k-fold cross-validation</dd>
+        <dd>Performing cross-validation on linear mixed-effects models and hierarchical generalized additive models</dd>
       </dl><dl><dt>
           
           <code><a href="model_logocv.html">model_logocv()</a></code> 
         </dt>
-        <dd>Leave-one-group-out cross-validation</dd>
-      </dl><dl><dt>
-          
-          <code><a href="osg_parse.html">osg_parse()</a></code> 
-        </dt>
-        <dd>Converts OS Grid Reference to BNG/WGS coordinates.</dd>
+        <dd>Performing cross-validation on linear mixed-effects models and hierarchical generalized additive models</dd>
       </dl><dl><dt>
           
           <code><a href="plot_heatmap.html">plot_heatmap()</a></code> 
         </dt>
-        <dd>Heatmap plot</dd>
+        <dd>Visualising and summarising gaps in time series data</dd>
       </dl><dl><dt>
           
-          <code><a href="plot_hev.html">plot_hev</a></code> 
+          <code><a href="plot_hev.html">plot_hev()</a></code> 
         </dt>
-        <dd>Produces a time series plot of biology and flow data for one site of interest.</dd>
+        <dd>Producing time series plots of biology and flow data</dd>
       </dl><dl><dt>
           
-          <code><a href="plot_predictions.html">plot_predictions</a></code> 
+          <code><a href="plot_predictions.html">plot_predictions()</a></code> 
         </dt>
-        <dd>Visualise the predictions from a hydro-ecological model</dd>
+        <dd>Visualising the time series predictions from a hydro-ecological model</dd>
       </dl><dl><dt>
           
           <code><a href="plot_rngflows.html">plot_rngflows()</a></code> 
         </dt>
-        <dd>Visualise the range of flow conditions experienced historically</dd>
+        <dd>Visualising the range of flow conditions experienced historically at a site</dd>
       </dl><dl><dt>
           
           <code><a href="plot_sitepca.html">plot_sitepca()</a></code> 
         </dt>
-        <dd>Principal Components Analysis (PCA) of site characteristics</dd>
+        <dd>Summarising environmental characteristics of biological sampling sites</dd>
       </dl><dl><dt>
           
           <code><a href="predict_indices.html">predict_indices()</a></code> 
         </dt>
-        <dd>Predict expected scores for macroinvertebrate indices</dd>
+        <dd>Calculating expected scores for macroinvertebrate indices using the RICT2 model</dd>
       </dl><dl><dt>
           
-          <code><a href="predict_indices_old.html">predict_indices()</a></code> 
+          <code><a href="predict_indices_old.html">predict_indices_old()</a></code> 
         </dt>
         <dd>Predict expected scores for macroinvertebrate indices</dd>
       </dl><dl><dt>
           
           <code><a href="shiny_hev.html">shiny_hev()</a></code> 
         </dt>
-        <dd>Produces an interactive time series plot of biology and flow data for one site of interest.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="test_if_dataframe.html">test_if_dataframe()</a></code> 
-        </dt>
-        <dd>Test if input is a data.frame</dd>
+        <dd>Producing interactive time series plots of biology and flow data</dd>
       </dl></div>
   </main></div>
 

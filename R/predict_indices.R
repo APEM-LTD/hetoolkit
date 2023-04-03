@@ -1,4 +1,4 @@
-#' Predict expected scores for macroinvertebrate indices
+#' Calculating expected scores for macroinvertebrate indices using the RICT2 model
 #'
 #' @description
 #' The `predict_indices` function mirrors the functionality of the RICT model available on the MS Azure platform (<https://gallery.azure.ai/Experiment/RICT-package-2>). Specifically, it uses  environmental (ENV) data from Ecology Data Explorer to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. The prediction functionality applies the 'rict_predict()' function from the AquaMetrics RICT package (https://github.com/aquaMetrics/rict). No classification is undertaken.

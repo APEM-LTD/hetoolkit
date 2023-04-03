@@ -2,7 +2,7 @@
 % Please edit documentation in R/join_he.R
 \name{join_he}
 \alias{join_he}
-\title{Link biology samples with time-varying flow statistics for paired biology and flow sites.}
+\title{Linking biology samples with time-varying flow statistics for paired biology and flow sites.}
 \usage{
 join_he(biol_data, flow_stats, mapping = NULL, method = "A" , lags = 0, join_type = "add_flows")
 }

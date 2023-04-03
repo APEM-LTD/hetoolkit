@@ -1,0 +1,46 @@
+---
+title: "Resources"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.path = "man/figures/")
+```
+
+# Resources for hetoolkit
+
+## Training videos
+
+Training videos based on based on two workshops are available at the following link:
+
+
+## Training project
+
+Two example projects are hosted on [PositCloud](https://posit.cloud/). 
+
+The workshop 1 project includes example code covering data import, processing and exploration
+
+The workshop 2 project includes example code covering flow statistics, additional data exploration and model selection.
+
+To access the projects, you first need to set up an account for PositCloud. Then navigate to the projects using the links below. This will open a temporary copy of the project. Please ensure you select "Take a Permanent Copy" at the top to move a copy of the project into your own workspace before making any changes to the project.
+
+Links to the projects can be found below:
+
+[Workshop 1](https://eur03.safelinks.protection.outlook.com/?url=https%3A%2F%2Fposit.cloud%2Fcontent%2F5663223&data=05%7C01%7Ci.gordon%40apemltd.co.uk%7C59f2aeb5fcec4eac7b1708db34537298%7Cf802729b1f8447b4881f4980f9545543%7C0%7C0%7C638161305235041721%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=SBy2SyUV%2B%2F%2FIWrcdAe857KHXQNHueHMMS7sPepPEw78%3D&reserved=0)
+
+[Workshop 2](https://eur03.safelinks.protection.outlook.com/?url=https%3A%2F%2Fposit.cloud%2Fcontent%2F5663226&data=05%7C01%7Ci.gordon%40apemltd.co.uk%7Cbf9cff5872b44182301b08db34540802%7Cf802729b1f8447b4881f4980f9545543%7C0%7C0%7C638161307737880503%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=eOV2dydEe7SwE5nnuFLBLW%2BarkN0e6zr4JPoOnoyEnI%3D&reserved=0)
+
+## Further Reading
+
+### Accessible introductions to linear mixed-effects modelling
+
+ * Harrison, X.A., et al. (2018). A brief introduction to mixed effects modelling and multi-model inference in ecology. PeerJ, 6, p.e4794.
+ * Zuur, A. F., Ieno, E. N., Walker, N. J., Saveliev, A. A., & Smith, G. M. (2009). Mixed effects models and extensions in ecology with R. London, UK: Springer
+ * Lots more online e.g. [GLMM FAQ](http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html)
+ 
+### Example applications to macroinvertebrate data
+
+ * Dunbar, M.J., Lauge Pedersen, M., Cadman, D., Extence, C., Waddingham, J, Chadd, R. and Larsen, S.E. (2009). River discharge and local scale habitat influence macroinvertebrate LIFE scores. *Freshwater Biology* 55, 226–242. doi:10.1111/j.1365-2427.2009.02306.x
+ * Dunbar, M.J., Warren, M., Extence, C., Baker, L., Cadman, D., Mould, D.J., Hall, J. and Chadd, R. (2010). Interaction between macroinvertebrates, discharge and physical habitat in upland rivers. Aquatic Conservation: Marine and Freshwater Ecosystems, 20(S1), pp.S31-S44.
+ * England, J., Chadd, R., Dunbar, M.J., Sarremejane, R., Stubbington, R. Westwood, C.G. and Leeming, D.J. 2019. An invertebrate-based index to characterize ecological responses to flow intermittence in rivers. *Fundamental and Applied Limnology*. DOI: 10.1127/fal/2019/1206
+

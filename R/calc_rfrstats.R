@@ -1,4 +1,4 @@
-#' Calculate residual flow ratios.
+#' Calculating summary statistics describing historical flow conditions
 #'
 #' @description Uses modelled flow data to calculate percentile statistics under a chosen
 #' scenario (e.g. historical or recent actual) as a ratio of a reference scenario (usually
@@ -10,8 +10,8 @@
 #'               date_col = NULL,
 #'               flow_col = NULL,
 #'               ref_col = NULL,
-#'               q = NULL
-#'               save_as = FALSE
+#'               q = NULL,
+#'               save_as = FALSE,
 #'               save_dir = getwd()
 #'               )
 #'

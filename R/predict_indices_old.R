@@ -4,7 +4,7 @@
 #' The `predict_indices` function mirrors the functionality of the RICT model available on the MS Azure platform (<https://gallery.azure.ai/Experiment/RICT-package-2>). Specifically, it uses  environmental (ENV) data from Ecology Data Explorer to generate expected scores under minimally impacted reference conditions for 80 indices, plus probabilities for RIVPACS end-groups. No classification is undertaken.
 #'
 #' @usage
-#' predict_indices(env_data = x, save = FALSE, save_dir = getwd())
+#' predict_indices_old(env_data = x, save = FALSE, save_dir = getwd())
 #'
 #' @param env_data A data frame or tibble containing site-level environmental data in Environment Agency Ecology Data Explorer format (as produced by the import_env function).
 #' @param save Specifies whether or not expected indices data should be saved as a rds file (for future use); Default = TRUE.

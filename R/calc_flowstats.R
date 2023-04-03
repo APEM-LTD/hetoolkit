@@ -1,8 +1,8 @@
-#' Calculate a suite of long-term and time-varying flow statistics for one or more sites.
+#' Calculating summary statistics describing historical flow conditions.
 #'
 #' @description This function takes a time series of measured or modelled flows and uses a user-defined moving window to calculate a suite of time-varying flow statistics for one or more sites (stations). A smaller set of long-term statistics is also calculated. It is primarily designed to work with daily flows but can also be applied to time series data on a longer (e.g. 10-daily or monthly) time step. The data should be regularly spaced, and a common time step should be used for all sites.
 #'
-#' @usage calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = “imputed”, win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, scaling = FALSE, ref_col = NULL)
+#' @usage calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = "imputed", win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, scaling = FALSE, ref_col = NULL)
 #'
 #' @param data Tibble or data frame containing the flow data to be processed. Must be in long format and have, as a minimum, separate columns containing site id, date and flow (e.g. as output by the import_flow() function). If flow estimates are available for different abstraction or climate scenarios, then these must be in separate columns (see `ref_col` argument).
 #' @param site_col Name of column in data containing unique flow site id. Default = "flow_site_id".
@@ -1119,7 +1119,7 @@ find_eventDuration <- function(x, threshold ,type, pref) {
 # Required for find_eventDuration
 # Finds events above/below qhigh/qlow
 
-#' find_events(x,threshold)
+# find_events(x,threshold)
 find_events <- function(flow_data, threshold, type="high") {
 
   x <- flow_data

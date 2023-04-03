@@ -2,9 +2,9 @@
 % Please edit documentation in R/plot_predictions.R
 \name{plot_predictions}
 \alias{plot_predictions}
-\title{Visualise the predictions from a hydro-ecological model}
+\title{Visualising the time series predictions from a hydro-ecological model}
 \usage{
-plot_predictions <- function(data, biol_metric, time_col, site_col, flow_stat, pred_col, ncol = 4, save = FALSE, save_dir = getwd())
+plot_predictions(data, biol_metric, time_col, site_col, flow_stat, pred_col, ncol = 4, save = FALSE, save_dir = getwd())
 }
 \arguments{
 \item{data}{Data to plot, containing observed biology and flow data as well as model predictions.}

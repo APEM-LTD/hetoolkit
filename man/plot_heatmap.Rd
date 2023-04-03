@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_heatmap.R
 \name{plot_heatmap}
 \alias{plot_heatmap}
-\title{Heatmap plot}
+\title{Visualising and summarising gaps in time series data}
 \usage{
 plot_heatmap(data, x, y, fill, colour = "viridis", lab.x = x, lab.y = y, lab.legend = fill, dual = FALSE, list_out = TRUE, limits = FALSE, save = FALSE, save_dir = getwd(), ...)
 }

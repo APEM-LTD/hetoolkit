@@ -2,6 +2,10 @@ pandoc: '2.18'
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  case_study_1: case_study_1.html
+  case_study_2: case_study_2.html
+  case_study_3: case_study_3.html
+  case_study_4: case_study_4.html
   hetoolkit-vignette: hetoolkit-vignette.html
-last_built: 2023-03-30T15:11Z
+last_built: 2023-04-03T12:49Z
 

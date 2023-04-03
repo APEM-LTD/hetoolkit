@@ -2,12 +2,12 @@
 % Please edit documentation in R/model_logocv.R
 \name{model_logocv}
 \alias{model_logocv}
-\title{Leave-one-group-out cross-validation}
+\title{Performing cross-validation on linear mixed-effects models and hierarchical generalized additive models}
 \usage{
 model_logocv(model, data, group, control = NULL)
 }
 \arguments{
-\item{model}{Model object for cross-validation. Supported classes are "lmerMod" (from lme4:: lmer) and "gam" (from mgcv::gam)}
+\item{model}{Model object for cross-validation. Supported classes are "lmerMod" (from lme4:: lmer), "lmerTest" (from lmerTest::lmer) and "gam" (from mgcv::gam)}
 
 \item{data}{Data frame or tibble containing data used for model calibration. None of the variables used in 'model' can contain NAs.}
 
@@ -20,7 +20,7 @@ Default = NULL.}
 A list of two elements: (i) the RMSE, and (ii) a data frame or tibble containing the input dataset plus an additional column (pred_cv) containing the cross-validation predicted values.
 }
 \description{
-model_logocv performs leave-one-group-out cross-validation on a linear mixed-effects model (class: lmerMod) or hierarchical generalized additive model (class: gam) model with a single random grouping factor.
+model_logocv performs leave-one-group-out cross-validation on a linear mixed-effects model (class lmerMod or lmerTest) or hierarchical generalized additive model (class gam) model with a single random grouping factor.
 }
 \details{
 Leave-one-group-out cross validation is a re-sampling procedure than can be used to evaluate a model’s predictive performance for new levels of a random grouping factor. If that grouping factor is Site, then the function evaluates the model’s ability to predict the response at new sites not in the calibration dataset.

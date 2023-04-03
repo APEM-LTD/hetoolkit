@@ -1,10 +1,10 @@
-#' Import daily mean flow data from the National River Flow Archive (NRFA)
+#' Importing flow data from the National River Flow Archive (NRFA)
 #'
 #' @description
 #' The import_nrfa function downloads mean daily flow data from the NRFA for a user-defined set of sites (gauging stations). Data can be optionally filtered by date.
 #'
 #' @usage
-#' import_nrfa(sites, start_date = "1985-01-01", end_data = Sys.Date(), tidyup = TRUE))
+#' import_nrfa(sites, start_date = "1985-01-01", end_data = Sys.Date(), tidyup = TRUE)
 #'
 #' @param sites Vector of site (station) IDs to extract data for. NAs and blanks ("") are ignored
 #' @param start_date Start date for flow data extraction (YYYY-MM-DD format). Default = "1985-01-01".

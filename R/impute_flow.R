@@ -1,4 +1,4 @@
-#' Impute missing flow data.
+#' Infilling missing records in daily flow time series for one or more sites
 #'
 #' @description This function imputes (infills) missing records in daily flow time series for one or more sites (gauging stations) using either interpolation or an equipercentile  method. Imputation of missing flow data can improve the later estimation of flow statistics using the calc_flowstats() function and aid the visualisation of hydro-ecological relationships using the plot_hev() function.  Note, although this function provides automated tools for imputing missing records, it is advisable to consult a hydrologist if your data contains extensive/lengthy gaps, to ensure that the methods and results are trustworthy.
 #'

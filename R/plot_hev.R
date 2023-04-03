@@ -1,4 +1,4 @@
-#' Produces a time series plot of biology and flow data for one site of interest.
+#' Producing time series plots of biology and flow data
 #'
 #' @description
 #' Intended for plotting data for one site at a time; data may need to be subset or filtered
@@ -8,7 +8,7 @@
 #' If multiplot = TRUE, the png file is named "Multi_Plot.png". If multiplot = FALSE, a separate png file is produced for each biology metric, named "biolmetric_Plot.png".
 #'
 #' @usage
-#' plot_hev <- function(data, date_col, flow_stat, biol_metric, multiplot = TRUE, save = FALSE, save_dir = getwd(), clr_by = NULL)
+#' plot_hev(data, date_col, flow_stat, biol_metric, multiplot = TRUE, save = FALSE, save_dir = getwd(), clr_by = NULL)
 #'
 #' @param data Data to plot.
 #' @param date_col Name of column containing time variable for x-axis.

@@ -2,9 +2,9 @@
 % Please edit documentation in R/calc_flowstats.R
 \name{calc_flowstats}
 \alias{calc_flowstats}
-\title{Calculate a suite of long-term and time-varying flow statistics for one or more sites.}
+\title{Calculating summary statistics describing historical flow conditions.}
 \usage{
-calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = “imputed”, win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, scaling = FALSE, ref_col = NULL)
+calc_flowstats(data, site_col = "flow_site_id", date_col = "date", flow_col = "flow", imputed_col = "imputed", win_start = "1995-04-01", win_width = "6 months", win_step = "6 months", date_range = NULL, q_low = 95, q_high = 70, scaling = FALSE, ref_col = NULL)
 }
 \arguments{
 \item{data}{Tibble or data frame containing the flow data to be processed. Must be in long format and have, as a minimum, separate columns containing site id, date and flow (e.g. as output by the import_flow() function). If flow estimates are available for different abstraction or climate scenarios, then these must be in separate columns (see \code{ref_col} argument).}

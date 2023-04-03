@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_indices.R
 \name{predict_indices}
 \alias{predict_indices}
-\title{Predict expected scores for macroinvertebrate indices}
+\title{Calculating expected scores for macroinvertebrate indices using the RICT2 model}
 \usage{
 predict_indices(env_data = x, save = FALSE, save_dir = getwd())
 }

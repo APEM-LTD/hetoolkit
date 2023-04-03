@@ -1,4 +1,4 @@
-#' Import macroinvertebrate data from Ecology Data Explorer (EDE)
+#' Importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer
 #'
 #' @description
 #' The `import_inv` function imports macroinvertebrate sampling data from the Environment Agency's Ecology and Fish Data Explorer (EDE). The data can either be downloaded automatically in .parquet or .csv format, or read in from a previously saved .csv or .rds file. The data can be optionally filtered by site ID and sample date, and the filtered data saved as a .rds file.
