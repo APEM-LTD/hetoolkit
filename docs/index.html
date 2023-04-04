@@ -46,6 +46,7 @@
     <a class="dropdown-item" href="articles/case_study_3.html">Case Study 3</a>
     <a class="dropdown-item" href="articles/case_study_4.html">Case Study 4</a>
     <a class="dropdown-item" href="articles/hetoolkit-vignette.html">hetoolkit-Vignette</a>
+    <a class="dropdown-item" href="articles/Resources.html">Resources</a>
   </div>
 </li>
 <li class="nav-item">
@@ -71,53 +72,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The <code>hetoolkit</code> package comprises a collection of 22 functions for assembling, processing, visualising and modelling hydro-ecological data. These are:</p>
-<ul>
-<li>
-<code>import_nrfa</code> for importing flow data from the National River Flow Archive (NRFA);</li>
-<li>
-<code>import_hde</code> for importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE);</li>
-<li>
-<code>import_flowfiles</code> for importing flow data from local files;</li>
-<li>
-<code>import_flow</code> for importing flow data from a mix of the above sources;</li>
-<li>
-<code>impute_flow</code> for infilling missing records in daily flow time series for one or more sites (gauging stations) using either an interpolation or an equipercentile method.</li>
-<li>
-<code>import_inv</code> for importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer;</li>
-<li>
-<code>import_env</code> for importing environmental base data from the EA Ecology and Fish Data Explorer;</li>
-<li>
-<code>import_rhs</code> for importing River Habitat Survey (RHS) data from the EA’s Open Data portal;</li>
-<li>
-<code>import_wq</code> for importing water quality data from the EA Water Quality Archive database;</li>
-<li>
-<code>predict_indices</code> for calculating expected scores for macroinvertebrate indices using the RICT model (FBA 2020);</li>
-<li>
-<code>calc_flowstats</code> and <code>calc_rfrstats</code> for calculating summary statistics describing historical flow conditions;</li>
-<li>
-<code>join_he</code> for joining the above datasets;</li>
-<li>
-<code>plot_heatmap</code> for visualising and summarising gaps in time series data;</li>
-<li>
-<code>plot_hev</code> and <code>shiny_hev</code> for producing time series plots of biology and flow data;</li>
-<li>
-<code>plot_sitepca</code> for summarising environmental characteristics of biological sampling sites;</li>
-<li>
-<code>plot_rngflows</code> for Visualising the range of flow conditions experienced historically at a site;</li>
-<li>
-<code>model_cv</code> and <code>model_logocv</code> for performing cross-validation on linear mixed-effects models and hierarchical generalized additive models;</li>
-<li>
-<code>diag_lmer</code> for generating a variety of diagnostic plots for a mixed-effects regression (lmer) model; and</li>
-<li>
-<code>plot_predictions</code> for visualising the time series predictions from a hydro-ecological model/</li>
-</ul>
-<p>The deprecated versions of three functions are retained for back-compatibility. These are:</p>
-<ul>
-<li>
-<code>calc_flowstats_old</code>, <code>predict_indices_old</code> and <code>join_he_old</code>
-</li>
-</ul>
+<p>The <code>hetoolkit</code> package comprises a collection of 22 functions, developed by APEM LTD on behalf of the Environment Agency, to assemble, process, visualise and model hydro-ecological data. The full set of functions are listed under the Reference tab above. Note that they include deprecated versions of three functions that are retained for back-compatibility.</p>
 </div>
 <div class="section level2">
 <h2 id="workflow">WORKFLOW<a class="anchor" aria-label="anchor" href="#workflow"></a>
@@ -132,18 +87,18 @@
 </h2>
 <p>To install the latest release of <code>hetoolkit</code> use the following code:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"APEM-LTD/hetoolkit"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hetoolkit</span><span class="op">)</span></span></code></pre></div>
-<p>As an alternative, the ‘remotes’ package can be used:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"APEM-LTD/hetoolkit"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hetoolkit</span><span class="op">)</span></span></code></pre></div>
+<p>As an alternative, the ‘devtools’ package can be used:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"APEM-LTD/hetoolkit"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hetoolkit</span><span class="op">)</span></span></code></pre></div>
 <p>It is recommended that you install <code>hetoolkit</code> into a blank project and use the <code>renv</code> package to avoid clashes with previously installed versions of dependent packages.</p>
-<p>After running the insall_github commands, you may get a message stating that some packages have a more recent version available, followed by a menu. This appears if any of the dependent packages required for the toolkit have a more recent version available than you currently have installed. Packages may be updated, however this is not required for the hetoolkit package to run.</p>
+<p>After running the install_github commands, you may get a message stating that some packages have a more recent version available, followed by a menu. This appears if any of the dependent packages required for the toolkit have a more recent version available than you currently have installed. Packages may be updated, however this is not required for the hetoolkit package to run.</p>
 <p>To skip the updates, either enter 3 in the console or simply press return. Note that if you run one of the full code blocks above all at once (ie, highlight all four lines and run them together) then this is skipped and no updates are made to the packages.</p>
 <p>You may also get warning messages regarding unused arguments on installing the packages. These relate to arguments in function definitions that have been removed from the main body of the function but not the definition. These will be removed but in the meantime will not affect the running of the toolkit.</p>
 </div>
@@ -208,71 +163,12 @@ Added new function import_wq.<br> Minor corrections to documentation (typos, etc
 </tr>
 </tbody>
 </table>
-<p>Full details of changes are listed below:</p>
-<p>v2.1.0:<br>
-* New functions<br>
-+ New function <code>import_wq</code> added, which allows the download and import of water quality data.</p>
-<ul>
-<li>Changes to functions
-<ul>
-<li>
-<code>import_rhs</code>: deprecated rhs_dir argument, use source instead. Function now returns an object, even when no surveys are specified for filtering.</li>
-</ul>
-</li>
-<li>Bug fixes
-<ul>
-<li>Corrections to calculations for long-term statistics in calc_flowstats, including adding mean, min and max flows.</li>
-<li>Fix to import_inv to resolve error if importing a formatted rds file.</li>
-<li>Removed tictoc package from import_env and import_rhs.</li>
-<li>
-<code>import_hde</code> updated following updates to the HDE</li>
-</ul>
-</li>
-</ul>
-<p>v2.0.0<br>
-* General + Vignette updated to include new functions and reflect other changes in v2.0.0.<br>
-+ Created new support pages with guidance on installing and using the hetoolkit.<br>
-+ Updated and rationalised the list of external package dependencies to speed up installation.<br>
-+ Various improvements and updates to function documentation and worked examples.</p>
-<ul>
-<li>New functions
-<ul>
-<li>New function <code>impute_flow</code> added, which offers three methods for infilling gaps in flow time series data.</li>
-</ul>
-</li>
-<li>Changes to functions
-<ul>
-<li>Temporary .csv files downloaded by <code>import_hde</code> are now deleted afterwards.</li>
-<li>
-<code>import_inv</code> now includes an option to download macroinvertebrate data from Ecology and Fish Data Explorer in .parquet format, which is faster than .csv and has data types pre-formatted. This is the new default, replacing the old .csv file download. New argument <code>source</code> added, with options to automatically download data from EDE in .parquet or .csv format, or read in a previously saved .csv, .rds or .parquet file. The old <code>biol_dir</code> argument for specifying a local file is deprecated, but retained for backwards compatibility.</li>
-<li>
-<code>predict_indices</code> updated to utilise the <code>rict_predict</code> function from the <code>rict</code> package (<a href="https://github.com/aquaMetrics/rict" class="external-link uri">https://github.com/aquaMetrics/rict</a>), thereby eliminating the risk of divergence between the <code>hetoolkit</code> and <code>rict</code> packages. The former function has been re-named to <code>predict_indices_old</code> for backwards compatibility.</li>
-<li>
-<code>calc_flowstats</code> has been completely re-written to provide much greater flexibility for characterising antecedent flows. Rather than use fixed, 6-month winter and summer periods, the new function uses a user-defined moving window, and calculates a wider range of flow statistics (include statistics to quantify the timing, frequency and severity of high flow, low flow and dry events, as well as the timing and magnitude of maximum and minimum flows). If the required minimum number of records is not met, then NAs are returned. The long-term flow statistics are now all annual statistics (separate winter and summer statistics have been dropped). The former function has been re-named to <code>calc_flowstats_old</code> for backwards compatibility.</li>
-<li>
-<code>join_he</code> has been completely re-written to provide much greater flexibility when joining flow and biology data. It is now possible to: (i) join biology data to flow statistics (as well as join flow statistics to biology samples), (ii) join flow statistics that have been calculated by <code>calc_flowstats</code> for any moving window (not just fixed 6-month winter and summer periods), and (ii) join flows for any lagged time period (not just the summer period of the previous year and the year before last). The former function has been re-named to <code>join_he_old</code> for backwards compatibility.</li>
-<li>
-<code>model_cv</code> and <code>model_logocv</code> modified to support model class “lmerTest” (from lmerTest::lmer), in addition to “lmerMod” (from lme4::lmer) and “gam” (from mgcv::gam).</li>
-</ul>
-</li>
-<li>Bug fixes
-<ul>
-<li>Fixed issue in <code>plot_rngflows</code> to prevent error when z variable is unspecified.</li>
-<li>Fixed issue in <code>plot_sitepca</code> to show labels when <code>plotly = TRUE</code>
-</li>
-<li>Removed deprecated function in <code>predict_indices</code>
-</li>
-<li>Check added to <code>impute_flows</code> to correct warning message appearance when donor sites specified</li>
-<li>
-<code>calc_flowstats</code> updated to deal with non-consecutive flow samples</li>
-</ul>
-</li>
-</ul>
+<p>Full details of the changes are listed in the Changelog tab above</p>
 </div>
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<p>Further information on the functions contained within the package, including examples, can be found in the <code>HE Toolkit - Vingette</code> at <a href="https://apem-ltd.github.io/hetoolkit/" class="external-link uri">https://apem-ltd.github.io/hetoolkit/</a>.</p>
+<p>Further information on the functions contained within the package, including examples, can be found the vignette and case studies listed under the Articles tab above.</p>
 </div>
 <div class="section level2">
 <h2 id="reporting-bugs">Reporting Bugs<a class="anchor" aria-label="anchor" href="#reporting-bugs"></a>
