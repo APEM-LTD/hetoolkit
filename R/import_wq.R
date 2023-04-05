@@ -4,11 +4,16 @@
 #' The `import_wq` function imports water quality (WQ) data from the Environment Agency’s Water Quality Archive database. The data can either be downloaded automatically in .csv format or read in from a previously saved .csv or .rds file. The data can be optionally filtered by WQ site ID, determinand and/or sample date, and the filtered data saved as a .rds file.
 #'
 #' @usage
-#' import_wq(source = NULL, sites, dets = "default", start_date = "2020-01-01", end_date = Sys.Date(), save = TRUE)
+#' import_wq(source = NULL,
+#'           sites,
+#'           dets = "default",
+#'           start_date = "2020-01-01",
+#'           end_date = Sys.Date(),
+#'           save = TRUE)
 #'
 #' @param source Either NULL, indicating the data should be downloaded from WIMS; or a path specifying a csv file with the same columns as would be in the downloaded file. Default = NULL.
 #' @param sites A list containing WQ sites for which data is to be imported.
-#' @param dets Sets the list of determinants to be imported. If “default”, a specific list of determinands will be imported (see details). If “all” is specified, all determinants are imported. Alternatively, a vector of determinand codes can be supplied. Default = “default”.
+#' @param dets Sets the list of determinants to be imported. If “default”, a specific list of determinands will be imported (see details). If “all” is specified, all determinants are imported. Alternatively, a vector of determinand codes (specified as integers) can be supplied. Default = “default”.
 #' @param start_date The date of the first record to be imported. Default = "2020-01-01"
 #' @param end_date The date of the last record to be imported. If a date in the future is specified, end_date will be replaced with Sys.Date(). Default Sys.Date()
 #' @param save A logical value confirming whether or not to save a copy of the filtered import file to the current working directory. Default = TRUE.
@@ -16,11 +21,13 @@
 #' @details
 #' The Water Quality Archive only has data since 2000. Data from 1999 and before is not available using this function.
 #'
-#' The default list of determinands to import (specified using dets = “default”) is: pH, temperature, conductivity at 25C, Ammoniacal nitrogen as N, nitrogen total oxidised as N, nitrate as N, nitrite as N, ammonia un-ionised as N, alkalinity to Ph 4.5 as CaCO3, Orthophosphate reactive as P, oxygen % dissolved saturation, oxygen dissolved as O2, chlorophyll, and suspended solids, and turbidity (6396). These are coded as determinand IDs: 61, 76, 77, 111, 116, 117, 118, 119, 162, 180, 9901, 9924, 19, 135, 6396.
+#' The default list of determinands to import (specified using dets = “default”) is: pH, temperature, conductivity at 25C, ammoniacal nitrogen as N, nitrogen total oxidised as N, nitrate as N, nitrite as N, ammonia un-ionised as N, alkalinity to Ph 4.5 as CaCO3, orthophosphate reactive as P, oxygen % dissolved saturation, oxygen dissolved as O2, chlorophyll, and suspended solids, and turbidity (6396). These are coded as determinand IDs: 61, 76, 77, 111, 116, 117, 118, 119, 162, 180, 9901, 9924, 19, 135, 6396.
 #'
 #' There are over 7000 determinands in the Water Quality Archive. To download a complete list in .csv format see https://environment.data.gov.uk/water-quality/def.csv/determinands. See also https://environment.data.gov.uk/water-quality/view/doc/reference#api-determinands for alternative ways to find determinands.
 #'
-#' If saving a copy of the downloaded data, the name of the rds file is hard-wired to WQ_OPEN_DATA_METRICS.RDS. The file will save to the current working directory  .
+#' If supplying a list of determinand IDs to the function, these must be specified as integers (ie, no leading zeros).
+#'
+#' If saving a copy of the downloaded data, the name of the rds file is hard-wired to WQ_OPEN_DATA_METRICS.RDS. The file will save to the current working directory.
 #'
 #' Downloaded raw data files will be automatically removed from the working directory following completed execution of the function.
 #'
@@ -33,7 +40,7 @@
 #' - wq_site_id (unique WQ site id)
 #' - date (of WQ record)
 #' - det_label (details of which determinant is measured in the record)
-#' - det_id (ID number of the determinand)
+#' - det_id (ID number of the determinand, returned as integers)
 #' - result (measured value of determinand)
 #' - unit (the unit of measurement for the determinand)
 #' - qualifier (character value “<” indicating whether the result is below the limit of quantification for the relevant determinant). Will be NA if the true measurement has been returned.

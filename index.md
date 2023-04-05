@@ -19,7 +19,7 @@ back-compatibility.
 
 The different functions link together as shown in the flow chart below:
 
-![image info](./man/figures/FlowChart_v01.png)
+![](./man/figures/FlowChart_v01.png)
 
 ## Installation
 

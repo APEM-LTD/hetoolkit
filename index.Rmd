@@ -26,7 +26,7 @@ The `hetoolkit` package comprises a collection of 22 functions, developed by APE
 
 The different functions link together as shown in the flow chart below:
 
-![image info](./man/figures/FlowChart_v01.png)
+![](./man/figures/FlowChart_v01.png)
 
 ## Installation
 
