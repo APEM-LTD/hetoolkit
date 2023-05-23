@@ -813,21 +813,21 @@ test_if_missing <- function(x){
   }
 }
 
-#' Test if input is a data.frame
-#'
-#' @param x object
-#'
-#' @return an error if input (x) is a data.frame
-#'
-#' @examples
-#' \dontrun{
-#' # success
-#' test_if_dataframe(airquality)
-#' #fail
-#' my_test <- matrix(10)
-#' test_if_dataframe(my_test)
-#' }
-#'
+# Test if input is a data.frame
+#
+#@param x object
+#
+# @return an error if input (x) is a data.frame
+#
+# @examples
+# \dontrun{
+# # success
+# test_if_dataframe(airquality)
+# #fail
+# my_test <- matrix(10)
+# test_if_dataframe(my_test)
+# }
+#
 test_if_dataframe <- function(x){
   # test for dataframe
   if (!inherits(x, "data.frame")) {

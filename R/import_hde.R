@@ -1,10 +1,10 @@
-#' Import daily mean flow data from Hydrology Data Explorer (HDE)
+#' Importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE)
 #'
 #' @description
 #' This function retrieves daily mean flow data from the EA's hydrology data explorer (HDE) for a user-defined set of sites (gauging stations). Date can be optionally filtered by date.
 #'
 #' @usage
-#' import_hde (sites, start_date = "1985-01-01", end_date = Sys.Date()))
+#' import_hde (sites, start_date = "1985-01-01", end_date = Sys.Date())
 #'
 #' @param sites Vector of site (station) IDs to filter by. NAs and blanks ("") are ignored.
 #' @param start_date Start date for flow data extraction (YYYY-MM-DD format);

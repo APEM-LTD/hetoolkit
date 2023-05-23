@@ -2,20 +2,21 @@
 % Please edit documentation in R/calc_rfrstats.R
 \name{calc_rfrstats}
 \alias{calc_rfrstats}
-\title{Calculate residual flow ratios.}
+\title{Calculating summary statistics describing historical flow conditions}
 \usage{
 calc_rfrstats(data = NULL,
               site_col = NULL,
               date_col = NULL,
               flow_col = NULL,
               ref_col = NULL,
-              q = NULL
-              save_as = FALSE
+              q = NULL,
+              save_as = FALSE,
               save_dir = getwd()
               )
 }
 \arguments{
-\item{data}{Name of dataframe or tibble containing the flow data to be processed. Must be in wide format (i.e. separate columns for site_id, date, and each flow scenario).}
+\item{data}{Name of dataframe or tibble containing the flow data to be processed.
+Must be in long format (i.e. separate columns for site_id, date, and each flow scenario).}
 
 \item{site_col}{Name of column in data containing unique flow site id.}
 

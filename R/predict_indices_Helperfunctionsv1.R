@@ -734,34 +734,33 @@ validateEnvData <- function (data) {
 
 ############################### osg_parse ###############################
 
-#' Converts OS Grid Reference to BNG/WGS coordinates.
-#'
-#' @author Claudia Vitolo
-#'
-#' @description This function converts an Ordnance Survey (OS) grid reference to
-#' easting/northing or latitude/longitude coordinates.
-#'
-#' @param grid_refs This is a string (or a character vector) that contains the
-#' OS grid Reference.
-#' @param coord_system By default, this is "BNG" which stands for British
-#' National Grids. The other option is to set coord_system = "WGS84", which
-#' returns latitude/longitude coordinates (more info can be found here
-#' <https://www.epsg-registry.org/>).
-#'
-#' @return vector made of two elements: the easting and northing (by default) or
-#' latitude and longitude coordinates.
-#'
-#'
-#'
-#' @examples
-#' \dontrun{
-#'   # single entry
-#'   osg_parse(grid_refs = "TQ722213")
-#'
-#'   # multiple entries
-#'   osg_parse(grid_refs = c("SN831869","SN829838"))
-#' }
-#'
+# Converts OS Grid Reference to BNG/WGS coordinates.
+#
+# @author Claudia Vitolo
+#
+# @description This function converts an Ordnance Survey (OS) grid reference to
+# easting/northing or latitude/longitude coordinates.
+#
+# @param grid_refs This is a string (or a character vector) that contains the
+# OS grid Reference.
+# @param coord_system By default, this is "BNG" which stands for British
+# National Grids. The other option is to set coord_system = "WGS84", which
+# returns latitude/longitude coordinates (more info can be found here
+# <https://www.epsg-registry.org/>).
+#
+# @return vector made of two elements: the easting and northing (by default) or
+# latitude and longitude coordinates.
+#
+#
+# @examples
+# \dontrun{
+#   # single entry
+#   osg_parse(grid_refs = "TQ722213")
+#
+#   # multiple entries
+#   osg_parse(grid_refs = c("SN831869","SN829838"))
+# }
+#
 
 osg_parse <- function(grid_refs, coord_system = c("BNG", "WGS84")) {
 

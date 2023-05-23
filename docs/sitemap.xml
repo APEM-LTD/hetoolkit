@@ -4,16 +4,34 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/case_study_1.html</loc>
+  </url>
+  <url>
+    <loc>/articles/case_study_2.html</loc>
+  </url>
+  <url>
+    <loc>/articles/case_study_3.html</loc>
+  </url>
+  <url>
+    <loc>/articles/case_study_4.html</loc>
+  </url>
+  <url>
     <loc>/articles/hetoolkit-vignette.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/Resources.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
     <loc>/index.html</loc>
+  </url>
+  <url>
+    <loc>/news/index.html</loc>
   </url>
   <url>
     <loc>/reference/calc_flowstats.html</loc>

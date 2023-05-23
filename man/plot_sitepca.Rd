@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_sitepca.R
 \name{plot_sitepca}
 \alias{plot_sitepca}
-\title{Principal Components Analysis (PCA) of site characteristics}
+\title{Summarising environmental characteristics of biological sampling sites}
 \usage{
 plot_sitepca(data, vars, eigenvectors = FALSE, label_by, colour_by, plotly = FALSE, save = FALSE, save_dir = getwd(), ...)
 }

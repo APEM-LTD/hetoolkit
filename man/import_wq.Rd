@@ -2,16 +2,21 @@
 % Please edit documentation in R/import_wq.R
 \name{import_wq}
 \alias{import_wq}
-\title{Import water quality data from the Water Quality Archive database}
+\title{Importing water quality data from the EA Water Quality Archive database}
 \usage{
-import_wq <- function(source = NULL, sites, dets = “default”, start_date = "2020-01-01", end_date = Sys.Date(), save = TRUE)
+import_wq(source = NULL,
+          sites,
+          dets = "default",
+          start_date = "2020-01-01",
+          end_date = Sys.Date(),
+          save = TRUE)
 }
 \arguments{
 \item{source}{Either NULL, indicating the data should be downloaded from WIMS; or a path specifying a csv file with the same columns as would be in the downloaded file. Default = NULL.}
 
 \item{sites}{A list containing WQ sites for which data is to be imported.}
 
-\item{dets}{Sets the list of determinants to be imported. If “default”, a specific list of determinands will be imported (see details). If “all” is specified, all determinants are imported. Alternatively, a vector of determinand codes can be supplied. Default = “default”.}
+\item{dets}{Sets the list of determinants to be imported. If “default”, a specific list of determinands will be imported (see details). If “all” is specified, all determinants are imported. Alternatively, a vector of determinand codes (specified as integers) can be supplied. Default = “default”.}
 
 \item{start_date}{The date of the first record to be imported. Default = "2020-01-01"}
 
@@ -25,7 +30,7 @@ A tibble containing the imported water quality data. The data are arranged in lo
 \item wq_site_id (unique WQ site id)
 \item date (of WQ record)
 \item det_label (details of which determinant is measured in the record)
-\item det_id (ID number of the determinand)
+\item det_id (ID number of the determinand, returned as integers)
 \item result (measured value of determinand)
 \item unit (the unit of measurement for the determinand)
 \item qualifier (character value “<” indicating whether the result is below the limit of quantification for the relevant determinant). Will be NA if the true measurement has been returned.
@@ -37,11 +42,13 @@ The \code{import_wq} function imports water quality (WQ) data from the Environme
 \details{
 The Water Quality Archive only has data since 2000. Data from 1999 and before is not available using this function.
 
-The default list of determinands to import (specified using dets = “default”) is: pH, temperature, conductivity at 25C, Ammoniacal nitrogen as N, nitrogen total oxidised as N, nitrate as N, nitrite as N, ammonia un-ionised as N, alkalinity to Ph 4.5 as CaCO3, Orthophosphate reactive as P, oxygen \% dissolved saturation, oxygen dissolved as O2, chlorophyll, and suspended solids, and turbidity (6396). These are coded as determinand IDs: 61, 76, 77, 111, 116, 117, 118, 119, 162, 180, 9901, 9924, 19, 135, 6396.
+The default list of determinands to import (specified using dets = “default”) is: pH, temperature, conductivity at 25C, ammoniacal nitrogen as N, nitrogen total oxidised as N, nitrate as N, nitrite as N, ammonia un-ionised as N, alkalinity to Ph 4.5 as CaCO3, orthophosphate reactive as P, oxygen \% dissolved saturation, oxygen dissolved as O2, chlorophyll, and suspended solids, and turbidity (6396). These are coded as determinand IDs: 61, 76, 77, 111, 116, 117, 118, 119, 162, 180, 9901, 9924, 19, 135, 6396.
 
 There are over 7000 determinands in the Water Quality Archive. To download a complete list in .csv format see https://environment.data.gov.uk/water-quality/def.csv/determinands. See also https://environment.data.gov.uk/water-quality/view/doc/reference#api-determinands for alternative ways to find determinands.
 
-If saving a copy of the downloaded data, the name of the rds file is hard-wired to WQ_OPEN_DATA_METRICS.RDS. The file will save to the current working directory  .
+If supplying a list of determinand IDs to the function, these must be specified as integers (ie, no leading zeros).
+
+If saving a copy of the downloaded data, the name of the rds file is hard-wired to WQ_OPEN_DATA_METRICS.RDS. The file will save to the current working directory.
 
 Downloaded raw data files will be automatically removed from the working directory following completed execution of the function.
 

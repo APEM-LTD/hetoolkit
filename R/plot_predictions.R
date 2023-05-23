@@ -1,9 +1,9 @@
-#' Visualise the predictions from a hydro-ecological model
+#' Visualising the time series predictions from a hydro-ecological model
 #'
 #' @description The plot_predictions function produces a time series plot of predictions from a hydro-ecological model, alongside observed biology and flow data. The plot is faceted by site, as specified by the `site_col` argument. The function generates a ggplot object, that is optionally saved as a .png file named "Predictions_Plot.png".
 #'
 #' @usage
-#' plot_predictions <- function(data, biol_metric, time_col, site_col, flow_stat, pred_col, ncol = 4, save = FALSE, save_dir = getwd())
+#' plot_predictions(data, biol_metric, time_col, site_col, flow_stat, pred_col, ncol = 4, save = FALSE, save_dir = getwd())
 #'
 #' @param data Data to plot, containing observed biology and flow data as well as model predictions.
 #' @param time_col Name of column containing time variable for x-axis.

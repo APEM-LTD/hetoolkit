@@ -1,4 +1,4 @@
-#' Heatmap plot
+#' Visualising and summarising gaps in time series data
 #'
 #' @description The plot_heatmap function is designed to visualise and summarise gaps in time series data. It plots time series data for multiple sites as a tiled heatmap, and optionally produces tabular summaries of data completeness by time period and site. Although designed for application with flow time series data, it can be applied to any type of numerical data, with or without a time dimension.
 #'

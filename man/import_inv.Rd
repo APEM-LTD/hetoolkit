@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_inv.R
 \name{import_inv}
 \alias{import_inv}
-\title{Import macroinvertebrate data from Ecology Data Explorer (EDE)}
+\title{Importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer}
 \usage{
 import_inv(source = "parquet", sites = NULL, start_date = NULL, end_date = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd(), biol_dir = NULL)
 }

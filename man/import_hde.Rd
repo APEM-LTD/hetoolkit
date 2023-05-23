@@ -2,9 +2,9 @@
 % Please edit documentation in R/import_hde.R
 \name{import_hde}
 \alias{import_hde}
-\title{Import daily mean flow data from Hydrology Data Explorer (HDE)}
+\title{Importing flow data from the Environment Agency (EA) Hydrology Data Explorer (HDE)}
 \usage{
-import_hde (sites, start_date = "1985-01-01", end_date = Sys.Date()))
+import_hde (sites, start_date = "1985-01-01", end_date = Sys.Date())
 }
 \arguments{
 \item{sites}{Vector of site (station) IDs to filter by. NAs and blanks ("") are ignored.}

@@ -34,7 +34,19 @@ rm(list = ls())
 if(!require(pacman)) {install.packages("pacman")}
 pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, mapview, plyr, rnrfa)
 
-remotes::install_github("aquaMetrics/rict")
+# Conditionally install hetoolkit from github
+p <- as.data.frame(utils::installed.packages())
+if ("hetoolkit" %in% p$Package == FALSE) {
+  remotes::install_github("APEM-LTD/hetoolkit")
+}
+rm(p)
+
+## Load hetoolkit. 
+## Library used for building of pkgdown site. If running this code use library(hetoolkit) instead.
+#library(hetoolkit)
+load_all()
+
+#remotes::install_github("aquaMetrics/rict")
 
 # for development
 #install.packages("devtools")
@@ -42,8 +54,8 @@ remotes::install_github("aquaMetrics/rict")
 #devtools::load_all(export_all = FALSE)
 #install_deps()
 # for public version (once live)
-remotes::install_github("APEM-LTD/hetoolkit")
-library(hetoolkit)
+#remotes::install_github("APEM-LTD/hetoolkit")
+#library(hetoolkit)
 
 ```
 

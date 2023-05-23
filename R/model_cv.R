@@ -1,4 +1,4 @@
-#' Repeated, stratified k-fold cross-validation
+#' Performing cross-validation on linear mixed-effects models and hierarchical generalized additive models
 #'
 #' @description model_cv performs repeated, stratified k-fold cross-validation on a linear mixed-effects model (class: lmerMod or lmerTest) or hierarchical generalized additive model (class: gam) model with a single random grouping factor.
 #'

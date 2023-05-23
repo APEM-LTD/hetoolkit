@@ -2,7 +2,7 @@
 % Please edit documentation in R/shiny_hev.R
 \name{shiny_hev}
 \alias{shiny_hev}
-\title{Produces an interactive time series plot of biology and flow data for one site of interest.}
+\title{Producing interactive time series plots of biology and flow data}
 \usage{
 shiny_hev(data, sites_col, date_col, flow_stat, biol_metric, multiplot = TRUE)
 }

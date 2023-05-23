@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_rhs.R
 \name{import_rhs}
 \alias{import_rhs}
-\title{Import RHS data}
+\title{Importing River Habitat Survey (RHS) data from the EA's Open Data portal}
 \usage{
 import_rhs(source = NULL, surveys = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd(), rhs_dir = NULL)
 }

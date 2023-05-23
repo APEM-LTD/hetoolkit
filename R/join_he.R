@@ -1,4 +1,4 @@
-#' Link biology samples with time-varying flow statistics for paired biology and flow sites.
+#' Linking biology samples with time-varying flow statistics for paired biology and flow sites.
 #'
 #' @description
 #' This function joins biology sample data with time-varying flow statistics for one or more antecedent (lagged) time periods (as calculated by the `calc_flowstats` function) to create a combined dataset for hydro-ecological modelling.

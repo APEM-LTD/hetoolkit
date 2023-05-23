@@ -1,4 +1,4 @@
-#' Leave-one-group-out cross-validation
+#' Performing cross-validation on linear mixed-effects models and hierarchical generalized additive models
 #'
 #' @description model_logocv performs leave-one-group-out cross-validation on a linear mixed-effects model (class lmerMod or lmerTest) or hierarchical generalized additive model (class gam) model with a single random grouping factor.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/diag_lmer.R
 \name{diag_lmer}
 \alias{diag_lmer}
-\title{Diagnostic plots for a mixed-effects (lmer) regression model}
+\title{Generating a variety of diagnostic plots for a mixed-effects regression (lmer) model}
 \usage{
 diag_lmer(model, data, facet_by = NULL, colour_by = NULL, order_by = "mean", order = "ascending", ncol = 4, scales = "fixed", save = FALSE, save_dir = getwd(), ...)
 }

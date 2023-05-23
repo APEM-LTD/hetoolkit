@@ -1,4 +1,4 @@
-#' Principal Components Analysis (PCA) of site characteristics
+#' Summarising environmental characteristics of biological sampling sites
 #'
 #' @description Performs PCA to summarise environmental characteristics of biology sampling sites.
 #'

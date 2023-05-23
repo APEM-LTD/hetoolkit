@@ -4,7 +4,7 @@
 \alias{predict_indices_old}
 \title{Predict expected scores for macroinvertebrate indices}
 \usage{
-predict_indices(env_data = x, save = FALSE, save_dir = getwd())
+predict_indices_old(env_data = x, save = FALSE, save_dir = getwd())
 }
 \arguments{
 \item{env_data}{A data frame or tibble containing site-level environmental data in Environment Agency Ecology Data Explorer format (as produced by the import_env function).}

@@ -2,9 +2,9 @@
 % Please edit documentation in R/import_nrfa.R
 \name{import_nrfa}
 \alias{import_nrfa}
-\title{Import daily mean flow data from the National River Flow Archive (NRFA)}
+\title{Importing flow data from the National River Flow Archive (NRFA)}
 \usage{
-import_nrfa(sites, start_date = "1985-01-01", end_data = Sys.Date(), tidyup = TRUE))
+import_nrfa(sites, start_date = "1985-01-01", end_data = Sys.Date(), tidyup = TRUE)
 }
 \arguments{
 \item{sites}{Vector of site (station) IDs to extract data for. NAs and blanks ("") are ignored}

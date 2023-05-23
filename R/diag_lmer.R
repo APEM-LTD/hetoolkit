@@ -1,4 +1,4 @@
-#' Diagnostic plots for a mixed-effects (lmer) regression model
+#' Generating a variety of diagnostic plots for a mixed-effects regression (lmer) model
 #'
 #' @description Generates a variety of diagnostic plots for a mixed-effects regression (lmer) model.
 #'

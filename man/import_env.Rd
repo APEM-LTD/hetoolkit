@@ -2,13 +2,12 @@
 % Please edit documentation in R/import_env.R
 \name{import_env}
 \alias{import_env}
-\title{Import environmental base data}
+\title{Importing environmental base data from the EA Ecology and Fish Data Explorer}
 \usage{
 import_env(env_dir = NULL, sites = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd())
 }
 \arguments{
-\item{env_dir}{Path to local file containing environmental data;
-NULL if downloading directly from EDE; Default = NULL.}
+\item{env_dir}{Path to local csv or rds file containing environmental data. If NULL (default), then data is downloaded from data.gov.uk.}
 
 \item{sites}{Vector of site ids to filter on.}
 
@@ -31,7 +30,7 @@ If saving a copy of the downloaded data, the name of the rds file is hard-wired 
 
 Downloaded raw data files (in .csv and .zip format) will be automatically removed from the working directory following completed execution of the function.
 
-The function will modify the output from EDE, renaming \code{SITE_ID} to \code{biol_site_id} (standardised column header for biology sites).
+The function will modify the output from EDE, renaming \code{SITE_ID} to \code{biol_site_id} (hetoolkit's standardised column header for biology sites).
 }
 \examples{
 # Download data for all sites and save as .rds file for future use:

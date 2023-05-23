@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_flowfiles.R
 \name{import_flowfiles}
 \alias{import_flowfiles}
-\title{Import mean daily flow data from local files}
+\title{Importing flow data from local files}
 \usage{
 import_flowfiles(sites = NULL, dir, skip_num, col_order, date_format = "dmy", start_date = "1985-01-01", end_date = Sys.Date())
 }
@@ -13,9 +13,9 @@ import_flowfiles(sites = NULL, dir, skip_num, col_order, date_format = "dmy", st
 
 \item{skip_num}{Number of rows (including any column headers) to skip before starting to read data. As an example, if the data has three rows of metadata, then a row of column headers, set skip_num = 4.}
 
-\item{col_order}{Define numbers of columns containing the date, flow and quality data. If no quality data, the third element can be set to NA.}
+\item{col_order}{Position of columns containing the date, flow and quality data. If no quality data, the third element can be set to NA.}
 
-\item{date_format}{The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the flow file. Default = "dmy". See Details for more information.}
+\item{date_format}{The order of the year (y), month (m), day (d), hour (h), minute (m) and second (s) elements in the date column. Default = "dmy". See Details for more information.}
 
 \item{start_date}{Start date for flow data extraction (YYYY-MM-DD format). Default = 1985-01-01.}
 
@@ -30,7 +30,7 @@ This function imports flow data from one or more local files, one per site, name
 \details{
 All files must be stored in the same directory and must have the same structure (i.e. the same number of header rows, and with the date, flow and quality columns in the same position) and (with the exception of xls and xlsx files - see below) have the same date format. A mix of different file formats is allowed. Only the first worksheet is imported from xlsx files.
 
-If 'sites' is not NULL, the function uses the information in 'sites' to search 'dir' for all possible files (e.g. 0130TH.csv, 0130TH.txt, 0130TH.all, 0130TH.xls and 0130TH.xlsx). If 'sites' is not NULL, then all csv, txt, all, xls and xlsx files in 'dir' are imported. All other folders and file types are ignored.
+If 'sites' is not NULL, the function uses the information in 'sites' to search 'dir' for all possible files (e.g. 0130TH.csv, 0130TH.txt, 0130TH.all, 0130TH.xls and 0130TH.xlsx). If 'sites' is NULL, then all csv, txt, all, xls and xlsx files in 'dir' are imported. All other folders and file types are ignored.
 
 If a site has two files in different formats (e.g. 0130TH.csv and 0130TH.all), then the data will be imported from both files. Be aware that this could result in duplicate records in the output file.
 

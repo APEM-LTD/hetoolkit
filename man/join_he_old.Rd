@@ -4,12 +4,12 @@
 \alias{join_he_old}
 \title{Link biology data to six-monthly flow statistics for paired biology and flow sites.}
 \usage{
-join_he(biol_data = biol_data, flow_stats = flow_stats, mapping = NULL, LS1 = FALSE, LS2 = FALSE, lag_vars = c("Q10z", "Q95z"))
+join_he_old(biol_data = biol_data, flow_stats = flow_stats, mapping = NULL, LS1 = FALSE, LS2 = FALSE, lag_vars = c("Q10z", "Q95z"))
 }
 \arguments{
 \item{biol_data}{Data frame or tibble containing the processed biology data. Must contain the following columns: biol_site_id, Year and Season. Seasons must be named "Spring" and "Autumn". See Details below.}
 
-\item{flow_stats}{Data frame (first element of list returned by the 'calc_flowstats' function), containing the processed flow statistics. Must contain the following columns: flow_site_id, water_year and season.}
+\item{flow_stats}{Data frame (first element of list returned by the \code{calc_flowstats} function), containing the processed flow statistics. Must contain the following columns: flow_site_id, water_year and season.}
 
 \item{mapping}{Data frame or tibble containing paired biology and flow site IDs. Must contain columns named biol_site_id and flow_site_id. These columns must not contain any NAs. Default = NULL, used when paired biology and flow sites are assumed to have identical ids, and so mapping not required.}
 
@@ -23,10 +23,10 @@ join_he(biol_data = biol_data, flow_stats = flow_stats, mapping = NULL, LS1 = FA
 join_he returns a tibble containing processed biology data linked to processed flow statistics.
 }
 \description{
-The join_he function links biology data to six-monthly flow statistics (from calc_flowstats) to create dataset for hydro-ecological modelling. Includes option to lag selected flow statistics.
+The join_he function links biology data to six-monthly flow statistics (from \code{calc_flowstats}) to create a dataset for hydro-ecological modelling. Includes option to lag selected flow statistics.
 }
 \details{
-join_he is not intended to join biology data to residual flow ratio statistics (from calc_rfrstats) because these are on an annual time step, rather than six-monthly, and therefore easy to join manually.
+join_he is not intended to join biology data to residual flow ratio statistics (from \code{calc_rfrstats}) because these are on an annual time step, rather than six-monthly, and therefore easy to join manually.
 
 'biol_data' and 'flow_stats' may contain more sites than listed in 'mapping', but any sites not listed in 'mapping' will be filtered out.
 
