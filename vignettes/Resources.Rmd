@@ -11,7 +11,27 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ## Training videos
 
-Training videos based on based on two workshops are available at the following link:
+Training videos based on based on two workshops are available to view online. The first workshop covers:
+
+ * Data import 
+ * Infilling and characterising flows 
+ * Running RICT to calculate OE ratios 
+ * Joining datasets 
+ * Data visualisation.
+ 
+The second workshop is more focused on statistical analysis of hydroecological data, and covers:
+
+ * Understanding the analysis of spaitio-temporal data using linear mixed-effects models
+ * Characterising flow histories
+ * Assessing the suitability of the data for developing models
+ * Building, calibrating and validating statistical regression models
+ * Applying these models to make predictions.
+ 
+ The videos can be accessed through APEMs YouTube channel on the links below.
+ 
+ [Workshop 1](https://www.youtube.com/playlist?list=PLyZ0s0I9obPiWJ6u748Npe_pokL4SQpZu)
+ 
+ [Workshop 2](https://www.youtube.com/playlist?list=PLyZ0s0I9obPj3bUDp9a8S1d0LF6ZiQYTT)
 
 
 ## Training project

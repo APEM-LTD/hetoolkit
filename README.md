@@ -144,7 +144,14 @@ Bug fixes and vignette updates.</td>
 <td>Added new function import_wq.<br />
 Minor corrections to documentation (typos, etc).<br />
 Updates to import_rhs to bring it in line with other import
-functions.</td>
+functions.<br />
+Minor bug fixes.</td>
+</tr>
+<tr class="even">
+<td>2.1.1</td>
+<td>May-2023</td>
+<td>Updates to website.<br />
+Minor update to predict_indices.</td>
 </tr>
 </tbody>
 </table>
@@ -156,7 +163,7 @@ log](https://apem-ltd.github.io/hetoolkit/news/index.html):
 
 Further information on the functions contained within the package,
 including examples, can be found in the `HE Toolkit - Vingette` and case
-studies under the Articles tab at
+studies (under development) under the Articles menu at
 <https://apem-ltd.github.io/hetoolkit/>.
 
 ## Reporting Bugs

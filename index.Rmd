@@ -70,13 +70,16 @@ Version | Date     | Details
                      Bug fixes and vignette updates.
 2.1.0   | Mar-2023 | Added new function import_wq.\
                      Minor corrections to documentation (typos, etc).\
-                     Updates to import_rhs to bring it in line with other import functions.
+                     Updates to import_rhs to bring it in line with other import functions.\
+                     Minor bug fixes.
+2.1.1   | May-2023 | Updates to website.\
+                     Minor update to predict_indices.
 
 Full details of the changes are listed in the Changelog tab above
 
 ## Examples
 
-Further information on the functions contained within the package, including examples, can be found the vignette and case studies listed under the Articles tab above.
+Further information on the functions contained within the package, including examples, can be found the vignette and case studies (under development) under the Articles menu above. 
 
 ## Reporting Bugs
 

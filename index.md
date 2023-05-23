@@ -103,7 +103,14 @@ Bug fixes and vignette updates.</td>
 <td>Added new function import_wq.<br />
 Minor corrections to documentation (typos, etc).<br />
 Updates to import_rhs to bring it in line with other import
-functions.</td>
+functions.<br />
+Minor bug fixes.</td>
+</tr>
+<tr class="even">
+<td>2.1.1</td>
+<td>May-2023</td>
+<td>Updates to website.<br />
+Minor update to predict_indices.</td>
 </tr>
 </tbody>
 </table>
@@ -113,8 +120,8 @@ Full details of the changes are listed in the Changelog tab above
 ## Examples
 
 Further information on the functions contained within the package,
-including examples, can be found the vignette and case studies listed
-under the Articles tab above.
+including examples, can be found the vignette and case studies (under
+development) under the Articles menu above.
 
 ## Reporting Bugs
 

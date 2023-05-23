@@ -110,7 +110,8 @@ predict_indices <- function(env_data,
 
   }
 
-  final_input_data <- data.frame(raw.input.data)
+  #final_input_data <- data.frame(raw.input.data)
+  final_input_data <- data.frame(raw.input.data, check.names = FALSE)
 
   predict_data <- rict::rict_predict(final_input_data, all_indices = all_indices)
 

@@ -1,14 +1,19 @@
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-# hetoolkit
+# hetoolkit 2.1.1
+
+## Changes to Functions
+
+-   `predict_indices`: Minor update to account for changes in
+    `rict::rict_predict`.
 
 # hetoolkit 2.1.0
 
 ## New Functions
 
--   ‘import_wq’: for importing water quality data from the EA Water
-    Quality Archive database
+-   `import_wq`: for importing water quality data from the EA Water
+    Quality Archive database.
 
 ## Changes to functions
 
