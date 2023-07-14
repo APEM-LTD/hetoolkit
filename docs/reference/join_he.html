@@ -24,10 +24,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/case_study_1.html">Case Study 1</a>
-    <a class="dropdown-item" href="../articles/case_study_2.html">Case Study 2</a>
-    <a class="dropdown-item" href="../articles/case_study_3.html">Case Study 3</a>
-    <a class="dropdown-item" href="../articles/case_study_4.html">Case Study 4</a>
+    <a class="dropdown-item" href="../articles/CaseStudy1.html">HE Toolkit Case Study: macroinvertebrates in chalk streams</a>
+    <a class="dropdown-item" href="../articles/CaseStudy2.html">HE Toolkit Case Study: macroinvertebrates in upland rivers</a>
     <a class="dropdown-item" href="../articles/hetoolkit-vignette.html">hetoolkit-Vignette</a>
     <a class="dropdown-item" href="../articles/Resources.html">Resources</a>
   </div>
@@ -157,6 +155,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27        A0001     27 2023-03-01 2023-03-31          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28        A0001     28 2023-04-01 2023-04-30          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29        A0001     29 2023-05-01 2023-05-31          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30        A0001     30 2023-06-01 2023-06-30          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   biol_site_id       date metric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        A0001 2021-04-15    0.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        A0001 2021-09-15    0.7</span>
@@ -228,6 +227,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27        A0001     27 2023-03-01 2023-03-31          27          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28        A0001     28 2023-04-01 2023-04-30          28          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29        A0001     29 2023-05-01 2023-05-31          29          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30        A0001     30 2023-06-01 2023-06-30          30          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    win_no_lag1   Q95z_lag1 biol_site_id       date metric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1            0          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            1 -0.31871603        A0001       &lt;NA&gt;     NA</span>
@@ -258,6 +258,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27          26          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28          27          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29          28          NA        A0001       &lt;NA&gt;     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30          29          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># add biology sample data to flow statistics for each time period using method B</span></span></span>
 <span class="r-in"><span><span class="fu">join_he</span><span class="op">(</span>biol_data <span class="op">=</span> <span class="va">biol_data</span>,</span></span>
@@ -296,6 +297,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27        A0001     27 2023-03-01 2023-03-31          27          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28        A0001     28 2023-04-01 2023-04-30          28          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29        A0001     29 2023-05-01 2023-05-31          29          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30        A0001     30 2023-06-01 2023-06-30          30          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    win_no_lag1   Q95z_lag1 biol_site_id       date metric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1            0          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            1 -0.31871603        A0001       &lt;NA&gt;     NA</span>
@@ -326,6 +328,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27          26          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28          27          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29          28          NA        A0001       &lt;NA&gt;     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30          29          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using join_type = "add_biol", a flow period becomes replicated if it has 2+ biology samples</span></span></span>
 <span class="r-in"><span><span class="va">biol_data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>biol_site_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"A0001"</span>, <span class="fl">3</span><span class="op">)</span>,</span></span>
@@ -368,6 +371,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28        A0001     27 2023-03-01 2023-03-31          27          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29        A0001     28 2023-04-01 2023-04-30          28          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 30        A0001     29 2023-05-01 2023-05-31          29          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31        A0001     30 2023-06-01 2023-06-30          30          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    win_no_lag1   Q95z_lag1 biol_site_id       date metric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1            0          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            1 -0.31871603        A0001       &lt;NA&gt;     NA</span>
@@ -399,6 +403,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28          26          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29          27          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 30          28          NA        A0001       &lt;NA&gt;     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31          29          NA        A0001       &lt;NA&gt;     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># average replicate biology samples within each time window before using join_type = "add_biol"</span></span></span>
 <span class="r-in"><span><span class="va">biol_data3</span> <span class="op">&lt;-</span> <span class="va">biol_data2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
@@ -441,6 +446,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27        A0001     27 2023-03-01 2023-03-31          27          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28        A0001     28 2023-04-01 2023-04-30          28          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29        A0001     29 2023-05-01 2023-05-31          29          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30        A0001     30 2023-06-01 2023-06-30          30          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    win_no_lag1   Q95z_lag1 biol_site_id month       date metric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1            0          NA        A0001    NA       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            1 -0.31871603        A0001    NA       &lt;NA&gt;     NA</span>
@@ -471,6 +477,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27          26          NA        A0001    NA       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28          27          NA        A0001    NA       &lt;NA&gt;     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29          28          NA        A0001    NA       &lt;NA&gt;     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30          29          NA        A0001    NA       &lt;NA&gt;     NA</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
