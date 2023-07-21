@@ -11,21 +11,27 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ## Training videos
 
-Training videos based on based on two workshops are available to view online. The first workshop covers:
+**Workshop 1: An Introduction to the HE Toolkit**
 
+This workshop is aimed at hydro-ecologists who have some basic experience with the R software package and wish to analyse open-source environmental monitoring data. The training covers:
+
+ * An introduction to the HE Toolkit
  * Data import 
- * Infilling and characterising flows 
- * Running RICT to calculate OE ratios 
- * Joining datasets 
- * Data visualisation.
+ * Flow processing
+ * Biological data processing
+ * Data exploration
  
-The second workshop is more focused on statistical analysis of hydroecological data, and covers:
+**Workshop 2: An Introduction to Hydro-ecological Modelling using the HE Toolkit**
 
- * Understanding the analysis of spaitio-temporal data using linear mixed-effects models
- * Characterising flow histories
- * Assessing the suitability of the data for developing models
- * Building, calibrating and validating statistical regression models
- * Applying these models to make predictions.
+This workshop is aimed at more experienced data analysists who are interested in developing statistical models for understanding and predicting ecological responses to changes in river flow. Building on Workshop 1, it covers:
+
+ * Mixed effects models
+ * Data assembly
+ * Data exploration
+ * Model fitting
+ * Model selection
+ * Model diagnostics
+ * Applications
  
  The videos can be accessed through APEMs YouTube channel on the links below.
  

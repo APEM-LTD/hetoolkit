@@ -32,7 +32,7 @@ rm(list = ls())
 # pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, geojsonio, mapview)
 
 if(!require(pacman)) {install.packages("pacman")}
-pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, mapview, plyr, rnrfa)
+pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, leaflet, plyr, rnrfa)
 
 # Conditionally install hetoolkit from github
 p <- as.data.frame(utils::installed.packages())
@@ -164,7 +164,7 @@ drops_bio <- c("SAMPLE_VERSION", "REPLICATE_CODE", "SAMPLE_TYPE", "SAMPLE_METHOD
 biol_data2 <- biol_data[ , !(names(biol_data) %in% drops_bio)]
 
 # read in additional biology data in csv format
-biol_data_excel <- read.csv("data/biol_data_join.csv")
+biol_data_excel <- read.csv("Data/biol_data_join.csv")
 
 # format columns
 biol_data_excel <- biol_data_excel %>% dplyr::mutate(biol_site_id = as.character(biol_site_id))
@@ -213,15 +213,9 @@ env_data
 
 ### Get data
 
-First we download data for our basemap. The England map is of EA public facing area boundaries.
-
 We use the environmental base data that we have downloaded from the Ecology and Fish Data Explorer using `import_env`, this gives us their NGRs. We translate the NGRs to full latitude / longitude (WGS84) and match this back to the env_data so we have information to include in the plot. 
 
 ```{r get_data, message=FALSE, warning=FALSE}
-
-# Get EA public facing area boundaries
-url_request <- "https://environment.data.gov.uk/arcgis/rest/services/EA/AdminBoundEAandNEpublicFaceAreas/FeatureServer/0/query?where=seaward='No'&outFields=*&f=geojson"
-ea.areas <- st_read(url_request)
 
 ## Convert national grid ref (NGR) to full lat / long from env_data (from import_env function)
 ## WGS84 is lat/long. 
@@ -229,19 +223,22 @@ temp.eastnorths <- osg_parse(env_data$NGR_10_FIG, coord_system = "WGS84") %>% as
 
 ## match to back to env data to give details on map
 env_data_map <- cbind(env_data, temp.eastnorths) %>%
-  dplyr::select(AGENCY_AREA, WATER_BODY, CATCHMENT, WATERBODY_TYPE, biol_site_id, lat, lon)
+  dplyr::select(AGENCY_AREA, WATER_BODY, CATCHMENT, WATERBODY_TYPE, biol_site_id, lat, lon) %>%
+  dplyr::mutate(label = paste0("<b>", as.character(biol_site_id), "</b><br/>", AGENCY_AREA, "<br/>", CATCHMENT))
 
 ```
 
 ### Create the map
 
-Finally we use mapview to plot the EA areas and points indicating the sample sites. The points and polygons are labelled with the biology sample site ID and the EA area code respectively. More data for each site is available by clicking on the point. 
+Finally we use leaflet to plot the and points indicating the sample sites. The points are labelled with the biology sample site ID, EA area code and the catchment.
 
-```{r map, message=FALSE, warning=FALSE}
+```{r map, message=FALSE, warning=FALSE, out.width = "100%"}
 
 ## Create map
-mapview(ea.areas, alpha.regions = 0.2, label=ea.areas$code) +
-  mapview(env_data_map, xcol = "lon", ycol = "lat", label=env_data_map$biol_site_id, grid = FALSE)
+leaflet() %>%
+  leaflet::addTiles() %>%
+  leaflet::addMarkers(lng = env_data_map$lon, lat = env_data_map$lat, popup = env_data_map$label,
+            options = popupOptions(closeButton = FALSE))
 
 ```
 
@@ -474,7 +471,7 @@ flow_data <- import_flow(sites = flowsites,
                 inputs = flowinputs,
                 start_date = "2010-01-01",
                 end_date = "2019-12-31",
-                dir = "data/wiski",
+                dir = "Data/wiski",
                 skip_num = 21,
                 col_order = c(1,2,3))
 ```
@@ -649,7 +646,7 @@ The function allows to user to select a method for linking biology samples to fl
 * using method = "B", lag 0 is defined as the most recently started flow time period. 
 To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (method = "A") or most recently started (method = "B") flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on. The function allows the user to select which antecedent (lagged) time periods the biology data is joined to, e.g. lag = c(0,1,2).  This method is demonstrated in the schematic below.
 
-![image info](./data/jeHE.png)
+![image info](./jeHE.png)
 
 The function also includes an option to specify the 'join_type':
 * "add_flows" (default) produces a dataset of biological metrics (response variables) and flow statistics (predictor variables) for hydro-ecological modelling. 
