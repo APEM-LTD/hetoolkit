@@ -4,7 +4,12 @@
 #' The `import_rhs` function imports River Habitat Survey (RHS) data. The data can either be downloaded from from data.gov.uk (<https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data>) or read in from a local xlsx or rds file. Data can be optionally filtered by survey ID.
 #'
 #' @usage
-#' import_rhs(source = NULL, surveys = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd(), rhs_dir = NULL)
+#' import_rhs(source = NULL,
+#'            surveys = NULL,
+#'            save = FALSE,
+#'            save_dwnld = FALSE,
+#'            save_dir = getwd(),
+#'            rhs_dir = NULL)
 #'
 #' @param source Path to local .xlsx or .rds file containing RHS data. If NULL (default), then RHS data is downloaded from data.gov.uk.
 #' @param surveys Vector of survey ids to filter on. Default = NULL
@@ -74,6 +79,7 @@ import_rhs <- function(source = NULL,
     # Read excel file
     rhs <- readxl::read_excel("River Habitat Survey - Survey Details and Summary Results.xlsx",
                               guess_max = 50000,
+                              sheet = "Data",
                               .name_repair = "universal")
 
     if(isTRUE(save_dwnld) == TRUE){
@@ -112,21 +118,21 @@ import_rhs <- function(source = NULL,
 
     # convert to integers, dates, factors
     rhs <- rhs %>% dplyr::mutate(
-      Survey.ID = as.character(Survey.ID)
+      SURVEY_ID = as.character(SURVEY_ID)
     )
 
     # Filter by surveys (vector of specified survey IDs)
-    rhs_1 <- dplyr::filter(rhs, Survey.ID %in% surveys)
+    rhs_1 <- dplyr::filter(rhs, SURVEY_ID %in% surveys)
 
-    rhs_1 <- rhs_1 %>% distinct(Survey.ID, .keep_all = TRUE)
+    rhs_1 <- rhs_1 %>% distinct(SURVEY_ID, .keep_all = TRUE)
 
     # Warning, if rhs Sites are not found
-    if(isTRUE(length(unique(rhs_1$Survey.ID)) ==
+    if(isTRUE(length(unique(rhs_1$SURVEY_ID)) ==
               length(unique(surveys))) == FALSE)
     {warning("Some RHS Surveys were not found - review specified sites.")}
 
     # Identify missing sites
-    a <- unique(rhs_1$Survey.ID)
+    a <- unique(rhs_1$SURVEY_ID)
     b <- unique(as.character(surveys))
     c <- b[!b %in% a]
     if(isFALSE(length(c) == 0)) {warning(paste0("RHS survey ID not found:", c))}
