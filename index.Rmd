@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ## Overview 
 
-The `hetoolkit` package comprises a collection of 22 functions, developed by APEM LTD on behalf of the Environment Agency, to assemble, process, visualise and model hydro-ecological data. The full set of functions are listed under the Reference tab above. Note that they include deprecated versions of three functions that are retained for back-compatibility. 
+The `hetoolkit` package comprises a collection of 23 functions, developed by APEM LTD on behalf of the Environment Agency, to assemble, process, visualise and model hydro-ecological data. The full set of functions are listed under the Reference tab above. Note that they include deprecated versions of three functions that are retained for back-compatibility. 
 
 ## WORKFLOW
 
@@ -58,7 +58,7 @@ You may also get warning messages regarding unused arguments on installing the p
 
 ## Development
 
-The `hetoolkit` package was developed by APEM LTD on behalf on the Environment Agency. For further information please contact [Mike Dunbar](mailto:mike.dunbar@environment-agency.gov.uk).
+The `hetoolkit` package was developed by APEM LTD on behalf on the Environment Agency. For further information please contact [Thomas Aspin](mailto:Thomas.Aspin@environment-agency.gov.uk).
 
 ## Change history
 
@@ -74,6 +74,8 @@ Version | Date     | Details
                      Minor bug fixes.
 2.1.1   | May-2023 | Updates to website.\
                      Minor update to predict_indices.
+2.1.2   | Jan-2024 | Added new function import_taxa.\
+                     Bug fix to import_rhs, minor update to import_wq.
 
 Full details of the changes are listed in the Changelog tab above
 

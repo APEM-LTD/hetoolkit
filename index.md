@@ -8,7 +8,7 @@
 
 ## Overview
 
-The `hetoolkit` package comprises a collection of 22 functions,
+The `hetoolkit` package comprises a collection of 23 functions,
 developed by APEM LTD on behalf of the Environment Agency, to assemble,
 process, visualise and model hydro-ecological data. The full set of
 functions are listed under the Reference tab above. Note that they
@@ -66,8 +66,8 @@ not affect the running of the toolkit.
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
-Environment Agency. For further information please contact [Mike
-Dunbar](mailto:mike.dunbar@environment-agency.gov.uk).
+Environment Agency. For further information please contact [Thomas
+Aspin](mailto:Thomas.Aspin@environment-agency.gov.uk).
 
 ## Change history
 
@@ -111,6 +111,12 @@ Minor bug fixes.</td>
 <td>May-2023</td>
 <td>Updates to website.<br />
 Minor update to predict_indices.</td>
+</tr>
+<tr class="odd">
+<td>2.1.2</td>
+<td>Jan-2024</td>
+<td>Added new function import_taxa.<br />
+Bug fix to import_rhs, minor update to import_wq.</td>
 </tr>
 </tbody>
 </table>
