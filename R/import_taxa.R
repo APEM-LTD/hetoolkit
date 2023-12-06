@@ -10,12 +10,12 @@
 #'
 #' @param sites Vector of site ids to filter by. Default = NULL
 #' @param samples Vector of sample ids to filter by. Default = NULL
-#' @param save Specifies whether (`TRUE`) or not (`FALSE`) the filtered data should be saved as an rds file (for future use, or audit trail). Default = `FALSE`.
+#' @param save Specifies whether (TRUE) or not (FALSE) the filtered data should be saved as an rds file (for future use, or audit trail). Default = FALSE.
 #'
 #' @details
 #' If saving a copy of the filtered taxa data, the name of the rds file is hard-wired to `INV_OPEN_DATA_TAXA_F.RDS`.
 #'
-#' Downloaded raw data files will be automatically removed from the working directory following completed execution of the function.
+#' Downloaded raw data files will be automatically removed from the working directory following execution of the function.
 #'
 #' The function automatically modifies the output from EDE, renaming "SITE_ID" to "biol_site_id" (`hetoolkit`'s standardised column header for biology site ids).
 #'
@@ -30,15 +30,13 @@
 #' # Import data from EDE for specific sites
 #' taxa_data <- import_taxa(sites = c("34310", "34343"))
 #'
-#' # Import data and match on other macroinvertebrate data
+#' # Import data using sample IDs
 #' biol_data <- hetoolkit::import_inv(sites = c("34310", "34343"))
 #' sample_IDs <- unique(biol_data$SAMPLE_ID)
 #'
 #' taxa_data <- import_taxa(samples = sample_IDs)
 #'
-#' full_data <- taxa_data %>%
-#'   dplyr::left_join(biol_data)
-#'
+
 
 
 import_taxa <- function(sites = NULL,
