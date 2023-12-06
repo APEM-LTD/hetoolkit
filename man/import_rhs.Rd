@@ -4,7 +4,12 @@
 \alias{import_rhs}
 \title{Importing River Habitat Survey (RHS) data from the EA's Open Data portal}
 \usage{
-import_rhs(source = NULL, surveys = NULL, save = FALSE, save_dwnld = FALSE, save_dir = getwd(), rhs_dir = NULL)
+import_rhs(source = NULL,
+           surveys = NULL,
+           save = FALSE,
+           save_dwnld = FALSE,
+           save_dir = getwd(),
+           rhs_dir = NULL)
 }
 \arguments{
 \item{source}{Path to local .xlsx or .rds file containing RHS data. If NULL (default), then RHS data is downloaded from data.gov.uk.}

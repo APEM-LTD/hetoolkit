@@ -24,13 +24,13 @@ expect_error(import_wq(source = NULL, sites = c(1, 2, 3)),
 expect_error(import_wq(source = NULL,
                        sites = c("SW-60250424", "NE-45401461", "MD-28291180", "MD-44205010", "SE-99999999"),
                        dets = "test"),
-             "dets must be set to default, all or a numeric vector of determinand IDs")
+             "dets must be set to default, all or a vector of determinand IDs. String IDs must be 4-digits long.")
 
 
 expect_error(import_wq(source = NULL,
                        sites = c("SW-60250424", "NE-45401461", "MD-28291180", "MD-44205010", "SE-99999999"),
                        dets = c("1", "2", "3")),
-             "dets must be set to default, all or a numeric vector of determinand IDs")
+             "dets must be set to default, all or a vector of determinand IDs. String IDs must be 4-digits long.")
 
 
 expect_error(import_wq(source = NULL,

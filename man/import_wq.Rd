@@ -46,7 +46,7 @@ The default list of determinands to import (specified using dets = “default”
 
 There are over 7000 determinands in the Water Quality Archive. To download a complete list in .csv format see https://environment.data.gov.uk/water-quality/def.csv/determinands. See also https://environment.data.gov.uk/water-quality/view/doc/reference#api-determinands for alternative ways to find determinands.
 
-If supplying a list of determinand IDs to the function, these must be specified as integers (ie, no leading zeros).
+If supplying a list of determinand IDs to the function, these may be specified as integers (ie, no leading zeros) or 4-digit character strings (ie, numbers enclosed in quotes, eg: c("0061", "9901")). Note that det_id in the output file is a numeric variable.
 
 If saving a copy of the downloaded data, the name of the rds file is hard-wired to WQ_OPEN_DATA_METRICS.RDS. The file will save to the current working directory.
 

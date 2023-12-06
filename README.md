@@ -8,7 +8,7 @@
 
 ## Overview
 
-The `hetoolkit` package comprises a collection of 22 functions for
+The `hetoolkit` package comprises a collection of 23 functions for
 assembling, processing, visualising and modelling hydro-ecological data.
 These are:
 
@@ -30,6 +30,8 @@ These are:
     EA’s Open Data portal;
 -   `import_wq` for importing water quality data from the EA Water
     Quality Archive database;
+-   `import_taxa` for importing taxonomic abundances from the EA Ecology
+    and Fish Data Explorer;
 -   `predict_indices` for calculating expected scores for
     macroinvertebrate indices using the RICT2 model (FBA 2020);
 -   `calc_flowstats` and `calc_rfrstats` for calculating summary
@@ -107,8 +109,8 @@ not affect the running of the toolkit.
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
-Environment Agency. For further information please contact [Mike
-Dunbar](mailto:mike.dunbar@environment-agency.gov.uk).
+Environment Agency. For further information please contact [Thomas
+Aspin](mailto:Thomas.Aspin@environment-agency.gov.uk).
 
 ## Change history
 
@@ -152,6 +154,12 @@ Minor bug fixes.</td>
 <td>May-2023</td>
 <td>Updates to website.<br />
 Minor update to predict_indices.</td>
+</tr>
+<tr class="odd">
+<td>2.1.2</td>
+<td>Jan-2024</td>
+<td>Added new function import_taxa.<br />
+Bug fix to import_rhs, minor update to import_wq.</td>
 </tr>
 </tbody>
 </table>

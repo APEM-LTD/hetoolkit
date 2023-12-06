@@ -25,7 +25,7 @@
 #'
 #' There are over 7000 determinands in the Water Quality Archive. To download a complete list in .csv format see https://environment.data.gov.uk/water-quality/def.csv/determinands. See also https://environment.data.gov.uk/water-quality/view/doc/reference#api-determinands for alternative ways to find determinands.
 #'
-#' If supplying a list of determinand IDs to the function, these must be specified as integers (ie, no leading zeros).
+#' If supplying a list of determinand IDs to the function, these may be specified as integers (ie, no leading zeros) or 4-digit character strings (ie, numbers enclosed in quotes, eg: c("0061", "9901")). Note that det_id in the output file is a numeric variable.
 #'
 #' If saving a copy of the downloaded data, the name of the rds file is hard-wired to WQ_OPEN_DATA_METRICS.RDS. The file will save to the current working directory.
 #'
@@ -85,9 +85,14 @@ import_wq <- function(source = NULL,
     stop("Site must be a list of strings")
   }
 
-  if(("default" %in% dets || "all" %in% dets) == FALSE && is.numeric(dets) == FALSE) {
-    stop("dets must be set to default, all or a numeric vector of determinand IDs")
+  if(("default" %in% dets || "all" %in% dets) == FALSE
+     && (all(grepl("[0-9]{4}", dets)) == FALSE && is.numeric(dets) == FALSE)) {
+    stop("dets must be set to default, all or a vector of determinand IDs. String IDs must be 4-digits long.")
   }
+
+  # if(("default" %in% dets || "all" %in% dets) == FALSE && is.numeric(dets) == FALSE) {
+  #   stop("dets must be set to default, all or a numeric vector of determinand IDs")
+  # }
 
   if(is.null(start_date) == FALSE && IsDate(start_date, "%Y-%m-%d") == FALSE) {
     stop("Start date should be in YYYY-MM-DD format")
@@ -254,8 +259,9 @@ import_wq <- function(source = NULL,
     dplyr::select(c(wq_site_id, date, det_label, det_id, result, unit, qualifier))
 
   # Identify missing determinands
-  a <- unique(wq_metrics$det_id)
-  b <- unique(as.character(dets))
+  # a <- unique(as.character(wq_metrics$det_id))
+  a <- unique(formatC(wq_metrics$det_id, width = 4, format = "d", flag = "0"))
+  b <- unique(formatC(dets, width = 4, format = "d", flag = "0"))
   c <- b[!b %in% a]
   if(isFALSE(length(c) == 0)) {warning(paste0("Water quality determinand Not Found:", c, "\n"))}
 
