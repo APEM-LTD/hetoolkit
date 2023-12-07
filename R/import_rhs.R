@@ -143,6 +143,34 @@ import_rhs <- function(source = NULL,
 
   }
 
+  # reassign variable names for back-compatibility
+  if(is.null(source) == TRUE){
+    rhs_1 <- rhs_1 %>%
+      dplyr::select(!c(SURVEY_YEAR, RSN_SURVEY))
+
+    colnames_original <- c(
+      "Survey.ID", "Survey.Status", "Location", "Site.Id..Site.", "NGR.Site", "Survey.Date", "River..Site.","Survey.Form.Id",
+      "Spot.One.Is.At", "Surveyor.Id", "Adverse.Conditions", "Number.Of.Photos", "Significant.Tributary",
+      "Site.Surveyed.From.Description", "Bed.is.Visible.Description","Valley.Form.Description", "Dist.Flat.Valley.Bottom",
+      "Natural.Terraces", "Predom.Channel.Desc", "Predominant.Flow.Type", "No.Pools", "No.Riffles", "No.Unvegetated.Point.Bars",
+      "No.Vegetated.Point.Bars", "Realigned.Channel.Description", "OverDeepened.Channel.Description", "Water.Impounded.Description",
+      "Trees.Left.Description", "Trees.Right.Description", "Left.Banktop.Height", "Left.Bth.Equals.Bfh", "Left.Embanked.Height",
+      "Channel.Bankfull.Width", "Channel.Water.Depth", "Channel.Water.Width", "Right.Banktop.Height", "Right.Bth.Equals.Bfh",
+      "Right.Embanked.Height", "Trashline.Height", "Trashline.Width", "Bed.Material.Description",
+      "Location.of.Measure.Description", "Hogweed.Bankface.Decoded", "Hogweed.Banktop.Decoded", "Knotweed.Bankface.Decode",
+      "Knotweed.Banktop.Decode", "Balsam.Bankface.Decode", "Balsam.Banktop.Decode", "Other.Plant.Name",
+      "Other.Plant.Bankface.Decode", "Other.Plant.Banktop.Decode", "Alders", "Diseased.Alders", "HMS.Score", "HMS.Class", "HQA",
+      "HQA.Adjusted", "PCA1", "PCA2", "Hms.Berms.Embnkmnts.Sub.Score", "Hms.Bridges.Sub.Score", "Hms.Fords.Sub.Score",
+      "Hms.Ofall.Dflector.Sub.Score", "Hms.Poaching.Sub.Score", "Hms.Rforced.Bnk.Bed.Sub.Score", "Hms.Rsctned.Bnk.Bed.Sub.Score",
+      "Hqa.Adj.Flow.Types.Sub.Score", "Hqa.Adj.Istr.Chl.Veg.Sub.Score", "Hqa.Bank.Features.Sub.Score", "Hqa.Bank.Veg.Sub.Score",
+      "Hqa.Chnl.Features.Sub.Score", "Hqa.Chnl.Substrates.Sub.Score", "Hqa.Flow.Types.Sub.Score", "Hqa.In.Str.Chnl.Veg.Sub.Score",
+      "Hqa.Land.Use.Sub.Score", "Hqa.Special.Features.Sub.Score", "Hqa.Trees.Assoc.Ftes.Sub.Score"
+    )
+
+    colnames(rhs_1) <- colnames_original
+  }
+
+
   # save copy to disk in rds format if needed
   if (save == TRUE) {saveRDS(rhs_1, paste0(save_dir, '/RHS_survey_summary_F.rds'))}
 
