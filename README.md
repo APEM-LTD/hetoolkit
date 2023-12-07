@@ -109,8 +109,9 @@ not affect the running of the toolkit.
 ## Development
 
 The `hetoolkit` package was developed by APEM LTD on behalf on the
-Environment Agency. For further information please contact [Thomas
-Aspin](mailto:Thomas.Aspin@environment-agency.gov.uk).
+Environment Agency. For further information please contact [the
+Environment
+Agency](mailto:mailto:hydroecologyteam@environment-agency.gov.uk).
 
 ## Change history
 
