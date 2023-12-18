@@ -1,6 +1,20 @@
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
+# hetoolkit 2.1.2
+
+## Changes to Functions
+
+-   `import_rhs`: Updated to account for structural changes in the file
+    downloaded from data.gov.uk
+-   `import_wq`: Updated to allow determinand IDs (dets argument) to be
+    specified as 4-character strings as well as integers.
+
+## New Functions
+
+-   `import_inv_taxa`: for macroinvertebrate taxon abundance information
+    from the Environment Agency’s Ecology and Fish Data Explorer (EDE).
+
 # hetoolkit 2.1.1
 
 ## Changes to Functions

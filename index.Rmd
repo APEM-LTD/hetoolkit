@@ -74,7 +74,7 @@ Version | Date     | Details
                      Minor bug fixes.
 2.1.1   | May-2023 | Updates to website.\
                      Minor update to predict_indices.
-2.1.2   | Jan-2024 | Added new function import_taxa.\
+2.1.2   | Jan-2024 | Added new function import_inv_taxa.\
                      Bug fix to import_rhs, minor update to import_wq.
 
 Full details of the changes are listed in the Changelog tab above

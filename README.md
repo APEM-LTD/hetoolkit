@@ -30,8 +30,8 @@ These are:
     EA’s Open Data portal;
 -   `import_wq` for importing water quality data from the EA Water
     Quality Archive database;
--   `import_taxa` for importing taxonomic abundances from the EA Ecology
-    and Fish Data Explorer;
+-   `import_inv_taxa` for importing taxonomic abundances from the EA
+    Ecology and Fish Data Explorer;
 -   `predict_indices` for calculating expected scores for
     macroinvertebrate indices using the RICT2 model (FBA 2020);
 -   `calc_flowstats` and `calc_rfrstats` for calculating summary
@@ -158,7 +158,7 @@ Minor update to predict_indices.</td>
 <tr class="odd">
 <td>2.1.2</td>
 <td>Jan-2024</td>
-<td>Added new function import_taxa.<br />
+<td>Added new function import_inv_taxa.<br />
 Bug fix to import_rhs, minor update to import_wq.</td>
 </tr>
 </tbody>

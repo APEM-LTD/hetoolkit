@@ -1,12 +1,12 @@
 #' Importing macroinvertebrate abundance data from the EA Ecology and Fish Data Explorer
 #'
 #' @description
-#' The import_taxa function imports macroinvertebrate taxon abundance information from the Environment Agency's Ecology and Fish Data Explorer (EDE). The function downloads and merges two files: one listing taxon abundances by sample, and one with details of each taxon (e.g. full taxon name, taxonomic rank). The data can be optionally filtered by site and/or sample ID, and the filtered data saved as a .rds file.
+#' The import_inv_taxa function imports macroinvertebrate taxon abundance information from the Environment Agency's Ecology and Fish Data Explorer (EDE). The function downloads and merges two files: one listing taxon abundances by sample, and one with details of each taxon (e.g. full taxon name, taxonomic rank). The data can be optionally filtered by site and/or sample ID, and the filtered data saved as a .rds file.
 #'
 #' @usage
-#' import_taxa(sites = NULL,
-#'             samples = NULL,
-#'             save = FALSE)
+#' import_inv_taxa(sites = NULL,
+#'                 samples = NULL,
+#'                 save = FALSE)
 #'
 #' @param sites Vector of site ids to filter by. Default = NULL
 #' @param samples Vector of sample ids to filter by. Default = NULL
@@ -28,20 +28,20 @@
 #' @examples
 #'
 #' # Import data from EDE for specific sites
-#' taxa_data <- import_taxa(sites = c("34310", "34343"))
+#' taxa_data <- import_inv_taxa(sites = c("34310", "34343"))
 #'
 #' # Import data using sample IDs
 #' biol_data <- hetoolkit::import_inv(sites = c("34310", "34343"))
 #' sample_IDs <- unique(biol_data$SAMPLE_ID)
 #'
-#' taxa_data <- import_taxa(samples = sample_IDs)
+#' taxa_data <- import_inv_taxa(samples = sample_IDs)
 #'
 
 
 
-import_taxa <- function(sites = NULL,
-                        samples = NULL,
-                        save = FALSE){
+import_inv_taxa <- function(sites = NULL,
+                            samples = NULL,
+                            save = FALSE){
 
   ## Errors and warnings
 

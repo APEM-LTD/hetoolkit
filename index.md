@@ -115,7 +115,7 @@ Minor update to predict_indices.</td>
 <tr class="odd">
 <td>2.1.2</td>
 <td>Jan-2024</td>
-<td>Added new function import_taxa.<br />
+<td>Added new function import_inv_taxa.<br />
 Bug fix to import_rhs, minor update to import_wq.</td>
 </tr>
 </tbody>
