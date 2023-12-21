@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
  * `import_rhs`: Updated to account for structural changes in the file downloaded from data.gov.uk
  * `import_wq`: Updated to allow determinand IDs (dets argument) to be specified as 4-character strings as well as integers. 
 
-## New Functions
+## New Functions  
 
  * `import_inv_taxa`: for macroinvertebrate taxon abundance information from the Environment Agency's Ecology and Fish Data Explorer (EDE).
 
