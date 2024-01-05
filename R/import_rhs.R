@@ -69,7 +69,7 @@ import_rhs <- function(source = NULL,
   if(is.null(source) == TRUE) {
 
     # Download RHS data from open data
-    downloader::download("https://environment.data.gov.uk/portalstg/sharing/rest/content/items/b82d3ef3750d49f6917fff02b9341d68/data",
+    downloader::download("https://environment.data.gov.uk/api/file/download?fileDataSetId=2a863fb9-2b20-4eca-8688-c5c9e6e4a485&fileName=River_Habitat_Survey_-_Survey_Details_and_Summary_Results_(2).zip",
                          dest = "River_Habitat_Survey_-_Survey_Details_and_Summary_Results_(2).zip",
                          mode="wb")
 
