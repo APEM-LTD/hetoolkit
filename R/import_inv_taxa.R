@@ -83,7 +83,7 @@ import_inv_taxa <- function(sites = NULL,
 
 
   ## Download abundance data
-  downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_TAXA.parquet",
+  downloader::download("https://environment.data.gov.uk/ecology/explorer/downloads/INV_OPEN_DATA_TAXA.parquet",
                        destfile = 'INV_OPEN_DATA_TAXA.parquet',
                        mode = 'wb')
 
@@ -113,7 +113,7 @@ import_inv_taxa <- function(sites = NULL,
   }
 
   ## Download taxa information
-  downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/OPEN_DATA_TAXON_INFO.zip",
+  downloader::download("https://environment.data.gov.uk/ecology/explorer/downloads/OPEN_DATA_TAXON_INFO.zip",
                        dest = "OPEN_DATA_TAXON_INFO.zip", mode="wb")
 
   # col_types <- readr::cols(

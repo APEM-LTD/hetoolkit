@@ -57,7 +57,7 @@ import_env <- function(env_dir = NULL,
   if(is.null(env_dir) == TRUE) {
 
     # Download envrionmental data from EDE
-    downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_SITE.csv.gz",
+    downloader::download("https://environment.data.gov.uk/ecology/explorer/downloads/INV_OPEN_DATA_SITE.csv.gz",
                          dest = "INV_OPEN_DATA_SITE.csv.gz", mode="wb")
 
     # read csv convert to integers, dates, factors

@@ -98,7 +98,7 @@ import_inv <- function(source = "parquet",
 
     if(source == "parquet") {
       # Download macroinvertebrate data from EDE
-      downloader::download("https://environment.data.gov.uk/ecology-fish/downloads/INV_OPEN_DATA_METRICS.parquet",
+      downloader::download("https://environment.data.gov.uk/ecology/explorer/downloads/INV_OPEN_DATA_METRICS.parquet",
                            destfile = 'INV_OPEN_DATA_SITE.parquet',
                            mode = 'wb')
 
