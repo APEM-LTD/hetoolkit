@@ -11,8 +11,8 @@ output:
     toc_depth: 3
     toc_float: yes
 editor_options:
-  chunk_output_type: console
   
+  chunk_output_type: console
 ---
 
 <img src="ApemLogo.png" style="width:80px;position:absolute;top:0px;right:0px;"/>
@@ -955,7 +955,25 @@ sjPlot::plot_model(model = cs1_mod2,
                    type = "pred",
                    pred.type = "fe",
                    facet.grid = TRUE,
-                   scales = "fixed")
+                   scales = "fixed", terms = "Season")
+
+sjPlot::plot_model(model = cs1_mod2, 
+                   type = "pred",
+                   pred.type = "fe",
+                   facet.grid = TRUE,
+                   scales = "fixed", terms = "Year_2005")
+
+sjPlot::plot_model(model = cs1_mod2, 
+                   type = "pred",
+                   pred.type = "fe",
+                   facet.grid = TRUE,
+                   scales = "fixed", terms = "Q95z_lag0")
+
+sjPlot::plot_model(model = cs1_mod2, 
+                   type = "pred",
+                   pred.type = "fe",
+                   facet.grid = TRUE,
+                   scales = "fixed", terms = "Q95z_lag12")
                      
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: "HE Toolkit Case Study: climwin analysis"
 author: "Environment Agency (National Hydroecology Team, WR E&B) & APEM"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "`r Sys.Date()`"
 output:
   html_document:
     highlight: tango
@@ -10,9 +10,6 @@ output:
     toc: yes
     toc_depth: 3
     toc_float: yes
-params:
-  date: !r Sys.Date
-subtitle: HE Toolkit Case Study
 editor_options:
   chunk_output_type: console
 ---
@@ -34,7 +31,7 @@ rm(list = ls())
 ## markdown document settings
 library(knitr, quietly = TRUE)
 library(formatR, quietly = TRUE)
-opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, tidy.opts = list(width.cutoff = 100), tidy = TRUE, fig.path = 'Plots/') 
+opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, tidy.opts = list(width.cutoff = 100), tidy = TRUE) 
 
 ```
 

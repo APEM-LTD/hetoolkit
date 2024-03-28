@@ -768,7 +768,25 @@ sjPlot::plot_model(model = cs3_mod_final,
                    type = "pred",
                    pred.type = "fe",
                    facet.grid = TRUE,
-                   scales = "fixed")
+                   scales = "fixed", terms = "Year_2005")
+
+sjPlot::plot_model(model = cs3_mod_final, 
+                   type = "pred",
+                   pred.type = "fe",
+                   facet.grid = TRUE,
+                   scales = "fixed", terms = "Q95z_lag0")
+
+sjPlot::plot_model(model = cs3_mod_final, 
+                   type = "pred",
+                   pred.type = "fe",
+                   facet.grid = TRUE,
+                   scales = "fixed", terms = "Q95z_lag12")
+
+sjPlot::plot_model(model = cs3_mod_final, 
+                   type = "pred",
+                   pred.type = "fe",
+                   facet.grid = TRUE,
+                   scales = "fixed", terms = "Q95z_lag24")
                      
 ```
 

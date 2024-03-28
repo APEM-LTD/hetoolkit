@@ -1,5 +1,5 @@
 ---
-title: "hetoolkit-Vignette"
+title: "HE Toolkit Vignette"
 author: "APEM Ltd"
 output: 
   
@@ -9,7 +9,7 @@ output:
     toc: true
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{hetoolkit-Vignette}
+  %\VignetteIndexEntry{HE Toolkit Vignette}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -28,34 +28,17 @@ rm(list = ls())
 
 ```{r load packages, message=FALSE, warning=FALSE, include=TRUE, message=FALSE, tidy=TRUE}
 
-# if(!require(pacman)) install.packages("pacman")
-# pacman::p_load(dplyr, insight, lubridate, readr, downloader, readxl, RCurl, writexl, tidyr, stringr, tibble, htmlTable, devtools, roxygen2, plotly, ggnewscale, ggplot2, fasstr, lme4, sjmisc, mgcv, gridExtra, ggfortify, visreg, formatR, sf, ggrepel, reshape, grid, glmmTMB, remotes, merTools, GGally, plyr, imputeTS, ggpubr, geojsonio, mapview)
-
 if(!require(pacman)) {install.packages("pacman")}
 pacman::p_load(insight, RCurl, writexl, htmlTable, devtools, roxygen2, ggnewscale, visreg, formatR, reshape, glmmTMB, remotes, merTools, GGally, imputeTS, sf, geojsonio, leaflet, plyr, rnrfa)
 
 # Conditionally install hetoolkit from github
-p <- as.data.frame(utils::installed.packages())
-if ("hetoolkit" %in% p$Package == FALSE) {
+#install.packages("remotes")
+library(remotes)
+# Conditionally install hetoolkit from github
+if ("hetoolkit" %in% installed.packages() == FALSE) {
   remotes::install_github("APEM-LTD/hetoolkit")
 }
-rm(p)
-
-## Load hetoolkit. 
-## Library used for building of pkgdown site. If running this code use library(hetoolkit) instead.
-#library(hetoolkit)
-load_all()
-
-#remotes::install_github("aquaMetrics/rict")
-
-# for development
-#install.packages("devtools")
-#library(devtools)
-#devtools::load_all(export_all = FALSE)
-#install_deps()
-# for public version (once live)
-#remotes::install_github("APEM-LTD/hetoolkit")
-#library(hetoolkit)
+library(hetoolkit)
 
 ```
 
@@ -105,7 +88,7 @@ master_file$biol_site_id <- as.character(master_file$biol_site_id)
 master_file$rhs_survey_id <- as.character(master_file$rhs_survey_id)
 
 # filter master file for selected sites of interest
-master_data <- master_file %>% filter(biol_site_id %in% c("34310", "34343", "34352", "55287", "55395", "55417", "55673", "55824", "55897", "56065", "56226", "54637", "54769", "54801", "80998", "56491", "54827", "77216", "52828"))
+master_data <- master_file %>% filter(biol_site_id %in% c("34310", "34343", "34352", "55287", "55395", "55417", "55673", "55824", "55897", "56065", "56226", "54637", "54769", "54801", "80998", "54827", "77216"))
 
 # view data
 master_data
@@ -415,7 +398,7 @@ Next the environmental base data are joined using the common field `biol_site_id
 ```{r join bio_2, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
 # join ENV data, by biol_site_id
- biol_all <- dplyr::left_join(biol_all, env_data, by = "biol_site_id")
+biol_all <- dplyr::left_join(biol_all, env_data, by = "biol_site_id")
 
 ```
 
@@ -467,11 +450,12 @@ Below, we use the lists `flowsites` and `flowinputs` to specify sites for import
 
 ```{r import flow, warning=FALSE, message=FALSE, tidy=TRUE, results=FALSE}
 
+
 flow_data <- import_flow(sites = flowsites,
                 inputs = flowinputs,
                 start_date = "2010-01-01",
                 end_date = "2019-12-31",
-                dir = "Data/wiski",
+                dir = "data/wiski",
                 skip_num = 21,
                 col_order = c(1,2,3))
 ```
@@ -499,7 +483,6 @@ a <- plot_heatmap(data = flow_data, x = "date", y = "flow_site_id", fill = "flow
 gridExtra::grid.arrange(a[[1]])
 # view table of completeness statistics for each site 
 a[[3]]
-
 
 # uses flow_data, as produced using import_flow()
 flow_data$month <- lubridate::month(flow_data$date)
@@ -553,7 +536,7 @@ If flow data for paired donor stations are not already included within the 'flow
 
 ```{r append donor flow, warning=FALSE, message=FALSE, tidy=TRUE}
 
-# create 'donor' data frame
+# create 'donor' data frame for site with relatively large data gap (F3105)
 donor_mapping <- data.frame(station = c("F3105"), donor_station = c("033014"))
 
 # get a list of donor sites
@@ -561,11 +544,11 @@ donorsites <- as.character(unique(donor_mapping$donor_station))
 
 # download donor flow data
 flow_data_donor <- import_flow(sites = donorsites,
-                    inputs = "HDE",
-                    start_date = "2010-01-01",
+                 inputs = "HDE",
+                   start_date = "2010-01-01",
                     end_date = "2019-12-31",
-                    skip_num = 21,
-                    col_order = c(1,2,3))
+                   skip_num = 21,
+                   col_order = c(1,2,3))
 
 # append donor flow data to the original flow data
 flow_data_all <- dplyr::bind_rows(flow_data, flow_data_donor)
@@ -619,7 +602,7 @@ flow_stats <- calc_flowstats(data = flow_data,
 ```{r calculate flow stats_print, warning=FALSE, message=FALSE, tidy=TRUE}
 
 # view time-varying flow statistics 
-flow_stats[[1]]
+head(flow_stats[[1]])
 
 ```
 

@@ -1019,7 +1019,7 @@ sjPlot::plot_model(model = cs2_mod1,
                    type = "pred",
                    pred.type = "fe",
                    grid = TRUE,
-                   title = NULL)
+                   title = NULL, terms=c("Q10z_lag0", "Season", "Q95z_lag0", "HQA", "Year_cen", "HMSRBB"))
 
 ```
 
