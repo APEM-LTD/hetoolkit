@@ -10,25 +10,16 @@
     <loc>/articles/CaseStudy2.html</loc>
   </url>
   <url>
-    <loc>/articles/case_study_1.html</loc>
+    <loc>/articles/CaseStudy3.html</loc>
   </url>
   <url>
-    <loc>/articles/case_study_2.html</loc>
-  </url>
-  <url>
-    <loc>/articles/case_study_3.html</loc>
-  </url>
-  <url>
-    <loc>/articles/case_study_4.html</loc>
+    <loc>/articles/CaseStudy4.html</loc>
   </url>
   <url>
     <loc>/articles/hetoolkit-vignette.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/MIDAS_v3.html</loc>
   </url>
   <url>
     <loc>/articles/Resources.html</loc>
@@ -74,6 +65,9 @@
   </url>
   <url>
     <loc>/reference/import_inv.html</loc>
+  </url>
+  <url>
+    <loc>/reference/import_inv_taxa.html</loc>
   </url>
   <url>
     <loc>/reference/import_nrfa.html</loc>
