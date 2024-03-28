@@ -31,9 +31,6 @@
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
     <loc>/reference/calc_flowstats.html</loc>
   </url>
   <url>
@@ -44,12 +41,6 @@
   </url>
   <url>
     <loc>/reference/diag_lmer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/find_events.html</loc>
-  </url>
-  <url>
-    <loc>/reference/find_events_old.html</loc>
   </url>
   <url>
     <loc>/reference/import_env.html</loc>
@@ -97,9 +88,6 @@
     <loc>/reference/model_logocv.html</loc>
   </url>
   <url>
-    <loc>/reference/osg_parse.html</loc>
-  </url>
-  <url>
     <loc>/reference/plot_heatmap.html</loc>
   </url>
   <url>
@@ -122,8 +110,5 @@
   </url>
   <url>
     <loc>/reference/shiny_hev.html</loc>
-  </url>
-  <url>
-    <loc>/reference/test_if_dataframe.html</loc>
   </url>
 </urlset>
