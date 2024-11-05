@@ -874,9 +874,10 @@ CreateLongData <- function(flow.data, statsData) {
   # returns a warning that calculation is ignoring missing values- even when NA are removed
   FlowDurationCurve <- flow_data %>%
     dplyr::filter(!is.na(flow)) %>%
-    dplyr::group_by(site) %>%
-    dplyr::group_modify(~ (fasstr::calc_longterm_percentile(data = flow_data, dates = date, values = flow, percentiles=c(1:99), transpose = TRUE))) %>%
-    dplyr::ungroup() %>%
+    #dplyr::group_by(site) %>%  ## group_by and group_modify were not grouping & applying calc_longterm_percentile() to each site
+    #dplyr::group_modify(~ ( ## instead, have added 'groups = site' to calc_longterm_percentile()
+    fasstr::calc_longterm_percentile(groups = site, dates = date, values = flow, percentiles=c(1:99), transpose = TRUE) %>%
+    #dplyr::ungroup() %>%
     dplyr::mutate(win_no="Annual") %>%
     setNames(., c("site", "parameter", "value", "win_no")) %>%
     dplyr::mutate(parameter=as.character(parameter))
@@ -1045,10 +1046,19 @@ riisbiggs2 <- function(datavector, threshold, multiplier) {
 
 calc_bfi <- function(x) {
 
-  day7mean <- zoo::rollmean(x, 7, align = "right")
-  min7day <- min(day7mean)
+  ## original function calculates rolling 7-day means then takes the minimum of these
+  #day7mean <- zoo::rollmean(x, 7, align = "right")
+  #min7day <- min(day7mean)
+  #meanflow <- mean(x)
+  #calc_bfi <- min7day/meanflow
+
+  ## but it should probably be the other way around: deriving rolling minima to get an estimate of underlying baseflows then taking the mean
+  day7min <- RcppRoll::roll_min(x, 7, align = "right")
+  mean_BF <- mean (day7min)
   meanflow <- mean(x)
-  calc_bfi <- min7day/meanflow
+  calc_bfi <- mean_BF/meanflow
+
+
   return(calc_bfi)
 
 }

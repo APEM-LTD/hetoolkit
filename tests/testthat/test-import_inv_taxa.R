@@ -37,7 +37,7 @@ expect_warning(import_inv_taxa(sites = c("999999999")),
 
 test_that("import_inv_taxa constructs 'tibble' as expected", {
   result <- import_inv_taxa(sites = "34310")
-  compared <- tibble::as_tibble(readRDS("testdata_import_taxa_format.RDS"))
+  compared <- tibble::as_tibble(readRDS("testdata_import_taxa_format_v2.RDS"))
   expect_equal(result, compared, ignore_attr = TRUE)
 })
 

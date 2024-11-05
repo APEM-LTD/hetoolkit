@@ -407,27 +407,26 @@ test_that("q_high appropraite...", {
 
 
 
-#test_that("constructs expected output", {
+test_that("constructs expected output", {
 
 
-# data_calcfs <- readRDS("data_calcfs.rds")
+ data_calcfs <- readRDS("data_calcfs.rds")
 
-# flow_stats <- calc_flowstats(data = data_calcfs,
-                            #site_col = "site",
-                            #date_col = "date",
-                            #flow_col = "flow")
+ flow_stats <- calc_flowstats(data = data_calcfs,
+                            site_col = "site",
+                            date_col = "date",
+                            flow_col = "flow")
 
-# result <- flow_stats[[1]]
-# compared_1 <- readRDS("data_cfs.rds")
-# compared <- compared_1[[1]]
+ result <- flow_stats[[2]]
+ compared_1 <- readRDS("data_cfs_LTstats.rds")
 
-# expect_equivalent(result, compared)
+ expect_equivalent(result, compared_1)
 
-#})
+})
 
 test_that("correct start date is generated (based on win_start)", {
 
-  expected <- readRDS("data_cfs_sd.rds")
+  expected <- readRDS("data_cfs_sd_v2.rds")
   data_calcfs <- readRDS("data_calcfs.rds")
 
   flow_stats <- calc_flowstats(data = data_calcfs,
@@ -449,7 +448,7 @@ test_that("correct start date is generated (based on win_start)", {
 
 test_that("correct end date is generated (based on win_start, win_width, win_step)", {
 
-  expected <- readRDS("data_cfs_sd.rds")
+  expected <- readRDS("data_cfs_sd_v2.rds")
   data_calcfs <- readRDS("data_calcfs.rds")
 
   flow_stats <- calc_flowstats(data = data_calcfs,
@@ -462,7 +461,7 @@ test_that("correct end date is generated (based on win_start, win_width, win_ste
                                win_width = "6 months")
 
   flow_stats1 <-flow_stats[[1]] %>%
-    dplyr::filter(start_date <= lubridate::ymd(20220101))
+    dplyr::filter(start_date <= lubridate::ymd(20240701))
 
   result <- max(flow_stats1$end_date)
   compared <- max(expected$end_date)
@@ -585,7 +584,7 @@ test_that("results are processed corrctly if data is not daily", {
 
 
   test1_data <- test1[[1]]
-  results <- readRDS("testdata_calcfs_nonconsec_results.rds")
+  results <- readRDS("testdata_calcfs_nonconsec_results_v2.rds")
 
   testthat::expect_equivalent(test1_data, results)
 
