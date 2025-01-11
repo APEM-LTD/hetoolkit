@@ -1,7 +1,7 @@
 ---
-title: "HE Toolkit Case Study: macrophytes in chalk streams"
-author: "APEM Ltd"
-date: "`r Sys.Date()`"
+title: "Macrophytes in chalk streams"
+author: "Environment Agency / APEM Ltd"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     highlight: tango
@@ -11,10 +11,9 @@ output:
     toc_depth: 3
     toc_float: yes
 editor_options:
+  
   chunk_output_type: console
 ---
-
-<img src="ApemLogo.png" style="width:80px;position:absolute;top:0px;right:0px;"/>
 
 ```{r Setup, message=FALSE, warning=FALSE, include=FALSE}
 
@@ -32,6 +31,7 @@ opts_chunk$set(fig.width = 12, fig.height = 8,
 This case study focuses on a macrophyte dataset of 58 sampling locations on the Test and Itchen (T&I), two groundwater-fed Chalk rivers in Hampshire, England. In particular, it illustrates the use of water quality data and modelled flow data within a hydro-ecological model.
 
 Sites were included in the model calibration dataset if they met all of the following criteria: 
+
 * At least 3 macrophyte surveys within the time period covered by the flow data. 
 * The site is not on a side channel where flow is controlled by hatches/sluices. 
 * The site is located on a reach with perennial flow (defined as natural Q99 > 0). 
@@ -50,11 +50,13 @@ This case study is optimised for viewing in Chrome.
 
 Install and load the HE Toolkit:
 
-```{r Install Hetoolkit, echo=TRUE, message=FALSE, warning=FALSE}
-
-if(!require("remotes")) install.packages("remotes")
+```{r Install hetoolkit, include = TRUE, results = 'hide'}
+#install.packages("remotes")
 library(remotes)
-remotes::install_github("APEM-LTD/hetoolkit")
+# Conditionally install hetoolkit from github
+if ("hetoolkit" %in% installed.packages() == FALSE) {
+  remotes::install_github("APEM-LTD/hetoolkit")
+}
 library(hetoolkit)
 
 ```
@@ -495,7 +497,7 @@ cs3_he2 <- hetoolkit::join_he(biol_data = cs3_biol_all,
 
 View the first dataset created using `join_type = "add_flows"`:
 
-```{r}
+```{r echo=FALSE}
 
 DT::datatable(cs3_he1,
           filter = 'top',
@@ -503,7 +505,7 @@ DT::datatable(cs3_he1,
           options = list(searching = FALSE, 
                          pageLength = 10,  
                          lengthMenu = c(10, 25, 50),
-                         scrollx = TRUE,
+                         scrollX = TRUE,
                          scrollCollapse = TRUE))
 
 ```
@@ -518,7 +520,7 @@ DT::datatable(cs3_he2,
           options = list(searching = FALSE, 
                          pageLength = 10,  
                          lengthMenu = c(10, 25, 50),
-                         scrollx = TRUE,
+                         scrollX = TRUE,
                          scrollCollapse = TRUE))
 ```
 
@@ -686,8 +688,7 @@ The preferred model with the lowest RMSE score (cs3_mod_final) included the fixe
 
 There was no evidence that RMHI was influenced by water quality (`log10_mean_p`) or long-term flow alteration (`LTQ95RFR`). This may be because because the 58 sites spanned only a narrow pressure gradient; sites with major water quality issues were screened out of the calibration dataset, and at only a handful of sites was the long-term Q95 reduced by more than 50%.
 
-On average, across all sites, there was a weak decreasing (improving) trend in RMHI of ca. -0.005 per year. After accounting for this underlying trend,
-RMHI was positively associated with all three Q95z flow statistics; the associations were weak, but became stronger and more significant with increasing time lag (i.e. RMHI was associated more strongly with Q95 flows 25-36 months ago than with flows in the immediately preceding 12 months). The finding of a *positive* relationship is counter-intuitive (higher RMHI scores are indicative of lower flow conditions) and suggests that the inclusion of additional, longer time lags might be warranted to explore whether this is a genuine result or an artefact of the flow statistics used in the model.  
+On average, across all sites, there was a weak decreasing (improving) trend in RMHI of ca. -0.005 per year. After accounting for this underlying trend, RMHI was positively associated with all three Q95z flow statistics; the associations were weak, but became stronger and more significant with increasing time lag (i.e. RMHI was associated more strongly with Q95 flows 25-36 months ago than with flows in the immediately preceding 12 months). The finding of a *positive* relationship is counter-intuitive as higher RMHI scores are associated with species that grow in habitats with lower flow velocities. The inclusion of additional, longer time lags might be warranted to explore whether this is a genuine result or an artefact of the flow statistics used in the model. If we consider it to be genuine we should attempt further interpretation with reference to the morphology of the sites in the model and the identity of the dominant macrophyte species driving the RMHI response.  
 
 ## Model diagnostics 
 
@@ -812,7 +813,8 @@ cs3_natural_scenario_flowstats <- hetoolkit::calc_flowstats(data = cs3_flowraw_w
 
 # Extract data frame of time-varying flow statistics, and select only essential columns
 cs3_natural_scenario_flowstats <- cs3_natural_scenario_flowstats[[1]] %>%
-  dplyr::select(flow_site_id, win_no, start_date, end_date, Q95z)
+  dplyr::select(flow_site_id, win_no, start_date, end_date, Q95z_ref) %>% 
+  dplyr::rename(Q95z = "Q95z_ref")
 
 # Extract data from historical flow stats
 cs3_historical_scenario_flowstats <- cs3_flowstats1 %>%
@@ -853,7 +855,7 @@ cs3_historical_he <- hetoolkit::join_he(biol_data = cs3_predict_biol_data,
 
 ```
 
-Now we can use the `predict` function to predict RMHI under both the naturalised and historical scenarios, and plot the results. We can see how the "historical" line describes the patterns in the historical data (the black points), and interpret the difference between the historical and naturalised scenarios as the effect of flow alteration. In this example, the historic and naturalised predictions are very similar, indicating little or no evidence that flow alteration is affecting RMHI scores.
+Now we can use the `predict` function to predict RMHI under both the naturalised and historical scenarios, and plot the results. We can see how the "historical" line describes the patterns in the historical data (the black points), and interpret the difference between the historical and naturalised scenarios as the effect of flow alteration. In this example, the historic and naturalised predictions are broadly similar, though with some evidence that flow alteration is altering RMHI scores at a subset of sites.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, fig.height =30, fig.width=25}
 
@@ -861,20 +863,23 @@ Now we can use the `predict` function to predict RMHI under both the naturalised
 cs3_natural_he$predict <- predict(cs3_mod_final, newdata = cs3_natural_he)
 cs3_historical_he$predict <- predict(cs3_mod_final, newdata = cs3_historical_he)
 
-# Create a data frame with the predicted values, biol_site_id, date and scenario (natural or historical), ready for plotting
+# Create a data frame with the predicted values, biol_site_id, date and scenario (natural or historical), 
+# ready for plotting
 cs3_predicted_data <- rbind(
-  data.frame(value = cs3_natural_he$predict, condition = "natural", biol_site_id = cs3_natural_he$biol_site_id, date = cs3_natural_he$date),
-  data.frame(value = cs3_historical_he$predict, condition = "historical", biol_site_id = cs3_historical_he$biol_site_id, date = cs3_historical_he$date)
+  data.frame(value = cs3_natural_he$predict, condition = "natural", 
+             biol_site_id = cs3_natural_he$biol_site_id, date = cs3_natural_he$date),
+  data.frame(value = cs3_historical_he$predict, condition = "historical", 
+             biol_site_id= cs3_historical_he$biol_site_id, date = cs3_historical_he$date)
 )
 
 # Plot the predictions, with the true (measured) values as points for reference.
 ggplot(cs3_predicted_data, aes(x = date, y = value, color = condition)) +
-  geom_line(size = 0.8) +
-  geom_point(data = cs3_biol_all, aes(x = date, y = RMHI, color = "measured"), size = 0.5, colour = "black") +
+  geom_line(size = 1) +
+  geom_point(data = cs3_biol_all, aes(x = date, y = RMHI, color = "measured"), size = 0.7, colour = "black") +
   facet_wrap(~ biol_site_id, ncol = 4) +
   labs(y = "RMHI") +
-  theme_bw()
+  theme(axis.title = element_text(size=18), axis.text = element_text(size = 16),
+  strip.text = element_text(size=18), legend.text = element_text(size=16), 
+  legend.title = element_text(size = 16))
 
 ```
-
-

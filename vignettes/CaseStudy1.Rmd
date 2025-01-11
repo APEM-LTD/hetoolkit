@@ -1,6 +1,6 @@
 ---
-title: "HE Toolkit Case Study: macroinvertebrates in chalk streams"
-author: "APEM Ltd"
+title: "Macroinvertebrates in chalk streams"
+author: "Environment Agency / APEM Ltd"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
@@ -14,8 +14,6 @@ editor_options:
   
   chunk_output_type: console
 ---
-
-<img src="ApemLogo.png" style="width:80px;position:absolute;top:0px;right:0px;"/>
 
 
 ```{r SetUp, include=FALSE}
@@ -35,6 +33,7 @@ opts_chunk$set(fig.width = 12, fig.height = 8,
 This case study focuses on a macroinvertebrate dataset of 33 sampling locations on the Test and Itchen (T&I), two groundwater-fed Chalk rivers in Hampshire, England. In particular, it illustrates the use of water quality data and modelled flow data within a hydro-ecological model.
 
 Sites were included in the model calibration dataset if they met all of the following criteria:
+
 * At least 10 macroinvertebrate samples (spanning at least 5 years) within the time period covered by the flow data.
 * The site is not on a side channel where flow is controlled by hatches/sluices.
 * The site is located on a reach with perennial flow (defined as natural Q99 > 0).
@@ -92,7 +91,7 @@ These id's are used below to download data from the Environment Agency's (EA) Ec
 ```{r load and tidy metadata}
 
 # Import metadata file containing site id's 
-cs1_metadata <- readxl::read_excel("Data/CaseStudy1/cs1_metadata.xlsx", col_types = "text") %>%
+cs1_metadata <- readxl::read_excel("data/CaseStudy1/cs1_metadata.xlsx", col_types = "text") %>%
   dplyr::rename(flow_site_id = reach_id) 
 
 # Get site lists, for use with functions 
@@ -191,7 +190,8 @@ temp.eastnorths <- rnrfa::osg_parse(cs1_env_data$NGR_10_FIG, coord_system = "WGS
 ## match to back to env data to give details on map.
 cs1_env_data_map <- cbind(cs1_env_data, temp.eastnorths) %>%
   dplyr::select(AGENCY_AREA, WATER_BODY, CATCHMENT, WATERBODY_TYPE, biol_site_id, lat, lon) %>%
-  dplyr::mutate(label = paste0("<b>", as.character(biol_site_id), "</b><br/>", AGENCY_AREA, "<br/>", CATCHMENT))
+  dplyr::mutate(label = paste0("<b>", as.character(biol_site_id), "</b><br/>", 
+                               AGENCY_AREA, "<br/>", CATCHMENT))
 
 ```
 
@@ -201,7 +201,8 @@ cs1_env_data_map <- cbind(cs1_env_data, temp.eastnorths) %>%
 ## Create map
 leaflet() %>%
   leaflet::addTiles() %>%
-  leaflet::addMarkers(lng = cs1_env_data_map$lon, lat = cs1_env_data_map$lat, popup = cs1_env_data_map$label,
+  leaflet::addMarkers(lng = cs1_env_data_map$lon, lat = cs1_env_data_map$lat, 
+                      popup = cs1_env_data_map$label,
             options = popupOptions(closeButton = FALSE))
 
 ```
@@ -214,7 +215,8 @@ Prior to building a hydro-ecological model, it is helpful to identify any sites 
 
 # plot site PCA 
 hetoolkit::plot_sitepca(data = cs1_env_data, 
-                        vars = c("ALTITUDE", "SLOPE", "WIDTH", "DEPTH", "BOULDERS_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY"), 
+                        vars = c("ALTITUDE", "SLOPE", "WIDTH", "DEPTH", 
+                                 "BOULDERS_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY"), 
                         eigenvectors = TRUE, label_by = "biol_site_id") 
 
 ```
@@ -253,7 +255,8 @@ cs1_predict_data <- cs1_predict_data %>%
 # Finally, select the variables in the Env data we want to keep
 
 cs1_env_data <- cs1_env_data %>% 
-  dplyr::select(biol_site_id, DIST_FROM_SOURCE, ALTITUDE, SLOPE, WIDTH, DEPTH, BOULDERS_COBBLES, PEBBLES_GRAVEL, SAND, SILT_CLAY, ALKALINITY)
+  dplyr::select(biol_site_id, DIST_FROM_SOURCE, ALTITUDE, SLOPE, WIDTH, DEPTH, 
+                BOULDERS_COBBLES, PEBBLES_GRAVEL, SAND, SILT_CLAY, ALKALINITY)
 
 ```
 
@@ -266,12 +269,14 @@ The `import_inv` function imports macroinvertebrate sampling data from the EA's 
 ```{r Load and clean Inv data, message=FALSE, warning=FALSE}
 
 # Download data from EDE with hetoolkit
-cs1_biol_data <- hetoolkit::import_inv(source = "parquet", sites = cs1_biolsites, start_date = "1995-01-01", end_date = "2017-12-31") 
+cs1_biol_data <- hetoolkit::import_inv(source = "parquet", sites = cs1_biolsites, 
+                                       start_date = "1995-01-01", end_date = "2017-12-31") 
 
 # Filter on spring and autumn samples, and select just the variables we want to keep 
 cs1_biol_data <- cs1_biol_data %>%
   dplyr:: filter(Season == "Spring" | Season == "Autumn") %>%
-  dplyr::select(biol_site_id, SAMPLE_DATE, LIFE_N_TAXA, LIFE_FAMILY_INDEX, LIFE_SCORES_TOTAL, Month, Season, Year)
+  dplyr::select(biol_site_id, SAMPLE_DATE, LIFE_N_TAXA, LIFE_FAMILY_INDEX, LIFE_SCORES_TOTAL, 
+                Month, Season, Year)
 
 cs1_biol_data$biol_site_id <- as.character(cs1_biol_data$biol_site_id)
 
@@ -292,25 +297,16 @@ DT::datatable(cs1_biol_data,
 
 ```
 
-Prior to joining the biology and flow data sets it is advisable to average results for any replicate samples collected from the same site in the same year and season.  
-
-```{r Average data, message=FALSE, warning=FALSE}
-
-cs1_biol_data <- cs1_biol_data %>%
-  dplyr::group_by(biol_site_id, Year, Season, Month) %>%
-  dplyr::summarise(LIFE_F = mean(LIFE_FAMILY_INDEX),
-                   date = mean(SAMPLE_DATE)) %>%
-  dplyr::ungroup()
-
-```
-
 ## Calculate O:E ratios 
 
-Now we join the  observed and expected LIFE scores into a single data frame so that O:E ratios (Observed/Expected) ratios can be calculated.
+Now we join the  observed and expected LIFE scores into a single data frame so that O:E ratios (Observed/Expected) ratios can be calculated. Prior to joining the biology data with other datasets, it is advisable to remove any replicate or duplicate samples collected from a site within the same year and season.
 
 ```{r calculate LIFE O:E ratio}
 
-# Join predicted indices to the invertebrate data by id and season into a new data frame called cs1_biol_all
+cs1_biol_data <- cs1_biol_data %>% distinct(biol_site_id, Year, Season, .keep_all = TRUE)
+
+# Join predicted indices to the invertebrate data by id and season 
+# into a new data frame called cs1_biol_all
 cs1_biol_all <- dplyr::left_join(cs1_biol_data, cs1_predict_data, by = c("biol_site_id", "Season")) 
 
 # Join the environmental data for later use
@@ -318,9 +314,10 @@ cs1_biol_all <-  dplyr::left_join(cs1_biol_all, cs1_env_data, by = "biol_site_id
 
 # Calculate LIFE O:E scores
 cs1_biol_all <- cs1_biol_all %>%
-  mutate(LIFE_F_O = LIFE_F,
+  mutate(LIFE_F_O = LIFE_FAMILY_INDEX,
          LIFE_F_E = TL3_LIFE_Fam_DistFam,
-         LIFE_F_OE = LIFE_F_O / LIFE_F_E) %>%
+         LIFE_F_OE = LIFE_F_O / LIFE_F_E,
+         date = SAMPLE_DATE) %>%
 # Select variables we want to keep 
   dplyr::select(biol_site_id, Year, Season, Month, date, DIST_FROM_SOURCE, LIFE_F_OE)
 
@@ -351,7 +348,8 @@ The exploratory plots below show:
 ```{r biol EDA1, echo=TRUE}
 
 # Number of macroinvertebrate samples by site & season
-ggplot(cs1_biol_all, aes(x = factor(biol_site_id, levels = rev(levels(factor(biol_site_id)))), fill = Season)) +
+ggplot(cs1_biol_all, aes(x = factor(biol_site_id, 
+                                    levels = rev(levels(factor(biol_site_id)))), fill = Season)) +
   geom_bar()+
   coord_flip()+
   xlab("Site") +
@@ -455,7 +453,8 @@ Following the Water Framework Directive (WFD) approach to classification, we cho
 ```{r 3-yr rolling statistics}
 
 # Calculate rolling 3-year summary statistics, by site and id. 
-cs1_wq_summary <- expand.grid(year = seq(from = 1995, to = 2019), wq_site_id = unique(cs1_metadata$wq_site_id))
+cs1_wq_summary <- expand.grid(year = seq(from = 1995, to = 2019), 
+                              wq_site_id = unique(cs1_metadata$wq_site_id))
 
 for(i in 1:dim(cs1_wq_summary)[1]){
 
@@ -464,10 +463,12 @@ for(i in 1:dim(cs1_wq_summary)[1]){
     dplyr::filter(year <= cs1_wq_summary$year[i] & year >= cs1_wq_summary$year[i]-2)
   
   # Calculate mean orthophsophate
-  cs1_wq_summary$mean_p[i] <- mean(temp$result[temp$det_label == "Orthophospht" & temp$wq_site_id == cs1_wq_summary$wq_site_id[i]], na.rm = TRUE)
+  cs1_wq_summary$mean_p[i] <- mean(temp$result[temp$det_label == "Orthophospht" & 
+                                      temp$wq_site_id == cs1_wq_summary$wq_site_id[i]], na.rm = TRUE)
 
   # Calculate 90th percentile ammonia
-  cs1_wq_summary$ammonium_90[i] <- quantile(temp$result[temp$det_label == "Ammonia(N)" & temp$wq_site_id == cs1_wq_summary$wq_site_id[i]], 0.90, na.rm=TRUE)
+  cs1_wq_summary$ammonium_90[i] <- quantile(temp$result[temp$det_label == "Ammonia(N)" & 
+                                      temp$wq_site_id == cs1_wq_summary$wq_site_id[i]], 0.90, na.rm=TRUE)
   
   rm(temp)
   
@@ -504,7 +505,7 @@ cs1_wq_summary %>%
 
 ```
 
-Ammonia and orthophosphate are strongly correlated (r = 0.70), so we choose to use just one (ammonia) to use as a predictor variable in our model. We choose ammonia based on scientific literature showing that ammonia is more likely to have a direct effect on macroinverterbate community, where as orthophosphate has an indirect affect on community through impacting food and habitat. The ammonia variable therefore provides a indicator of general water quality.  
+Ammonia and orthophosphate are strongly correlated (r = 0.70), so we choose to use just one (ammonia) to use as a predictor variable in our model. We choose ammonia based on scientific literature showing that ammonia is more likely to have a direct effect on macroinvertebrate community, whereas orthophosphate has an indirect effect by impacting food and habitat. The ammonia variable therefore provides a indicator of general water quality.  
 
 # Flow data 
 
@@ -664,12 +665,14 @@ cs1_he1 <- hetoolkit::join_he(biol_data = cs1_biol_all,
                               lags = c(0,12), 
                               method = "A", 
                               join_type = "add_flows") %>%
-# Manually join the long-term flow alteration statistics, RHS metrics and water quality statistics for each site
+# Manually join the long-term flow alteration statistics, RHS metrics and 
+# water quality statistics for each site
   dplyr::left_join(cs1_rfr, by = "flow_site_id") %>%
   dplyr::left_join(cs1_rhs_data, by = "rhs_survey_id") %>%
   dplyr::left_join(cs1_wq_summary, by = c("wq_site_id", "Year" = "year")) 
 
-# Separately, join biology data to flow statistics to create a dataset for data visualisation (this feeds into the plot_rngflows function)
+# Separately, join biology data to flow statistics to create a dataset for data visualisation 
+# (this feeds into the plot_rngflows function)
 cs1_he2 <- hetoolkit::join_he(biol_data = cs1_biol_all, 
                               flow_stats = cs1_flowstats1, 
                               mapping = cs1_metadata, 
@@ -819,7 +822,8 @@ summary(cs1_mod1)
 cs1_mod1_logocv <- hetoolkit::model_logocv(model = cs1_mod1, 
                                            data = cs1_he1, 
                                            group = "biol_site_id",
-                                           control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000)))
+                                           control = lmerControl(optimizer="bobyqa", 
+                                                            optCtrl = list(maxfun = 10000)))
 
 # get the RMSE (smaller values are better)
 cs1_mod1_logocv[[1]]
@@ -1018,19 +1022,21 @@ cs1_natural_scenario_flowstats <- hetoolkit::calc_flowstats(data = cs1_flowraw_w
 
 # Extract data frame of time-varying flow statistics, and select only essential columns
 cs1_natural_scenario_flowstats <- cs1_natural_scenario_flowstats[[1]] %>%
-  dplyr::select("flow_site_id", "win_no", "start_date", "end_date", "Q95z")
+  dplyr::select("flow_site_id", "win_no", "start_date", "end_date", "Q95z_ref") %>% 
+  dplyr::rename(Q95z = "Q95z_ref")
 
 cs1_historical_scenario_flowstats <- cs1_flowstats[[1]] %>%
   dplyr::select("flow_site_id", "win_no", "start_date", "end_date", "Q95z")
 
 ```
 
-To generate model predictions for spring (mid-April) and autumn (mid-October) in every year at every site (not just those seasons that happen to have a macroinvertebrate sample) we use `expand.grid` to create a prediction dataset, and then join it to the naturalised and historical flow statistics. Note how the prediction datasets contain all the predictor variables used in the final model.
+To generate model predictions for spring (mid-April) and autumn (mid-October) in every year at every site (not just those that happen to have a macroinvertebrate sample) we use `expand.grid` to create a prediction dataset, and then join it to the naturalised and historical flow statistics. Note how the prediction datasets contain all the predictor variables used in the final model.
 
 ```{r}
 
 # Create a prediction data set
-cs1_predict_biol_data <- expand.grid(biol_site_id = unique(cs1_biol_all$biol_site_id), Year = seq(1995,2018), Season = c("Spring", "Autumn"))
+cs1_predict_biol_data <- expand.grid(biol_site_id = unique(cs1_biol_all$biol_site_id), 
+                                     Year = seq(1995,2018), Season = c("Spring", "Autumn"))
 
 cs1_predict_biol_data <- cs1_predict_biol_data %>%
   # Center the year to 2005
@@ -1058,7 +1064,7 @@ cs1_historical_he <- hetoolkit::join_he(biol_data = cs1_predict_biol_data,
 
 ```
 
-Now we can use the `predict` function to predict LIFE O:E under both the naturalised and historical scenarios, and plot the results. We can see how the "historical" line describes the patterns in the historical data (the black points), and interpret the difference between the historical and naturalised scenarios as the effect of flow alteration. In this example, the historic and naturalised predictions are very similar, indicating little no evidence that flow alteration is suppressing macroinvertebrate LIFE O:E ratios.
+Now we can use the `predict` function to predict LIFE O:E under both the naturalised and historical scenarios, and plot the results. We can see how the "historical" line describes the patterns in the historical data (the black points), and interpret the difference between the historical and naturalised scenarios as the effect of flow alteration. In this example, the historic and naturalised predictions are broadly similar, though with some evidence that flow alteration is suppressing macroinvertebrate LIFE O:E ratios at a handful of sites. There are also specific cases (e.g. sites 43091 and 43407) where naturalised predictions of LIFE O:E are lower than historic predictions, a result of flows being augmented (historic > natural) at these sites.   
 
 ```{r, fig.height = 30}
 
@@ -1066,24 +1072,22 @@ Now we can use the `predict` function to predict LIFE O:E under both the natural
 cs1_natural_he$predict <- predict(cs1_mod2, newdata = cs1_natural_he)
 cs1_historical_he$predict <- predict(cs1_mod2, newdata = cs1_historical_he)
 
-# Create a data frame with the predicted values, biol_site_id, date and scenario (natural or historical), ready for plotting
+# Create a data frame with the predicted values, biol_site_id, date and scenario 
+# (natural or historical), ready for plotting
 cs1_predicted_data <- rbind(
-  data.frame(value = cs1_natural_he$predict, condition = "natural", biol_site_id = cs1_natural_he$biol_site_id, date = cs1_natural_he$date),
-  data.frame(value = cs1_historical_he$predict, condition = "historical", biol_site_id = cs1_historical_he$biol_site_id, date = cs1_historical_he$date)
+  data.frame(value = cs1_natural_he$predict, condition = "natural", 
+             biol_site_id = cs1_natural_he$biol_site_id, date = cs1_natural_he$date),
+  data.frame(value = cs1_historical_he$predict, condition = "historical", 
+             biol_site_id = cs1_historical_he$biol_site_id, date = cs1_historical_he$date)
 )
 
 # Plot the predictions, with the true (measured) values as points for reference.
 ggplot(cs1_predicted_data, aes(x = date, y = value, color = condition)) +
   geom_line(size = 0.8) +
-  geom_point(data = cs1_biol_all, aes(x = date, y = LIFE_F_OE, color = "measured"), size = 0.5, colour = "black") +
+  geom_point(data = cs1_biol_all, aes(x = date, y = LIFE_F_OE, color = "measured"), 
+             size = 0.5, colour = "black") +
   facet_wrap(~ biol_site_id, ncol = 3) +
   labs(y = "LIFE O:E ratio") +
   theme_bw()
 
 ```
-
-
-
-
-
-

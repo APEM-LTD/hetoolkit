@@ -41,11 +41,11 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/CaseStudy1.html">HE Toolkit Case Study: macroinvertebrates in chalk streams</a>
-    <a class="dropdown-item" href="../articles/CaseStudy2.html">HE Toolkit Case Study: macroinvertebrates in upland rivers</a>
-    <a class="dropdown-item" href="../articles/CaseStudy3.html">HE Toolkit Case Study: macrophytes in chalk streams</a>
-    <a class="dropdown-item" href="../articles/CaseStudy4.html">HE Toolkit Case Study: climwin analysis</a>
-    <a class="dropdown-item" href="../articles/hetoolkit-vignette.html">HE Toolkit Vignette</a>
+    <a class="dropdown-item" href="../articles/A.Vignette.html">Vignette</a>
+    <a class="dropdown-item" href="../articles/CaseStudy1.html">Macroinvertebrates in chalk streams</a>
+    <a class="dropdown-item" href="../articles/CaseStudy2.html">Macroinvertebrates in upland rivers</a>
+    <a class="dropdown-item" href="../articles/CaseStudy3.html">Macrophytes in chalk streams</a>
+    <a class="dropdown-item" href="../articles/CaseStudy4.html">Climwin analysis</a>
     <a class="dropdown-item" href="../articles/Resources.html">Resources</a>
   </div>
 </li>
@@ -76,11 +76,8 @@
     
     
 <div class="section level2">
-<h2 id="resources-for-hetoolkit">Resources for hetoolkit<a class="anchor" aria-label="anchor" href="#resources-for-hetoolkit"></a>
+<h2 id="training-videos">Training videos<a class="anchor" aria-label="anchor" href="#training-videos"></a>
 </h2>
-<div class="section level3">
-<h3 id="training-videos">Training videos<a class="anchor" aria-label="anchor" href="#training-videos"></a>
-</h3>
 <p><strong>Workshop 1: An Introduction to the HE Toolkit</strong></p>
 <p>This workshop is aimed at hydro-ecologists who have some basic
 experience with the R software package and wish to analyse open-source
@@ -113,10 +110,11 @@ below.</p>
 1</a></p>
 <p><a href="https://www.youtube.com/playlist?list=PLyZ0s0I9obPj3bUDp9a8S1d0LF6ZiQYTT" class="external-link">Workshop
 2</a></p>
+<p></p>
 </div>
-<div class="section level3">
-<h3 id="training-project">Training project<a class="anchor" aria-label="anchor" href="#training-project"></a>
-</h3>
+<div class="section level2">
+<h2 id="training-project">Training project<a class="anchor" aria-label="anchor" href="#training-project"></a>
+</h2>
 <p>Two example projects are hosted on <a href="https://posit.cloud/" class="external-link">PositCloud</a>.</p>
 <p>The workshop 1 project includes example code covering data import,
 processing and exploration</p>
@@ -132,45 +130,88 @@ your own workspace before making any changes to the project.</p>
 1</a></p>
 <p><a href="https://eur03.safelinks.protection.outlook.com/?url=https%3A%2F%2Fposit.cloud%2Fcontent%2F5663226&amp;data=05%7C01%7Ci.gordon%40apemltd.co.uk%7Cbf9cff5872b44182301b08db34540802%7Cf802729b1f8447b4881f4980f9545543%7C0%7C0%7C638161307737880503%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=eOV2dydEe7SwE5nnuFLBLW%2BarkN0e6zr4JPoOnoyEnI%3D&amp;reserved=0" class="external-link">Workshop
 2</a></p>
+<p></p>
 </div>
-<div class="section level3">
-<h3 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
-</h3>
-<div class="section level4">
-<h4 id="accessible-introductions-to-linear-mixed-effects-modelling">Accessible introductions to linear mixed-effects modelling<a class="anchor" aria-label="anchor" href="#accessible-introductions-to-linear-mixed-effects-modelling"></a>
-</h4>
+<div class="section level2">
+<h2 id="links-to-key-packages">Links to key packages<a class="anchor" aria-label="anchor" href="#links-to-key-packages"></a>
+</h2>
 <ul>
-<li>Harrison, X.A., et al. (2018). A brief introduction to mixed effects
-modelling and multi-model inference in ecology. PeerJ, 6, p.e4794.</li>
-<li>Zuur, A. F., Ieno, E. N., Walker, N. J., Saveliev, A. A., &amp;
-Smith, G. M. (2009). Mixed effects models and extensions in ecology with
-R. London, UK: Springer</li>
+<li>
+<code>lme4</code>: linear mixed-effects modelling (<a href="https://cran.r-project.org/web/packages/lme4/index.html" class="external-link uri">https://cran.r-project.org/web/packages/lme4/index.html</a>)</li>
+<li>
+<code>lmerTest</code>: tests for linear mixed-effects models (<a href="https://cran.r-project.org/web/packages/lmerTest/index.html" class="external-link uri">https://cran.r-project.org/web/packages/lmerTest/index.html</a>)</li>
+<li>
+<code>mgcv</code>: generalised additive modelling (<a href="https://cran.r-project.org/web/packages/mgcv/index.html" class="external-link uri">https://cran.r-project.org/web/packages/mgcv/index.html</a>)</li>
+<li>
+<code>visreg</code>: visualisation of regression models (<a href="https://cran.r-project.org/web/packages/visreg/index.html" class="external-link uri">https://cran.r-project.org/web/packages/visreg/index.html</a>)</li>
+<li>
+<code>gratia</code>: graphics for GAMs fitted using
+<code>mgcv</code> (<a href="https://cloud.r-project.org/web/packages/gratia/index.html" class="external-link uri">https://cloud.r-project.org/web/packages/gratia/index.html</a>)</li>
+<li>
+<code>vegan</code>: ordination methods, diversity analysis and other
+functions for community and vegetation ecologists (<a href="https://cran.r-project.org/web/packages/vegan/index.html" class="external-link uri">https://cran.r-project.org/web/packages/vegan/index.html</a>)</li>
+<li>
+<code>gradientForest</code>: detecting biological composition
+patterns along environmental gradients (<a href="https://gradientforest.r-forge.r-project.org/" class="external-link uri">https://gradientforest.r-forge.r-project.org/</a>)</li>
+<li>
+<code>rnrfa</code>: retrieving data and information from the
+National River Flow Archive (<a href="https://cran.r-project.org/web/packages/rnrfa/index.html" class="external-link uri">https://cran.r-project.org/web/packages/rnrfa/index.html</a>)</li>
+</ul>
+<p></p>
+</div>
+<div class="section level2">
+<h2 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+</h2>
+<div class="section level3">
+<h3 id="accessible-introductions-to-linear-mixed-effects-modelling">Accessible introductions to linear mixed-effects modelling<a class="anchor" aria-label="anchor" href="#accessible-introductions-to-linear-mixed-effects-modelling"></a>
+</h3>
+<ul>
+<li>Harrison, X.A. <em>et al.</em> (2018). A brief introduction to mixed
+effects modelling and multi-model inference in ecology. <em>PeerJ</em>,
+6, p.e4794.</li>
+<li>Zuur, A. F., Ieno, E. N., Walker, N. J., Saveliev, A. A. and Smith,
+G. M. (2009). Mixed effects models and extensions in ecology with R.
+London, UK: Springer</li>
 <li>Lots more online e.g. <a href="http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html" class="external-link">GLMM
 FAQ</a>
 </li>
 </ul>
 </div>
-<div class="section level4">
-<h4 id="example-applications-to-macroinvertebrate-data">Example applications to macroinvertebrate data<a class="anchor" aria-label="anchor" href="#example-applications-to-macroinvertebrate-data"></a>
-</h4>
+<div class="section level3">
+<h3 id="accessible-introductions-to-generalised-additive-modelling">Accessible introductions to generalised additive modelling<a class="anchor" aria-label="anchor" href="#accessible-introductions-to-generalised-additive-modelling"></a>
+</h3>
+<ul>
+<li>Pedersen, E.J., Miller, D.L., Simpson, G.L. and Ross, N. (2019).
+Hierarchical generalized additive models in ecology: an introduction
+with mgcv. <em>PeerJ</em>, 7:e6876, <a href="https://doi.org/10.7717/peerj.6876" class="external-link uri">https://doi.org/10.7717/peerj.6876</a>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="example-applications-to-macroinvertebrate-data">Example applications to macroinvertebrate data<a class="anchor" aria-label="anchor" href="#example-applications-to-macroinvertebrate-data"></a>
+</h3>
 <ul>
 <li>Dunbar, M.J., Lauge Pedersen, M., Cadman, D., Extence, C.,
 Waddingham, J, Chadd, R. and Larsen, S.E. (2009). River discharge and
 local scale habitat influence macroinvertebrate LIFE scores.
-<em>Freshwater Biology</em> 55, 226–242. <a href="doi:10.1111/j.1365-2427.2009.02306.x" class="uri">doi:10.1111/j.1365-2427.2009.02306.x</a>
+<em>Freshwater Biology</em>, 55, 226–242. <a href="doi:10.1111/j.1365-2427.2009.02306.x" class="uri">doi:10.1111/j.1365-2427.2009.02306.x</a>
 </li>
 <li>Dunbar, M.J., Warren, M., Extence, C., Baker, L., Cadman, D., Mould,
 D.J., Hall, J. and Chadd, R. (2010). Interaction between
 macroinvertebrates, discharge and physical habitat in upland rivers.
-Aquatic Conservation: Marine and Freshwater Ecosystems, 20(S1),
-pp.S31-S44.</li>
+<em>Aquatic Conservation: Marine and Freshwater Ecosystems</em>, 20(S1),
+S31-S44.</li>
 <li>England, J., Chadd, R., Dunbar, M.J., Sarremejane, R., Stubbington,
-R. Westwood, C.G. and Leeming, D.J. 2019. An invertebrate-based index to
-characterize ecological responses to flow intermittence in rivers.
-<em>Fundamental and Applied Limnology</em>. DOI:
+R., Westwood, C.G. and Leeming, D.J. 2019. An invertebrate-based index
+to characterize ecological responses to flow intermittence in rivers.
+<em>Fundamental and Applied Limnology</em>, DOI:
 10.1127/fal/2019/1206</li>
+<li>Sarremejane, R., England, J., Dunbar, M.J., Brown, R., Naura, M. and
+Stubbington, R. (2024). Human impacts mediate freshwater invertebrate
+community responses to and recovery from drought. <em>Journal of Applied
+Ecology</em>, 61, 2616–2627, <a href="https://doi.org/10.1111/1365-2664.14771" class="external-link uri">https://doi.org/10.1111/1365-2664.14771</a>
+</li>
 </ul>
-</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -181,7 +222,7 @@ characterize ecological responses to flow intermittence in rivers.
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by APEM-Ltd.</p>
+<p>Developed by Environment Agency, APEM Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

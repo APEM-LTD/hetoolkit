@@ -20,9 +20,17 @@ knitr::opts_chunk$set(
 
 ## Overview 
 
-The `hetoolkit` package comprises a collection of 23 functions, developed by APEM LTD on behalf of the Environment Agency, to assemble, process, visualise and model hydro-ecological data. The full set of functions are listed under the Reference tab above. Note that they include deprecated versions of three functions that are retained for back-compatibility. 
+The `hetoolkit` package comprises a collection of 23 functions, developed by APEM Ltd on behalf of the Environment Agency, to assemble, process, visualise and model hydroecological (HE) data. The full set of functions are listed under the Reference tab above. Note that they include deprecated versions of three functions that are retained for back-compatibility. 
 
-## WORKFLOW
+## Background 
+
+There is growing awareness of the need for better empirical evidence in water resources decision-making. HE modelling is an emerging field that offers the opportunity to develop statistically powerful tools to predict the ecological impacts of water resources activities, such as abstraction, by relating data on an ecological receptor to antecedent hydrological (plus other environmental) predictors. The most powerful models are those that 'pool' data from multiple sites that span the environmental gradient(s) of interest (e.g. abstraction pressure) to create a large calibration dataset, making it possible to predict the ecological impacts of changes in flow under a range of environmental conditions.  
+
+HE modelling has various areas of intended application, from no deterioration investigations and water company drought plan environmental assessments to local flow constraint proposals. Any water company or consultant using the toolkit for an official purpose such as these should first ensure they are familiar with the relevant statutory guidance and other Environment Agency publications. 
+
+Short of full HE model development and beyond the specific field of hydroecology, the `hetoolkit` package has various potential uses, such as collating Environment Agency monitoring data, summarising flow data and pairing environmental and ecological datasets. 
+
+## Workflow
 
 The different functions link together as shown in the flow chart below:
 
@@ -76,12 +84,19 @@ Version | Date     | Details
                      Minor update to predict_indices.
 2.1.2   | Jan-2024 | Added new function import_inv_taxa.\
                      Bug fix to import_rhs, minor update to import_wq.
-
+2.1.2   | Nov-2024 | Bug fix to calc_flowstats for Q values and BFI.
+2.1.2   | Jan-2025 | Updates to website.\
+                     Corrections and updates to case studies.
+                     
 Full details of the changes are listed in the Changelog tab above
+
+## Help and advice
+
+Questions about using the HE Toolkit and HE modelling more generally can be sent to the EA National Hydroecology Team (hydroecologyteam@environment-agency.gov.uk). Please also see the list of FAQs under the Articles menu above.   
 
 ## Examples
 
-Further information on the functions contained within the package, including examples, can be found the vignette and case studies (under development) under the Articles menu above. 
+Some examples of how to use the toolkit for HE modelling can be found in the vignette and case studies, under the Articles menu above. Beyond the toolkit's core functions these illustrate a range of methods relevant to the processing and analysis of HE data, from generalised additive modelling to harmonising taxonomic data.   
 
 ## Reporting Bugs
 

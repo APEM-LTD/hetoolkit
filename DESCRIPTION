@@ -2,11 +2,15 @@ Package: hetoolkit
 Title: Hydro-Ecology Toolkit
 Version: 2.1.2
 Authors@R: 
-    person(given = "APEM-Ltd",
+    c(person(given = "Environment Agency",
            family = "",
            role = c("aut", "cre"),
-           email = "A.Davey@apemltd.co.uk")
-Description: The hetoolkit package comprises a collection of functions for assembling, processing, visualising and modelling hydro-ecological data.
+           email = "hydroecologyteam@environment-agency.gov.uk"),
+    person(given = "APEM Ltd",
+           family = "",
+           role = c("aut", "cre"),
+           email = "A.Davey@apemltd.co.uk"))
+Description: The hetoolkit package comprises a collection of functions for assembling, processing, visualising and modelling hydroecological data.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

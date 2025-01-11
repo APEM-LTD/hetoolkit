@@ -1,7 +1,7 @@
 ---
-title: "HE Toolkit Case Study: climwin analysis"
-author: "Environment Agency (National Hydroecology Team, WR E&B) & APEM"
-date: "`r Sys.Date()`"
+title: "Climwin analysis"
+author: "Environment Agency / APEM Ltd"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     highlight: tango
@@ -11,6 +11,7 @@ output:
     toc_depth: 3
     toc_float: yes
 editor_options:
+  
   chunk_output_type: console
 ---
 

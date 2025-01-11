@@ -2,11 +2,11 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  A.Vignette: A.Vignette.html
   CaseStudy1: CaseStudy1.html
   CaseStudy2: CaseStudy2.html
   CaseStudy3: CaseStudy3.html
   CaseStudy4: CaseStudy4.html
-  hetoolkit-vignette: hetoolkit-vignette.html
   Resources: Resources.html
-last_built: 2024-03-28T14:45Z
+last_built: 2025-01-10T22:39Z
 

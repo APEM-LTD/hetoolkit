@@ -7,8 +7,6 @@ knitr::opts_chunk$set(echo = FALSE,
                       fig.path = "man/figures/")
 ```
 
-# Resources for hetoolkit
-
 ## Training videos
 
 **Workshop 1: An Introduction to the HE Toolkit**
@@ -39,6 +37,7 @@ This workshop is aimed at more experienced data analysists who are interested in
  
  [Workshop 2](https://www.youtube.com/playlist?list=PLyZ0s0I9obPj3bUDp9a8S1d0LF6ZiQYTT)
 
+</br>
 
 ## Training project
 
@@ -56,17 +55,37 @@ Links to the projects can be found below:
 
 [Workshop 2](https://eur03.safelinks.protection.outlook.com/?url=https%3A%2F%2Fposit.cloud%2Fcontent%2F5663226&data=05%7C01%7Ci.gordon%40apemltd.co.uk%7Cbf9cff5872b44182301b08db34540802%7Cf802729b1f8447b4881f4980f9545543%7C0%7C0%7C638161307737880503%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=eOV2dydEe7SwE5nnuFLBLW%2BarkN0e6zr4JPoOnoyEnI%3D&reserved=0)
 
+</br>
+
+## Links to key packages
+
+* `lme4`: linear mixed-effects modelling (https://cran.r-project.org/web/packages/lme4/index.html)
+* `lmerTest`: tests for linear mixed-effects models (https://cran.r-project.org/web/packages/lmerTest/index.html)
+* `mgcv`: generalised additive modelling (https://cran.r-project.org/web/packages/mgcv/index.html)
+* `visreg`: visualisation of regression models (https://cran.r-project.org/web/packages/visreg/index.html)
+* `gratia`: graphics for GAMs fitted using `mgcv` (https://cloud.r-project.org/web/packages/gratia/index.html)
+* `vegan`: ordination methods, diversity analysis and other functions for community and vegetation ecologists (https://cran.r-project.org/web/packages/vegan/index.html) 
+* `gradientForest`: detecting biological composition patterns along environmental gradients (https://gradientforest.r-forge.r-project.org/)
+* `rnrfa`: retrieving data and information from the National River Flow Archive (https://cran.r-project.org/web/packages/rnrfa/index.html)
+
+</br>
+
 ## Further Reading
 
 ### Accessible introductions to linear mixed-effects modelling
 
- * Harrison, X.A., et al. (2018). A brief introduction to mixed effects modelling and multi-model inference in ecology. PeerJ, 6, p.e4794.
- * Zuur, A. F., Ieno, E. N., Walker, N. J., Saveliev, A. A., & Smith, G. M. (2009). Mixed effects models and extensions in ecology with R. London, UK: Springer
+ * Harrison, X.A. *et al.* (2018). A brief introduction to mixed effects modelling and multi-model inference in ecology. *PeerJ*, 6, p.e4794.
+ * Zuur, A. F., Ieno, E. N., Walker, N. J., Saveliev, A. A. and Smith, G. M. (2009). Mixed effects models and extensions in ecology with R. London, UK: Springer
  * Lots more online e.g. [GLMM FAQ](http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html)
+ 
+### Accessible introductions to generalised additive modelling
+
+* Pedersen, E.J., Miller, D.L., Simpson, G.L. and Ross, N. (2019). Hierarchical generalized additive models in ecology: an introduction with mgcv. *PeerJ*, 7:e6876, https://doi.org/10.7717/peerj.6876
  
 ### Example applications to macroinvertebrate data
 
- * Dunbar, M.J., Lauge Pedersen, M., Cadman, D., Extence, C., Waddingham, J, Chadd, R. and Larsen, S.E. (2009). River discharge and local scale habitat influence macroinvertebrate LIFE scores. *Freshwater Biology* 55, 226–242. doi:10.1111/j.1365-2427.2009.02306.x
- * Dunbar, M.J., Warren, M., Extence, C., Baker, L., Cadman, D., Mould, D.J., Hall, J. and Chadd, R. (2010). Interaction between macroinvertebrates, discharge and physical habitat in upland rivers. Aquatic Conservation: Marine and Freshwater Ecosystems, 20(S1), pp.S31-S44.
- * England, J., Chadd, R., Dunbar, M.J., Sarremejane, R., Stubbington, R. Westwood, C.G. and Leeming, D.J. 2019. An invertebrate-based index to characterize ecological responses to flow intermittence in rivers. *Fundamental and Applied Limnology*. DOI: 10.1127/fal/2019/1206
+ * Dunbar, M.J., Lauge Pedersen, M., Cadman, D., Extence, C., Waddingham, J, Chadd, R. and Larsen, S.E. (2009). River discharge and local scale habitat influence macroinvertebrate LIFE scores. *Freshwater Biology*, 55, 226–242. doi:10.1111/j.1365-2427.2009.02306.x
+ * Dunbar, M.J., Warren, M., Extence, C., Baker, L., Cadman, D., Mould, D.J., Hall, J. and Chadd, R. (2010). Interaction between macroinvertebrates, discharge and physical habitat in upland rivers. *Aquatic Conservation: Marine and Freshwater Ecosystems*, 20(S1), S31-S44.
+ * England, J., Chadd, R., Dunbar, M.J., Sarremejane, R., Stubbington, R., Westwood, C.G. and Leeming, D.J. 2019. An invertebrate-based index to characterize ecological responses to flow intermittence in rivers. *Fundamental and Applied Limnology*, DOI: 10.1127/fal/2019/1206
+ * Sarremejane, R., England, J., Dunbar, M.J., Brown, R., Naura, M. and Stubbington, R. (2024). Human impacts mediate freshwater invertebrate community responses to and recovery from drought. *Journal of Applied Ecology*, 61, 2616–2627, https://doi.org/10.1111/1365-2664.14771
 

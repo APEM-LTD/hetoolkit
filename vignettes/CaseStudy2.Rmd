@@ -1,6 +1,6 @@
 ---
-title: "HE Toolkit Case Study: macroinvertebrates in upland rivers"
-author: "APEM Ltd"
+title: "Macroinvertebrates in upland rivers"
+author: "Environment Agency / APEM Ltd"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
@@ -14,8 +14,6 @@ editor_options:
   
   chunk_output_type: console
 ---
-
-<img src="ApemLogo.png" style="width:80px;position:absolute;top:0px;right:0px;"/>
 
 ```{r SetUp, include=FALSE}
 
@@ -31,9 +29,9 @@ opts_chunk$set(fig.width = 12, fig.height = 8,
 
 # Introduction 
 
-This case study illustrates a typical HE Toolkit workflow using a dataset first analysed by Dunbar et al. 2010 as part of the Environment Agency-funded DRIED-UP2 study. The study used family-level macroinvertebrate LIFE scores and a mix of gauged and modelled mean daily flow data to explore how flow history and channel morphology interact to influence macroinvertebrate communities in upland rivers. 
+This case study illustrates a typical HE Toolkit workflow using a dataset first analysed by Dunbar *et al.* (2010) as part of the Environment Agency-funded DRIED-UP2 study. The study used family-level macroinvertebrate LIFE scores and a mix of gauged and modelled mean daily flow data to explore how flow history and channel morphology interact to influence macroinvertebrate communities in upland rivers. 
 
-This re-analysis using the HE Toolkit has several differences from Dunbar et al. 2010 as it focuses on a reduced set of 68 macroinvertebrate sampling locations in England, uses LIFE O:E ratios rather than LIFE as the response variable, and uses updated macroinvertebrate and flow data up to 2015. 
+This re-analysis using the HE Toolkit has several differences from Dunbar *et al.* (2010) as it focuses on a reduced set of 68 macroinvertebrate sampling locations in England, uses LIFE O:E ratios rather than LIFE as the response variable, and uses updated macroinvertebrate and flow data up to 2015. 
 
 As this case study is intended to illustrate the application of the HE toolkit, rather than be a comprehensive analysis in its own right, some of the analytical steps have been simplified for brevity.  
 
@@ -263,7 +261,6 @@ leaflet() %>%
 
 ```
 
-
 ## Assess site similarity 
 
 Prior to building a hydro-ecological model, it is important identify any sites that could potentially be outliers because they are physically dissimilar to the others sites in the dataset.
@@ -367,20 +364,14 @@ DT::datatable(cs2_predict_data,
 
 ## Join Biology and Environmental data with expected indices
 
-Prior to joining the data, it is advisable to average results for any replicate samples collected from the same site in the same month. 
+Prior to joining the biology data with other datasets, it is advisable to remove any replicate or duplicate samples collected from a site within the same year and season.
 
-```{r Average LIFE scores, warning=FALSE}
+```{r join bio, warning=FALSE}
 
-# Average LIFE scores from same site, year and season
-cs2_biol_data <- cs2_biol_data %>%
-  dplyr::group_by(biol_site_id, Year, Season, Month) %>%
-  dplyr::summarise(LIFE_F_O = mean(LIFE_FAMILY_INDEX),
-                   date = mean(SAMPLE_DATE)) %>%
-  dplyr::ungroup()
+# remove replicate samples
+cs2_biol_data <- cs2_biol_data %>% distinct(biol_site_id, Year, Season, .keep_all = TRUE)
 
 ```
-
-## Calculate O:E ratios 
 
 Now we join the  observed and expected LIFE scores into a single data frame so that O:E  (Observed/Expected) ratios can be calculated.
 
@@ -395,9 +386,10 @@ cs2_biol_all <-  dplyr::left_join(cs2_biol_all, cs2_env_data, by = "biol_site_id
 # Calculate LIFE O:E scores
 cs2_biol_all <- cs2_biol_all %>%
   mutate(LIFE_F_E = TL3_LIFE_Fam_DistFam,
-         LIFE_F_OE = LIFE_F_O / LIFE_F_E)
+         LIFE_F_OE = LIFE_FAMILY_INDEX / LIFE_F_E,
+         date = SAMPLE_DATE)
   
-cs2_biol_all <- subset(cs2_biol_all, select = c(biol_site_id, Year, Season, Month, date, LIFE_F_OE))
+cs2_biol_all <- cs2_biol_all %>% select(biol_site_id, Year, Season, Month, date, LIFE_F_OE)
 cs2_biol_all$biol_site_id <- as.character(cs2_biol_all$biol_site_id)
 
 ```
@@ -441,7 +433,7 @@ ggplot(data = cs2_biol_all, aes(x = LIFE_F_OE)) +
 
 ## Split data by season 
 
-For this case study, the biology data needs to be split into two data frames, Spring and Autumn. The spring samples will be joined to flow statistics for the preceding six month Winter period, and the Autumn samples will be joined to flow statistics for the preceding six month Summer period.
+For this case study, the biology data needs to be split into two data frames, spring and autumn. The spring samples will be joined to flow statistics for the preceding six month winter period, and the autumn samples will be joined to flow statistics for the preceding six month summer period.
 
 ```{r Split MI, warning=FALSE}
 
@@ -546,7 +538,7 @@ cs2_flow_data <- hetoolkit::impute_flow(cs2_flow_data,
 
 ## Calculate flow statistics
 
-Dunbar et al. (2010) explored the how flows in the preceding six month period influence spring and autumn LIFE O:E ratios. Flow statistics were calculated for Winter (October-March) and Summer (April-September) periods, and these two sets of statistics were each z-score standardised to indicate whether winter flows were above or below normal for that time of year, and whether summer flows were above or below normal for that time of year. To mirror that analysis, we run the `calc_flowstats` function twice - first for winter and then for summer - so that the winter and summer flow statistics are standardised separately.
+Dunbar *et al.* (2010) explored the how flows in the preceding six month period influence spring and autumn LIFE O:E ratios. Flow statistics were calculated for Winter (October-March) and Summer (April-September) periods, and these two sets of statistics were each z-score standardised to indicate whether winter flows were above or below normal for that time of year, and whether summer flows were above or below normal for that time of year. To mirror that analysis, we run the `calc_flowstats` function twice - first for winter and then for summer - so that the winter and summer flow statistics are standardised separately.
 
 `calc_flowstats` takes a time series of measured or modelled flows and uses a user-defined moving window to calculate a suite of long-term and time-varying flow statistics for one or more sites (stations). 
 
@@ -630,10 +622,8 @@ The `join_he` function links biology data with time-varying flow statistics  for
 
 To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (method = "A") or most recently started (method = "B") flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on. The function allows the user to select which antecedent (lagged) time periods the biology data is joined to, e.g. lag = c(0,1,2).  This method is demonstrated in the schematic below.
 
-```{r echo=FALSE,}
-
-knitr::include_graphics("jeHE.PNG")
-
+```{r schematic, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("data/jeHE.png")
 ```
 
 The function also includes an option to specify the "join_type":
@@ -784,9 +774,9 @@ cs2_hev_data %>%
 
 Once the biology and flow data have been processed and assembled into a single data frame, spatial and temporal variation in a biological metric of interest can be modelled as a function of one or more flow summary statistics to reveal potential hydro-ecological relationships. For datasets comprising multiple sites, linear mixed-effects models fitted using the `lmer` function from the `lme4` package have the ability to describe a 'global' relationship that applies across all sites, whilst also quantifying the degree of variability in this relationship from site to site. 
 
-Following Dunbar et al. (2010), we model variation in LIFE (expressed as an O:E ratio rather than as an observed score to better control for natural variation in invertebrate community composition) as a function of: high (`Q10z_lag0`) and low (`Q95z_lag0`) flows in the previous six-month winter or summer period; `Season` (spring or autumn); Habitat Quality Assessment (`HQA`) score, representing instream habitat quality; Habitat Modification Score (`HMSRBB`) representing the extent and severity of morphological channel alteration; and time (Year, centered to 2005 = 0, termed `Year_cen`) to account for underlying long-term trends. Selected interaction terms were also included to explore if and how the effect of flow history varies with season, HMSRBB and HQA (see Dunbar et al. 2010 for details).
+Following Dunbar *et al.* (2010), we model variation in LIFE (expressed as an O:E ratio rather than as an observed score to better control for natural variation in invertebrate community composition) as a function of: high (`Q10z_lag0`) and low (`Q95z_lag0`) flows in the previous six-month winter or summer period; `Season` (spring or autumn); Habitat Quality Assessment (`HQA`) score, representing instream habitat quality; Habitat Modification Score (`HMSRBB`) representing the extent and severity of morphological channel alteration; and time (Year, centered to 2005 = 0, termed `Year_cen`) to account for underlying long-term trends. Selected interaction terms were also included to explore if and how the effect of flow history varies with season, HMSRBB and HQA (see Dunbar *et al.* (2010) for details).
 
-To reflect the hierarchical structure of the data (samples nested in sites), the models include a random intercept to account for site-to-site variation in mean LIFE O:E. Following Dunbar et al. (2010), we alos include a random slope to account for site-specific time trends. 
+To reflect the hierarchical structure of the data (samples nested in sites), the models include a random intercept to account for site-to-site variation in mean LIFE O:E. Following Dunbar *et al.* (2010), we alos include a random slope to account for site-specific time trends. 
 
 To illustrate the challenge of selecting a preferred model, we fit four competing models of varying complexity and use cross-validation to compare their predictive performance.
 
@@ -933,11 +923,11 @@ summary(cs2_mod1)
 
 The preferred model with the lowest RMSE (model 1) included the fixed predictors `Q10z_lag0`,  `Q95z_lag0`, `Season`, `HQA`, `Year_cen`, and `HMSRBB`, plus two interaction terms, while the random effects included intercept and Year_cen varying by site. The diagnostic plots (see below) indicate that all of these effects were approximately linear.
 
-On average, LIFE O:E was lower in autumn than spring, increased with habitat diversity (HQA score) and decreased with the extent of habitat modification (HMSRBB score). There was also an underlying long-term increasing trend across all sites (Year_cen) of ca 0.03. After controlling for these influences, LIFE O:E was positively associated with the Q95z flow in the preceding six month winter or summer period and to a lesser extent with the Q10z flow. The effect of Q10z was stronger in autumn than in spring (Q10z * season interaction), and the effect of Q95z decreased with the HQA score (Q95z * HQA interaction), indicating that macroinvertebrate communities at sites with more diversity habitat were less sensitive to antecedent low flows.  
+On average, LIFE O:E was lower in autumn than spring, increased with habitat diversity (HQA score) and decreased with the extent of habitat modification (HMSRBB score). There was also an underlying long-term increasing trend across all sites (Year_cen). After controlling for these influences, LIFE O:E was positively associated with the Q95z flow in the preceding six month winter or summer period and to a lesser extent with the Q10z flow. The effect of Q10z was stronger in autumn than in spring (Q10z * season interaction), and the effect of Q95z decreased with the HQA score (Q95z * HQA interaction), indicating that macroinvertebrate communities at sites with more habitat diversity were less sensitive to antecedent low flows.  
 
-The random effects estimates showed a relatively large variance in the intercept among the 68 sites, indicating a high degree of unexplained spatial variation, but only a small variance in the Year-cen effect, indicating a similar long-term trend across all sites. The random intercepts and slopes were only weakly (r = 0.16) correlated.
+The random effects estimates showed a relatively large variance in the intercept among the 68 sites, indicating a high degree of unexplained spatial variation, but only a small variance in the Year_cen effect, indicating a similar long-term trend across all sites. The random intercepts and slopes were only weakly (r = 0.16) correlated.
 
-In spite of the use of a smaller dataset (68 vs 87 sites) and LIFE O:E ratios in preference to LIFE scores, these results are broadly consistent with those reported by Dunbar et al. (2010).
+In spite of the use of a smaller dataset (68 vs 87 sites) and LIFE O:E ratios in preference to LIFE scores, these results are broadly consistent with those reported by Dunbar *et al.* (2010).
 
 ## Model diagnostics
 
@@ -1018,8 +1008,17 @@ sjPlot::plot_model(model = cs2_mod1,
 sjPlot::plot_model(model = cs2_mod1, 
                    type = "pred",
                    pred.type = "fe",
-                   grid = TRUE,
-                   title = NULL, terms=c("Q10z_lag0", "Season", "Q95z_lag0", "HQA", "Year_cen", "HMSRBB"))
+                   title = NULL, terms= "Q95z_lag0")
+
+sjPlot::plot_model(model = cs2_mod1, 
+                   type = "pred",
+                   pred.type = "fe",
+                   title = NULL, terms= "HQA")
+
+sjPlot::plot_model(model = cs2_mod1, 
+                   type = "pred",
+                   pred.type = "fe",
+                   title = NULL, terms= "HMSRBB")
 
 ```
 
