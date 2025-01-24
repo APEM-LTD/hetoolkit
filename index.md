@@ -9,19 +9,38 @@
 ## Overview
 
 The `hetoolkit` package comprises a collection of 23 functions,
-developed by APEM LTD on behalf of the Environment Agency, to assemble,
-process, visualise and model hydro-ecological data. The full set of
+developed by APEM Ltd on behalf of the Environment Agency, to assemble,
+process, visualise and model hydroecological (HE) data. The full set of
 functions are listed under the Reference tab above. Note that they
 include deprecated versions of three functions that are retained for
 back-compatibility.
 
-## Background 
+## Background
 
-There is growing awareness of the need for better empirical evidence in water resources decision-making. HE modelling is an emerging field that offers the opportunity to develop statistically powerful tools to predict the ecological impacts of water resources activities, such as abstraction, by relating data on an ecological receptor to antecedent hydrological (plus other environmental) predictors. The most powerful models are those that 'pool' data from multiple sites that span the environmental gradient(s) of interest (e.g. abstraction pressure) to create a large calibration dataset, making it possible to predict the ecological impacts of changes in flow under a range of environmental conditions.  
+There is growing awareness of the need for better empirical evidence in
+water resources decision-making. HE modelling is an emerging field that
+offers the opportunity to develop statistically powerful tools to
+predict the ecological impacts of water resources activities, such as
+abstraction, by relating data on an ecological receptor to antecedent
+hydrological (plus other environmental) predictors. The most powerful
+models are those that ‘pool’ data from multiple sites that span the
+environmental gradient(s) of interest (e.g. abstraction pressure) to
+create a large calibration dataset, making it possible to predict the
+ecological impacts of changes in flow under a range of environmental
+conditions.
 
-HE modelling has various areas of intended application, from no deterioration investigations and water company drought plan environmental assessments to local flow constraint proposals. Any water company or consultant using the toolkit for an official purpose such as these should first ensure they are familiar with the relevant statutory guidance and other Environment Agency publications. 
+HE modelling has various areas of intended application, from no
+deterioration investigations and water company drought plan
+environmental assessments to local flow constraint proposals. Any water
+company or consultant using the toolkit for an official purpose such as
+these should first ensure they are familiar with the relevant statutory
+guidance and other Environment Agency publications. They may also find
+the FAQs tab above helpful.
 
-Short of full HE model development and beyond the specific field of hydroecology, the `hetoolkit` package has various potential uses, such as collating Environment Agency monitoring data, summarising flow data and pairing environmental and ecological datasets. 
+Short of full HE model development and beyond the specific field of
+hydroecology, the `hetoolkit` package has various potential uses, such
+as collating Environment Agency monitoring data, summarising flow data
+and pairing environmental and ecological datasets.
 
 ## Workflow
 
@@ -130,11 +149,23 @@ Bug fix to import_rhs, minor update to import_wq.</td>
 </tbody>
 </table>
 
-Full details of the changes are listed in the Changelog tab above
+Details of recent changes to the current version of the package,
+including website updates, are listed in the Updates tab above.
+
+## Help and advice
+
+Questions about using the HE Toolkit and HE modelling more generally can
+be sent to the EA National Hydroecology Team
+(<hydroecologyteam@environment-agency.gov.uk>). Please also see the list
+of FAQs under the Articles menu above.
 
 ## Examples
 
-Some examples of how to use the toolkit for HE modelling can be found in the vignette and case studies, under the Articles menu above. Beyond the toolkit's core functions these illustrate a range of methods relevant to the processing and analysis of HE data, from generalised additive modelling to harmonising taxonomic data.
+Some examples of how to use the toolkit for HE modelling can be found in
+the vignette and case studies, under the Articles menu above. Beyond the
+toolkit’s core functions these illustrate a range of methods relevant to
+the processing and analysis of HE data, from generalised additive
+modelling to harmonising taxonomic data.
 
 ## Reporting Bugs
 

@@ -4,6 +4,9 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/A.Vignette.html</loc>
+  </url>
+  <url>
     <loc>/articles/CaseStudy1.html</loc>
   </url>
   <url>
@@ -16,6 +19,9 @@
     <loc>/articles/CaseStudy4.html</loc>
   </url>
   <url>
+    <loc>/articles/CaseStudy5.html</loc>
+  </url>
+  <url>
     <loc>/articles/hetoolkit-vignette.html</loc>
   </url>
   <url>
@@ -26,6 +32,9 @@
   </url>
   <url>
     <loc>/authors.html</loc>
+  </url>
+  <url>
+    <loc>/FAQs.html</loc>
   </url>
   <url>
     <loc>/index.html</loc>
@@ -110,5 +119,11 @@
   </url>
   <url>
     <loc>/reference/shiny_hev.html</loc>
+  </url>
+  <url>
+    <loc>/Resources.html</loc>
+  </url>
+  <url>
+    <loc>/updates.html</loc>
   </url>
 </urlset>

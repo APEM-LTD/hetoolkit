@@ -1,4 +1,18 @@
 url: ~
 template:
   bootstrap: 5
-
+  bootswatch: lumen
+navbar:
+  structure:
+    left:  [reference, articles, Resources, updates, FAQs]
+  components:
+   Resources:
+    text: Resources
+    href: Resources.md
+   updates:
+    text: Updates
+    href: updates.md
+   FAQs:
+    text: FAQs
+    href: FAQs.md
+    right:  [search]
