@@ -8,7 +8,7 @@ Authors@R:
            email = "hydroecologyteam@environment-agency.gov.uk"),
     person(given = "APEM Ltd",
            family = "",
-           role = c("aut", "cre"),
+           role = "aut",
            email = "A.Davey@apemltd.co.uk"))
 Description: The hetoolkit package comprises a collection of functions for assembling, processing, visualising and modelling hydroecological data.
 License: GPL-3

@@ -1,6 +1,6 @@
 ---
 title: "Macroinvertebrates in upland rivers"
-author: "Environment Agency / APEM Ltd"
+author: "APEM Ltd / Environment Agency"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
@@ -33,7 +33,9 @@ This case study illustrates a typical HE Toolkit workflow using a dataset first 
 
 This re-analysis using the HE Toolkit has several differences from Dunbar *et al.* (2010) as it focuses on a reduced set of 68 macroinvertebrate sampling locations in England, uses LIFE O:E ratios rather than LIFE as the response variable, and uses updated macroinvertebrate and flow data up to 2015. 
 
-As this case study is intended to illustrate the application of the HE toolkit, rather than be a comprehensive analysis in its own right, some of the analytical steps have been simplified for brevity.  
+Two different modelling approaches are applied in this case study: a linear mixed-effect model, and a Generalised Additive Model (GAM).  Linear models assume that the explanatory variables are linearly related to the response, whereas GAMs allow relationships between the explanatory variables and the response to be described by smooth curves or linear terms (Wood, 2017).  This case study will illustrate how the same explanatory and response variables can be modeled using the two different approaches.
+
+As this case study is intended to illustrate the application of the HE Toolkit, rather than be a comprehensive analysis in its own right, some of the analytical steps have been simplified for brevity.  
 
 This case study is optimised for viewing in Chrome.
 
@@ -80,7 +82,7 @@ We start by importing a "metadata" file with the following columns:
 ```{r Load metadata, warning=FALSE}
 
 # Import the metadata file containing site id's
-cs2_metadata <- readxl::read_excel("Data/CaseStudy2/cs2_metadata.xlsx", col_types = "text")
+cs2_metadata <- readxl::read_excel("data/CaseStudy2/cs2_metadata.xlsx", col_types = "text")
 
 # Get site lists, for use with functions
 cs2_rhssurvey <- cs2_metadata$rhs_survey_id
@@ -206,7 +208,7 @@ cs2_env_data <- cs2_env_data %>%
   dplyr::filter(!is.na(PEBBLES_GRAVEL) & !is.na(SAND) & !is.na(SILT_CLAY) & !is.na(BOULDERS_COBBLES))
 
 # Load in additional environment data for these sites
-additional_env_data <- readRDS("Data/CaseStudy2/additional_env_data.RDS")
+additional_env_data <- readRDS("data/CaseStudy2/additional_env_data.RDS")
 
 # Join env data sets together: 
 cs2_env_data <- rbind(cs2_env_data, additional_env_data)
@@ -260,6 +262,7 @@ leaflet() %>%
             options = popupOptions(closeButton = FALSE))
 
 ```
+
 
 ## Assess site similarity 
 
@@ -364,14 +367,20 @@ DT::datatable(cs2_predict_data,
 
 ## Join Biology and Environmental data with expected indices
 
-Prior to joining the biology data with other datasets, it is advisable to remove any replicate or duplicate samples collected from a site within the same year and season.
+Prior to joining the data, it is advisable to average results for any replicate samples collected from the same site in the same month. 
 
-```{r join bio, warning=FALSE}
+```{r Average LIFE scores, warning=FALSE}
 
-# remove replicate samples
-cs2_biol_data <- cs2_biol_data %>% distinct(biol_site_id, Year, Season, .keep_all = TRUE)
+# Average LIFE scores from same site, year and season
+cs2_biol_data <- cs2_biol_data %>%
+  dplyr::group_by(biol_site_id, Year, Season, Month) %>%
+  dplyr::summarise(LIFE_F_O = mean(LIFE_FAMILY_INDEX),
+                   date = mean(SAMPLE_DATE)) %>%
+  dplyr::ungroup()
 
 ```
+
+## Calculate O:E ratios 
 
 Now we join the  observed and expected LIFE scores into a single data frame so that O:E  (Observed/Expected) ratios can be calculated.
 
@@ -386,10 +395,9 @@ cs2_biol_all <-  dplyr::left_join(cs2_biol_all, cs2_env_data, by = "biol_site_id
 # Calculate LIFE O:E scores
 cs2_biol_all <- cs2_biol_all %>%
   mutate(LIFE_F_E = TL3_LIFE_Fam_DistFam,
-         LIFE_F_OE = LIFE_FAMILY_INDEX / LIFE_F_E,
-         date = SAMPLE_DATE)
+         LIFE_F_OE = LIFE_F_O / LIFE_F_E)
   
-cs2_biol_all <- cs2_biol_all %>% select(biol_site_id, Year, Season, Month, date, LIFE_F_OE)
+cs2_biol_all <- subset(cs2_biol_all, select = c(biol_site_id, Year, Season, Month, date, LIFE_F_OE))
 cs2_biol_all$biol_site_id <- as.character(cs2_biol_all$biol_site_id)
 
 ```
@@ -433,7 +441,7 @@ ggplot(data = cs2_biol_all, aes(x = LIFE_F_OE)) +
 
 ## Split data by season 
 
-For this case study, the biology data needs to be split into two data frames, spring and autumn. The spring samples will be joined to flow statistics for the preceding six month winter period, and the autumn samples will be joined to flow statistics for the preceding six month summer period.
+For this case study, the biology data needs to be split into two data frames, Spring and Autumn. The spring samples will be joined to flow statistics for the preceding six month Winter period, and the Autumn samples will be joined to flow statistics for the preceding six month Summer period.
 
 ```{r Split MI, warning=FALSE}
 
@@ -476,7 +484,7 @@ For the remaining sites we manually load in modelled flow data from a local RDS 
 
 ```{r}
 
-cs2_flow2 <- readRDS("Data/CaseStudy2/cs2_flow2.rds")
+cs2_flow2 <- readRDS("data/CaseStudy2/cs2_flow2.rds")
 
 ```
 
@@ -494,7 +502,7 @@ cs2_flow_data <- rbind(cs2_flow1, cs2_flow2)
 The `plot_heatmap` function is designed to visualise and summarise gaps in time series data. 
 It plots time series data for multiple sites as a tiled heat map, and optionally produces tubular summaries of data completeness by time period and site. Although designed for application with flow time series data, it can be applied to any type of numerical data, with or without a time dimension.
 
-In the following example `plot_heatmap` is used to explore gaps in the time series of mean daily flows, and then to summarise how complete the data is in each calendar month. 
+In the following example `plot_heatmap` is used to explore gaps in the time series of mean daily flows, and then summarise how complete the data are in each calendar month. 
 
 ```{r Plot heatmap, warning=FALSE}
 
@@ -538,7 +546,7 @@ cs2_flow_data <- hetoolkit::impute_flow(cs2_flow_data,
 
 ## Calculate flow statistics
 
-Dunbar *et al.* (2010) explored the how flows in the preceding six month period influence spring and autumn LIFE O:E ratios. Flow statistics were calculated for Winter (October-March) and Summer (April-September) periods, and these two sets of statistics were each z-score standardised to indicate whether winter flows were above or below normal for that time of year, and whether summer flows were above or below normal for that time of year. To mirror that analysis, we run the `calc_flowstats` function twice - first for winter and then for summer - so that the winter and summer flow statistics are standardised separately.
+Dunbar *et al.* (2010) explored the how flows in the preceding six month period influence spring and autumn LIFE O:E ratios. Flow statistics were calculated for winter (October-March) and summer (April-September) periods, and these two sets of statistics were each z-score standardised to indicate whether flows were above or below normal for the time of year. To mirror that analysis, we run the `calc_flowstats` function twice - first for winter and then for summer - so that the winter and summer flow statistics are standardised separately.
 
 `calc_flowstats` takes a time series of measured or modelled flows and uses a user-defined moving window to calculate a suite of long-term and time-varying flow statistics for one or more sites (stations). 
 
@@ -558,10 +566,10 @@ Note that `calc_flowstats` returns a list of two data frames. The first contains
 ```{r skip calc_flowstats, eval=FALSE, include=FALSE}
 
 # To skip waiting for calc_flowstats, you can load in pre-saved flow stats: 
-cs2_summer_flowstats1 <- readRDS("Data/CaseStudy2/summer_flowstats1.RDS")
-cs2_summer_flowstats2 <- readRDS("Data/CaseStudy2/summer_flowstats2.RDS")
-cs2_winter_flowstats1 <- readRDS("Data/CaseStudy2/winter_flowstats1.RDS")
-cs2_winter_flowstats2 <- readRDS("Data/CaseStudy2/winter_flowstats2.RDS")
+cs2_summer_flowstats1 <- readRDS("data/CaseStudy2/summer_flowstats1.RDS")
+cs2_summer_flowstats2 <- readRDS("data/CaseStudy2/summer_flowstats2.RDS")
+cs2_winter_flowstats1 <- readRDS("data/CaseStudy2/winter_flowstats1.RDS")
+cs2_winter_flowstats2 <- readRDS("data/CaseStudy2/winter_flowstats2.RDS")
 
 ```
 
@@ -616,15 +624,11 @@ saveRDS(cs2_winter_flowstats1, file = "winter_flowstats1.RDS")
 
 # Join hydrological and ecological data 
 
-The `join_he` function links biology data with time-varying flow statistics  for one or more antecedent (lagged) time periods (as calculated by the `calc_flowstats` function) to create a combined data set for hydro-ecology modelling. The function provide two alternative methods for linking biology samples to flow statistics for antecedent time periods: 
+The `join_he` function links biology data with time-varying flow statistics  for one or more antecedent (lagged) time periods (as calculated by the `calc_flowstats` function) to create a combined data set for hydro-ecology modelling. The function provides two alternative methods for linking biology samples to flow statistics for antecedent time periods: 
 * Method = "A" (default), lag 0 is defined for each biology sample as the most recently finished time period;
 * Method = "B", lag 0 is defined as the most recently started flow time period. 
 
-To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (method = "A") or most recently started (method = "B") flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on. The function allows the user to select which antecedent (lagged) time periods the biology data is joined to, e.g. lag = c(0,1,2).  This method is demonstrated in the schematic below.
-
-```{r schematic, echo=FALSE, out.width = '100%'}
-knitr::include_graphics("data/jeHE.png")
-```
+To describe the antecedent flow conditions prior to each biology sample, the time periods are labelled relative to the date of the biology sample, with lag 0 representing either the most recently finished (method = "A") or most recently started (method = "B") flow time period. The time period immediately prior to the Lag 0 time period is the Lag 1 period, and the period immediately prior to that is the Lag 2 period, and so on. The function allows the user to select which antecedent (lagged) time periods the biology data are joined to, e.g. lag = c(0,1,2).
 
 The function also includes an option to specify the "join_type":
 
@@ -690,7 +694,7 @@ cs2_HE2 <- rbind(cs2_as_HE2, cs2_sw_HE2)
 
 A hydro-ecological model has a greater chance of revealing relationships between biology metrics and flow variables if the biology samples span a wide range of flow conditions. Good coverage of historical flow conditions by the biology sample data also means that the calibrated model is likely to be better at predicting biological responses under high and low flow scenarios.
 
-The `plot_rngflows` function generates a scatterplot for two flow variables and overlays two convex hulls: one showing the full range of flow conditions experienced historically, and a second convex hull showing the range of flow conditions with associated biology samples. This visualisation helps identify to what extent the available biology data span the full range of full range of flow conditions experienced historically.
+The `plot_rngflows` function generates a scatterplot for two flow variables and overlays two convex hulls: one showing the full range of flow conditions experienced historically, and a second convex hull showing the range of flow conditions with associated biology samples. This visualisation helps identify to what extent the available biology data span the full range of flow conditions experienced historically.
 
 In the following example, the Q95z and Q10z flow statistics have been selected as measures of low and high flows within each 6 month antecedent period. The first plot shows all of the data from all of the sites, and the second plot is faceted to show the data separately for each site individually. For the dataset as a whole, the biology samples appear to provide excellent coverage of historical flow conditions.
 
@@ -705,7 +709,7 @@ hetoolkit::plot_rngflows(data = cs2_HE2, flow_stats = c("Q95z_lag0","Q10z_lag0")
 
 ## HEV plots 
 
-The `plot_hev` function generates, for one site of interest, a time series plot of biology sample data and flow summary statistics, referred to by the EA as a hydro-ecological validation (HEV) plot. HEV plots provide a visual assessment of trends in the historical data, and an initial guide to possible relationships that could be explored and quantified within a hydro-ecological model.
+The `plot_hev` function generates, for one site of interest, a time series plot of biology sample data and flow summary statistics, known as as a hydroecological validation (HEV) plot. HEV plots provide a visual assessment of trends in the historical data, and an initial guide to possible relationships that could be explored and quantified using a hydroecological model.
 
 The data set created by the `join_he` function can be used to produce a simple HEV plot:
 
@@ -720,7 +724,7 @@ cs2_HE1 %>%
 
 ```
 
-A slightly nicer looking HEV plot can be created using a little manual data manipulation; this creates a "sky-scraper" plot that illustrates more clearly the time period over which the flow statistics are calculated. 
+A smarter-looking HEV plot can be created using a little manual data manipulation; this creates a "sky-scraper" plot that illustrates more clearly the time period over which the flow statistics are calculated. 
 
 ```{r Create hev data, warning=FALSE}
 
@@ -768,15 +772,17 @@ cs2_hev_data %>%
 
 ```
 
-# Modelling
+# Modelling 
 
-## Model calibration
+## Linear Model
 
-Once the biology and flow data have been processed and assembled into a single data frame, spatial and temporal variation in a biological metric of interest can be modelled as a function of one or more flow summary statistics to reveal potential hydro-ecological relationships. For datasets comprising multiple sites, linear mixed-effects models fitted using the `lmer` function from the `lme4` package have the ability to describe a 'global' relationship that applies across all sites, whilst also quantifying the degree of variability in this relationship from site to site. 
+### Model calibration
 
-Following Dunbar *et al.* (2010), we model variation in LIFE (expressed as an O:E ratio rather than as an observed score to better control for natural variation in invertebrate community composition) as a function of: high (`Q10z_lag0`) and low (`Q95z_lag0`) flows in the previous six-month winter or summer period; `Season` (spring or autumn); Habitat Quality Assessment (`HQA`) score, representing instream habitat quality; Habitat Modification Score (`HMSRBB`) representing the extent and severity of morphological channel alteration; and time (Year, centered to 2005 = 0, termed `Year_cen`) to account for underlying long-term trends. Selected interaction terms were also included to explore if and how the effect of flow history varies with season, HMSRBB and HQA (see Dunbar *et al.* (2010) for details).
+Once the biology and flow data have been processed and assembled into a single data frame, spatial and temporal variation in a biological metric of interest can be modelled as a function of one or more flow summary statistics to reveal potential hydroecological relationships. For datasets comprising multiple sites, linear mixed-effects models fitted using the `lmer` function from the `lme4` package have the ability to describe a 'global' relationship that applies across all sites, whilst also quantifying the degree of variability in this relationship from site to site. 
 
-To reflect the hierarchical structure of the data (samples nested in sites), the models include a random intercept to account for site-to-site variation in mean LIFE O:E. Following Dunbar *et al.* (2010), we alos include a random slope to account for site-specific time trends. 
+Following Dunbar *et al.* (2010), we model variation in LIFE (expressed as an O:E ratio rather than as an observed score to better control for natural variation in invertebrate community composition) as a function of: high (`Q10z_lag0`) and low (`Q95z_lag0`) flows in the preceding six-month winter or summer period; `Season` (spring or autumn); Habitat Quality Assessment (`HQA`) score, representing instream habitat quality; Habitat Modification Score (`HMSRBB`) representing the extent and severity of morphological channel alteration; and time (Year, centered to 2005 = 0, termed `Year_cen`) to account for underlying long-term trends. Selected interaction terms were also included to explore if and how the effect of flow history varies with season, HMSRBB and HQA (see Dunbar *et al.* (2010) for details).
+
+To reflect the hierarchical structure of the data (samples nested in sites), the models include a random intercept to account for site-to-site variation in mean LIFE O:E. Following Dunbar *et al.* (2010), we also include a random slope to account for site-specific time trends. 
 
 To illustrate the challenge of selecting a preferred model, we fit four competing models of varying complexity and use cross-validation to compare their predictive performance.
 
@@ -788,6 +794,13 @@ cs2_HE1$Year_cen <- cs2_HE1$Year - 2005
 # And make Spring the base season
 cs2_HE1$Season <- factor(cs2_HE1$Season, levels = c("Spring", "Autumn"))
 
+```
+
+
+### Candidate Models: {.tabset}
+
+#### Model 1 {-}
+```{r create models_1, warning=FALSE}
 # Model 1 (Model A in Table 2 of Dunbar et al. 2010)
 cs2_mod1 <- lme4::lmer(LIFE_F_OE ~ 
                          Q10z_lag0 +
@@ -803,6 +816,10 @@ cs2_mod1 <- lme4::lmer(LIFE_F_OE ~
                        data = cs2_HE1,
                        control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000)))
 summary(cs2_mod1)
+```
+
+#### Model 2 {-}
+```{r create models_2, warning=FALSE}
 
 # Model 2 (Model B in Table 2 of Dunbar et al. 2010)
 cs2_mod2 <- lme4::lmer(LIFE_F_OE ~ 
@@ -819,6 +836,10 @@ cs2_mod2 <- lme4::lmer(LIFE_F_OE ~
                        data = cs2_HE1,
                        control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000)))
 summary(cs2_mod2)
+```
+
+#### Model 3 {-}
+```{r create models_3, warning=FALSE}
 
 # Model 3 (no interactions)
 cs2_mod3 <- lme4::lmer(LIFE_F_OE ~ 
@@ -835,6 +856,10 @@ cs2_mod3 <- lme4::lmer(LIFE_F_OE ~
                        data = cs2_HE1,
                        control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000)))
 summary(cs2_mod3)
+```
+
+#### Model 4 {-}
+```{r create models_4, warning=FALSE}
 
 # Model 4 (no interactions and no random slope)
 cs2_mod4 <- lme4::lmer(LIFE_F_OE ~ 
@@ -853,12 +878,14 @@ cs2_mod4 <- lme4::lmer(LIFE_F_OE ~
 summary(cs2_mod4)
 
 ```
+### {-}
+\
 
 To aid model selection, the `hetoolkit` package includes two functions for performing cross-validation.
 
-`model_cv` performs repeated, stratified k-fold cross-validation, which can be used to evaluate a model’s ability to predict the response at sites in the calibration dataset. Alternatively, `model_logocv` performs leave-one-group-out cross-validation, which can be used to evaluate a model’s ability to predict the response at sites, not in the calibration dataset. Both functions can be applied to a linear mixed-effects model (class: lmerMod) or a hierarchical generalized additive model (class: gam) model with a single random grouping factor. See `?model_cv` and `?model_logocv` for details.
+`model_cv` performs repeated, stratified k-fold cross-validation, which can be used to evaluate a model’s ability to predict the response at sites in the calibration dataset. Alternatively, `model_logocv` performs leave-one-group-out cross-validation, which can be used to evaluate a model’s ability to predict the response at sites not in the calibration dataset. Both functions can be applied to a linear mixed-effects model (class: lmerMod) or a hierarchical generalized additive model (class: gam) model with a single random grouping factor. See `?model_cv` and `?model_logocv` for details.
 
-`model_cv` and `model_logocv` measure the performance of the model under different situations, and so will not necessarily agree on which is the best model. If the priority is to be able to predict the response at sites in the calibration dataset, then use `model_cv`; if the priority is to be able to predict the response at sites, not in the calibration dataset, then use `model_logocv`.
+`model_cv` and `model_logocv` measure the performance of the model under different situations, and so will not necessarily agree on which is the best model. If the priority is to be able to predict the response at sites in the calibration dataset, then use `model_cv`; if the priority is to be able to predict the response at sites not in the calibration dataset, then use `model_logocv`.
 
 Here we use `model_cv` to compare the four candidate models fitted above. Predictive performance is measured using the Root Mean Square Error (RMSE); lower values indicate better predictions. `r` is set at 10 to give stable RMSE estimates and `control` is used to help prevent model convergence issues. 
 
@@ -913,7 +940,7 @@ cs2_cv_mod4[[1]]
 
 ```
 
-## Model interpretation
+### Model interpretation
 
 ```{r Final Summary, echo=FALSE}
 
@@ -923,13 +950,13 @@ summary(cs2_mod1)
 
 The preferred model with the lowest RMSE (model 1) included the fixed predictors `Q10z_lag0`,  `Q95z_lag0`, `Season`, `HQA`, `Year_cen`, and `HMSRBB`, plus two interaction terms, while the random effects included intercept and Year_cen varying by site. The diagnostic plots (see below) indicate that all of these effects were approximately linear.
 
-On average, LIFE O:E was lower in autumn than spring, increased with habitat diversity (HQA score) and decreased with the extent of habitat modification (HMSRBB score). There was also an underlying long-term increasing trend across all sites (Year_cen). After controlling for these influences, LIFE O:E was positively associated with the Q95z flow in the preceding six month winter or summer period and to a lesser extent with the Q10z flow. The effect of Q10z was stronger in autumn than in spring (Q10z * season interaction), and the effect of Q95z decreased with the HQA score (Q95z * HQA interaction), indicating that macroinvertebrate communities at sites with more habitat diversity were less sensitive to antecedent low flows.  
+On average, LIFE O:E was lower in autumn than spring, increased with habitat diversity (HQA score) and decreased with the extent of habitat modification (HMSRBB score). There was also an underlying long-term increasing trend across all sites (Year_cen) of ca 0.03. After controlling for these influences, LIFE O:E was positively associated with the Q95z flow in the preceding six-month winter or summer period and to a lesser extent with the Q10z flow. The effect of Q10z was stronger in autumn than in spring (Q10z * season interaction), and the effect of Q95z decreased with the HQA score (Q95z * HQA interaction), indicating that macroinvertebrate communities at sites with more diverse habitat were less sensitive to antecedent low flows.  
 
 The random effects estimates showed a relatively large variance in the intercept among the 68 sites, indicating a high degree of unexplained spatial variation, but only a small variance in the Year_cen effect, indicating a similar long-term trend across all sites. The random intercepts and slopes were only weakly (r = 0.16) correlated.
 
 In spite of the use of a smaller dataset (68 vs 87 sites) and LIFE O:E ratios in preference to LIFE scores, these results are broadly consistent with those reported by Dunbar *et al.* (2010).
 
-## Model diagnostics
+### Model diagnostics
 
 The `diag_lmer` function produces a variety of diagnostic plots for a mixed-effects regression (lmer) model. Below we create model diagnostic plots for Model 1 as it had the lowest RMSE score.
 
@@ -953,7 +980,7 @@ cs2_diag_plots[[1]]
 
 ```
 
-2. Normal probability plot. This is a graphical technique for verifying the assumption of a Normally-distributed error structure. The model residuals are plotted against a theoretical normal distribution in such a way that the points should form an approximate straight line. Here we can see that the residuals conform very closely to a Normal distribution, only small deviations at the extremities. 
+2. Normal probability plot. This is a graphical technique for verifying the assumption of a normally distributed error structure. The model residuals are plotted against a theoretical normal distribution in such a way that the points should form an approximate straight line. Here we can see that the residuals conform very closely to a normal distribution, with only small deviations at the extremities. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -969,7 +996,7 @@ cs2_diag_plots[[3]]
 
 ```
 
-4.	Histogram of residuals. This is an alternative to plot 2 for verifying the assumption of normally-distributed errors. Here we can see that the probability distribution of the model residuals (shown in pink) is very similar to a perfect Normal distribution. 
+4.	Histogram of residuals. This is an alternative to plot 2 for verifying the assumption of normally distributed errors. Here we can see that the probability distribution of the model residuals (shown in pink) is very similar to a perfect normal distribution. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -977,7 +1004,7 @@ cs2_diag_plots[[4]]
 
 ```
 
-5.	Residuals vs model fixed predictors. To verify the assumption of linearity, the model's residuals are plotted against each of the fixed predictors in turn. if the relationship between the response and each predictor is truly linear, then there should be no trend in the residuals. Here we can see that the linear (red) line fitted to the residuals is horizontal, indicating that the strength of the linear effects has not been over-or under-estimated. And in most cases the loess-smoothed (blue) line is also close to horizontal; there is a small departure from linearity for Q95z_lag0, Q10z_lag0 and Year_cen, but for Q95z_lag0 and Q10z_lag0 this is due to a very small number of unusually low/high data points and in all cases the deviations are very small, so in this example a linear model appears to provide a reasonable representation of these relationships. 
+5.	Residuals vs model fixed predictors. To verify the assumption of linearity, the model's residuals are plotted against each of the fixed predictors in turn. If the relationship between the response and each predictor is truly linear, then there should be no trend in the residuals. Here we can see that the linear (red) line fitted to the residuals is horizontal, indicating that the strength of the linear effects has not been over-or under-estimated. Also in most cases the loess-smoothed (blue) line is close to horizontal; there is a small departure from linearity for Q95z_lag0, Q10z_lag0 and Year_cen, but for Q95z_lag0 and Q10z_lag0 this is due to a small number of unusually low/high data points and in all cases the deviations are small, so in this example a linear model appears to provide a reasonable representation of these relationships. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1001,7 +1028,7 @@ sjPlot::plot_model(model = cs2_mod1,
 
 ```
 
-* Partial effects plots, for visualising the fixed effects that are common to all sites; these show the modelled effect of each predictor in turn when other continuous predictors are held constant at their mean values and factors are fixed at their reference level (i.e. spring for Season). This confirms the positive associations with low flows (Q95z) and habitat quality (HQA) and the negative effect of bed and bank re-sectioning (HMSRBB).
+* Partial effects plots, for visualising the fixed effects that are common to all sites; these show the modelled effect of each predictor in turn when other continuous predictors are held constant at their mean values and factors are fixed at their reference level (i.e. spring for Season). This confirms the positive associations with low flows (Q95z) and habitat quality (HQA) and the negative effect of bed and bank resectioning (HMSRBB).
 
 ```{r}
 
@@ -1020,9 +1047,10 @@ sjPlot::plot_model(model = cs2_mod1,
                    pred.type = "fe",
                    title = NULL, terms= "HMSRBB")
 
+
 ```
 
-* Interaction plots, showing how the effect of one predictor depends upon the value of another predictor. Here we can see that the effect of high flows (Q10z_lag0) is marginally stronger in autumn than in spring, and how sites with poorer habitat quality (low HQA scores) are more sensitive to low flows (Q95z_lag0).
+* Interaction plots, showing how the effect of one predictor depends upon the value of another predictor. Here we can see that the effect of high flows (Q10z_lag0) is marginally stronger in autumn than in spring, and that sites with poorer habitat quality (low HQA scores) are more sensitive to low flows (Q95z_lag0).
 
 ```{r}
 
@@ -1038,7 +1066,7 @@ sjPlot::plot_model(model = cs2_mod1,
                    terms = c("Q95z_lag0", "HQA [35, 50, 65]"))
 ```
 
-* Finally, the mixed-effect estimates of the time trend at each site can be extracted and plotted. For reference, the vertical dashed blue line is the global slope (i.e. the average time trend of 0.001 per year - see the output from `summary()` above). This shows that, after accounting for inter-annual variation in flow, the majority of sites display a trend of increasing LIFE O:E ratios over time, but that a minority of sites have a decreasing trend. 
+* Finally, the mixed-effects estimates of the time trend at each site can be extracted and plotted. For reference, the vertical dashed blue line is the global slope (i.e. the average time trend of 0.001 per year - see the output from `summary()` above). This shows that, after accounting for interannual variation in flow, the majority of sites display a trend of increasing LIFE O:E ratios over time, but that a minority of sites have a decreasing trend. 
 
 ```{r}
 
@@ -1055,4 +1083,272 @@ ggplot(cs2_mod.coef, aes(x = biol_site_id, y = Year_cen)) +
 ```
 
 
+## Generalised Additive Model
+
+In addition to a linear model, we also demonstrate how you may apply a generalised additive model for analysis of hydroecological data. 
+
+Hierarchical Generalised Additive Models (HGAMs), implemented using the [mgcv](https://cran.r-project.org/web/packages/mgcv/index.html) library were used to model spatial and temporal variation in LIFE O:E. HGAMs allow relationships between the explanatory variables and the response to be described by smooth curves or linear terms (Wood, 2017), whilst also incorporating terms to represent unexplained site-to-site variation (Pedersen et al., 2019). By flexibly describing non-linear relationships nonparametrically, without making *a priori* assumptions about the form of the relationship, HGAMs can be a suitable alternative to more simple, less flexible linear models.
+
+Linear models 1 and 2 were re-fitted using the `gam()` function from mgcv.  The same explanatory variables and interaction terms were tested, but incorporated into the `gam()` model structure. The mixture of continuous and categorical predictors was included within the full models as fixed effects, with continuous predictors fitted as smoothed terms (using the `s()` notation). 
+
+To model interactions of continuous variables, the functions, `te()` and `ti()`, can be used. The function `te()` is applicable when variables are not on the same scale, and when interactions include main effects. The function `ti()` is used for modelling interaction surfaces that do not include the main effects, under the assumption that they will be included separately.  In models 1 and 2, below, interactions between two smoothed terms (i.e Q95z_lag0 * HQA, or Q95z_lag0 * HMSRBB) were therefore specified using the notation `ti()`, so the main effects could be evaluated separately from the interaction term. 
+
+In addition, a ‘factor-smooth’ term (Pedersen et al. 2019) was used to model random site-specific intercepts and time trends; the inclusion of a ‘factor-smooth’ term allowed the temporal trend to vary from site to site, and is specified in place of the random effects included within the linear model structures.
+
+```{r save_gam, warning=FALSE, include = FALSE}
+
+#saveRDS(cs2_mod1, "data/cs2_mod1.RDS")
+#saveRDS(cs2_mod2, "data/cs2_mod2.RDS")
+
+#cs2_mod1 <- readRDS("data/cs2_mod1.RDS")
+#cs2_mod2 <- readRDS("data/cs2_mod2.RDS")
+
+
+# First center the year variable (which aids model convergence)
+cs2_HE1$Year_cen <- cs2_HE1$Year - 2005
+
+# And make Spring the base season
+cs2_HE1$Season <- factor(cs2_HE1$Season, levels = c("Spring", "Autumn"))
+
+cs2_HE1$Season <- as.factor(cs2_HE1$Season)
+cs2_HE1$biol_site_id <- as.factor(cs2_HE1$biol_site_id)
+cs2_HE1$Year_cen <- as.numeric(cs2_HE1$Year_cen)
+cs2_HE1$HMSRBB <- as.numeric(cs2_HE1$HMSRBB)
+cs2_HE1$Q95z_lag0 <- as.numeric(cs2_HE1$Q95z_lag0)
+cs2_HE1$Q10z_lag0 <- as.numeric(cs2_HE1$Q10z_lag0)
+cs2_HE1$HQA <- as.numeric(cs2_HE1$HQA)
+
+```
+
+### Candidate Models: {.tabset}
+
+#### Model 1 {-}
+```{r full_model_gam, warning=FALSE}
+
+# model 1 (includes interactions)
+cs2_gam1 <- mgcv::gam(LIFE_F_OE ~ 
+                     Season +
+                     s(Year_cen) +
+                     s(Q10z_lag0) +
+                     s(Q95z_lag0) +
+                     s(Q10z_lag0, by = Season, m = 1) +
+                     s(HQA) +
+                     s(HMSRBB) +
+                     ti(Q95z_lag0, HQA) +
+                     #ti(Q95z_lag0, HMSRBB) +
+                     s(Year_cen, biol_site_id, bs = "fs"),
+                    data = cs2_HE1,  
+                    #select = TRUE,
+                    method = 'REML')
+
+#saveRDS(cs2_gam1, "data/cs2_gam1.RDS")
+
+```
+
+
+```{r gammsummary1, warning=FALSE}
+
+summary(cs2_gam1)
+
+```
+
+#### Model 2 {-}
+```{r full_model_gam2, warning=FALSE}
+
+# model 2 (includes interactions)
+cs2_gam2 <- mgcv::gam(LIFE_F_OE ~ 
+                     Season +
+                     s(Year_cen) +
+                     s(Q10z_lag0) +
+                     s(Q95z_lag0) +
+                     s(Q10z_lag0, by = Season, m = 1) +
+                     s(HQA) +
+                     s(HMSRBB) +
+                     #ti(Q95z_lag0, HQA) +
+                     ti(Q95z_lag0, HMSRBB) +
+                     s(Year_cen, biol_site_id, bs = "fs"),
+                    data = cs2_HE1,  
+                    #select = TRUE,
+                    method = 'REML')
+
+#saveRDS(cs2_gam2, "data/cs2_gam2.RDS")
+
+```
+
+```{r gammsummary2, warning=FALSE}
+
+summary(cs2_gam2)
+
+```
+
+### {-}
+\
+Similar to the linear models, we use `model_cv` to compare the two candidate GAMs fitted above. `model_cv` performs repeated, stratified k-fold cross-validation, which can be used to evaluate a model’s ability to predict the response at sites in the calibration dataset. Predictive performance is measured using the Root Mean Square Error (RMSE); lower values indicate better predictions. r is set at 10 to give stable RMSE estimates and control is used to help prevent model convergence issues.
+
+```{r Model validation_gam, warning=FALSE, include = TRUE, results = 'hide'}
+
+my_control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000))
+
+# Model 1
+cs2_cv_gam1 <- hetoolkit::model_cv(model = cs2_gam1,
+                               data = cs2_HE1,
+                               group = "biol_site_id",
+                               k = 5,
+                               r = 10, 
+                               control = my_control)
+
+# Model 2
+cs2_cv_gam2 <- hetoolkit::model_cv(model = cs2_gam2,
+                               data = cs2_HE1,
+                               group = "biol_site_id",
+                               k = 5,
+                               r = 10,
+                               control = my_control)
+
+```
+
+
+```{r save_modelcv, warning=FALSE, include = FALSE}
+
+#saveRDS(cs2_cv_gam1, "vignettes/data/cs2_cv_gam1.RDS")
+#saveRDS(cs2_cv_gam2, "vignettes/data/cs2_cv_gam2.RDS")
+
+#cs2_cv_gam1 <- readRDS("vignettes/data/cs2_cv_gam1.RDS")
+#cs2_cv_gam2 <- readRDS("vignettes/data/cs2_cv_gam2.RDS")
+
+```
+
+RMSE is very similar for both models, and is only marginally lower for model 1. 
+
+```{r warning=FALSE, message=FALSE}
+
+# Let's compare the RMSE results 
+cs2_cv_gam1[[1]]
+cs2_cv_gam2[[1]]
+
+```
+
+In this instance, we also compared the Akaike Information Criterion (AIC) of model 1 and model 2. AIC is a relative measure of how well a model fits a set of data. A lower AIC value indicates a better-fitting model. Model 2 has a notably lower AIC, compared to model 1. 
+
+Model 2 was therefore chosen as the final model.
+ 
+```{r warning=FALSE, message=FALSE}
+
+# Let's compare the AIC 
+AIC(cs2_gam1, cs2_gam2)
+
+```
+
+### Model interpretation
+
+The final model (model 2) included the fixed predictors `Q10z_lag0`,  `Q95z_lag0`, `Season`, `HQA`, `Year_cen`, and `HMSRBB`, plus two interaction terms, and a factor-smooth term that allowed the temporal trend to vary from site-to-site.
+
+On average, LIFE O:E was lower in autumn than spring.  LIFE O:E decreased with the extent of habitat modification (HMSRBB score), with the steepest decrease in LIFE O:E observed when HMSRBB was greater than 20, and habitat quality (HQA) demonstrated a weak positive relationship with LIFE O:E. There was also an underlying long-term increasing trend across all sites (Year_cen); however, in contrast to the linear model, the HGAM found that LIFE O:E scores peaked in ~2005, and decreased slightly after this - although more recent temporal change (~2010-onwards) in LIFE O:E is associated with a higher degree of uncertainty.
+
+After controlling for these influences, LIFE O:E was positively associated with the Q95z flow in the preceding six month winter or summer period and to a lesser extent with the Q10z flow, similar to the linear model.  While Q95z demonstrated a linear relationship with LIFE O:E, Q10z demonstrated a slightly non-linear relationship, and LIFE O:E gradually plateaued at the highest antecedent flows; however, at the highest antecedent flows, the flow-ecology relationship was associated with a higher degree of uncertainty. The effect of Q10z was stronger in autumn than in spring (`s(Q10z_lag0, by = season)` interaction). 
+
+The effect of Q95z was strongest at sites with a high HMSRBB score (`ti(Q95z_lag0, HMSRBB)` interaction), indicating that macroinvertebrate communities at sites with more modified habitat were more sensitive to antecedent low flows, while sites with more natural habitat demonstrated lesser sensitivity to change in antecedent flow. At modified sites, LIFE O:E was positively associated with the Q95z flow in the preceding six months, whereas at sites with a lesser degree of modification, LIFE O:E remained relatively unchanged regardless of antecedent flow conditions. However, the magnitude of change in LIFE O:E associated with the interaction term (`ti(Q95z_lag0, HMSRBB)`) was weaker when compared to the individual fixed effects (`s(Q95z_lag0)` and `s(HMSRBB)`); with LIFE O:E showing a maximum change of ~0.01 for the interaction term, and a maximum change of ~0.03 and ~0.1 for the Q95z and HMSRBB main effects, respectively.
+
+The factor-smooth estimates showed a relatively large variance in the intercept among the 68 sites, indicating a high degree of spatial variation.
+
+```{r Final Summary_gam, warning = FALSE}
+
+viz.gam <- mgcViz::getViz(cs2_gam2)
+print(plot(viz.gam, allTerms = TRUE), pages = 1)
+summary(cs2_gam2)
+
+```
+
+
+### Model diagnostics
+
+We can run `gam.check()`, which produces some diagnostic information about the fitting procedure and results. The default is to produce 4 residual plots, some information about the convergence of the smoothness selection optimisation, and to run diagnostic tests of whether the basis dimension choices are adequate. Below we run `gam.check()` for Model 2, as it had the lowest RMSE score, to produce four diagnostic plots.
+
+These include:
+
+1. Q-Q Plot.  This plots two sets of quantiles against one another.  If the residuals fall along a roughly straight line at a 45-degree angle, then the residuals are roughly normally distributed. We can see in our Q-Q plot below that the residuals tend to deviate from the 45-degree line on the tail ends, which could be an indication that they’re not normally distributed.
+
+2.	Residuals vs linear pred. This plot checks the assumption of homogeneous variances, which states that the error variance should be constant regardless of what value the response takes. Here we can see that the residuals generally have a similar amount of vertical scatter at all fitted values of the response, with some deviation at lower values of the linear predictor. 
+
+3.	Histogram of residuals. This is an alternative to plot 2 for verifying the assumption of normally distributed errors. Here we can see that the probability distribution of the model residuals is reasonably similar to a normal distribution. 
+
+4. Response vs fitted values. This plot shows the relationship between the fitted (predicted) and observed (true) values of the response variable. If the model fits the data well, the points should be clustered around the diagonal 1:1 line, which represents a perfect fit (fitted=observed). Here we can see the model provides a reasonably good fit to the data, but with the weakest predictive power at low LIFE O:E values (observed values). 
+
+
+```{r warning=FALSE}
+
+gam.check(cs2_gam2)
+
+```
+
+In addition to the diagnostic plots, `gam.check()` returns a check of the basis dimensions (k) of smoothed terms that were included within model 2. This can also be returned by running `k.check()`. For model 2 above, the basis dimensions (k) are set at the default values of `mgcv::gam()`.
+
+Above, the `gam.check()` report returned low p-values (and k-index <1) for the Q10_lag0 and Year_cen variables, and their interactions. These results indicate that k may be too low, especially where the EDF (effective degrees of freedom) are close to their maximum possible value (k'), meaning that the wiggliness of the model may be overly constrained by the default k, and the model could fit the data better (with greater wiggliness) if k were to be increased. In other words, the trade off between smoothness and wiggliness is not balanced. The model was first refitted with larger k values (k = 20) for Q10_lag0 and Year_cen variables (below).
+
+Re-running k.check() on the adjusted model demonstrated some increase in p-values, but these remained reasonably low for the Q10z_lag0 and Year_cen variables. However, applying k=20 only marginally increased the EDF for the Q10z_lag0 and Year_cen variables. A second adjusted model, applying k=30 for Q10z_lag0 and k=25 for Year_cen, was also trialed and, again, only marginal increases in the EDF were observed. To balance computational time, and model wiggliness, a k value of 20 was therefore applied for Q10z_lag0 and Year_cen variables. Using this model, we can see that the EDF are no longer close to k'.
+
+In case it is not clear from the above, note that k, k-index and k' denote (somewhat confusingly) slightly different things. See Pedersen *et al.* (2019; https://doi.org/10.7717/peerj.6876) or Wood (2017; https://www.taylorfrancis.com/books/mono/10.1201/9781315370279/generalized-additive-models-simon-wood) for further information on this and other aspects of GAMs. 
+
+```{r read_gam_k, warning=FALSE, include = FALSE}
+
+#cs2_gam2_k20 <- readRDS("data/cs2_gam2_k20.RDS")
+#cs2_gam2_k50 <- readRDS("data/cs2_gam2_k50.RDS")
+
+```
+
+### Adjust k-values: {.tabset}
+
+#### Model 2_k20 {-}
+```{r model2_k20}
+
+cs2_gam2_k20 <- mgcv::gam(LIFE_F_OE ~ 
+                     Season +
+                     s(Year_cen, k = 20) +
+                     s(Q10z_lag0, k = 20) +
+                     s(Q95z_lag0) +
+                     s(Q10z_lag0, by = Season, m = 1, k = 20) +
+                     s(HQA) +
+                     s(HMSRBB) +
+                     #ti(Q95z_lag0, HQA) +
+                     ti(Q95z_lag0, HMSRBB) +
+                     s(Year_cen, biol_site_id, bs = "fs"),
+                    data = cs2_HE1,  
+                    #select = TRUE,
+                    method = 'REML')
+
+
+#saveRDS(cs2_mod2_k20, "vignettes/data/cs2_mod2_k20.RDS")
+
+```
+
+```{r kcheck2, eval=TRUE}
+mgcv::k.check(cs2_gam2_k20)
+```
+
+#### Model 2_k30 {-}
+```{r model2_k50}
+
+cs2_gam2_k50 <- mgcv::gam(LIFE_F_OE ~ 
+                     Season +
+                     s(Year_cen, k = 25) +
+                     s(Q10z_lag0, k = 30) +
+                     s(Q95z_lag0) +
+                     s(Q10z_lag0, by = Season, m = 1, k = 30) +
+                     s(HQA) +
+                     s(HMSRBB) +
+                     #ti(Q95z_lag0, HQA) +
+                     ti(Q95z_lag0, HMSRBB) +
+                     s(Year_cen, biol_site_id, bs = "fs"),
+                    data = cs2_HE1,  
+                    #select = TRUE,
+                    method = 'REML')
+
+#saveRDS(cs2_mod2_k50, "vignettes/data/cs2_mod2_k50.RDS")
+```
+
+```{r kcheck50, eval=TRUE, echo=FALSE}
+mgcv::k.check(cs2_gam2_k50)
+```
+### {-}
+\
 
