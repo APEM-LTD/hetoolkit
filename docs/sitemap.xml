@@ -4,9 +4,6 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/articles/A.Vignette.html</loc>
-  </url>
-  <url>
     <loc>/articles/CaseStudy1.html</loc>
   </url>
   <url>
@@ -22,13 +19,13 @@
     <loc>/articles/CaseStudy5.html</loc>
   </url>
   <url>
-    <loc>/articles/hetoolkit-vignette.html</loc>
-  </url>
-  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
     <loc>/articles/Resources.html</loc>
+  </url>
+  <url>
+    <loc>/articles/Vignette.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -77,6 +74,9 @@
   </url>
   <url>
     <loc>/reference/import_wq.html</loc>
+  </url>
+  <url>
+    <loc>/reference/import_wq_old.html</loc>
   </url>
   <url>
     <loc>/reference/impute_flow.html</loc>

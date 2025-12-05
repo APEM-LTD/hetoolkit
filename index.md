@@ -3,8 +3,8 @@
 
 # hetoolkit
 
-<!-- badges: start -->
-<!-- badges: end -->
+<img src="man/figures/EA_logo.jpg" style="float:top; height:55px;">
+<img src="man/figures/ApemLogo.png" style="float:right; height:45px;">
 
 ## Overview
 
@@ -145,6 +145,12 @@ Minor update to predict_indices.</td>
 <td>Jan-2024</td>
 <td>Added new function import_inv_taxa.<br />
 Bug fix to import_rhs, minor update to import_wq.</td>
+</tr>
+<tr class="even">
+<td>2.1.3</td>
+<td>Dec-2025</td>
+<td>Updates to website.<br />
+Update to import_wq to ensure compatibility with new WQ data API.</td>
 </tr>
 </tbody>
 </table>

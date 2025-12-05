@@ -90,14 +90,14 @@ expect_warning(import_wq(source = NULL,
                          start_date = "2021-01-01",
                          end_date = "2026-12-31",
                          save = FALSE),
-               "End date is in the future. End date will be set to the current date")
+               "End date is in the future. End date has reverted to the current date")
 
 expect_warning(import_wq(source = NULL,
                          sites = c("SW-60250424"),
                          dets = "default",
                          start_date = "1999-01-01",
                          end_date = "2000-12-31"),
-               "Data not availble from the WQA database before year 2000")
+               "Data not available from the WQA database before year 2000")
 
 # Test filters
 # Determinands
@@ -111,7 +111,7 @@ test_that("dets filter works", {
 
   result <- sort(unique(result$det_id))
 
-  compared <- c(116, 180)
+  compared <- c('0116', '0180')
 
   expect_equal(result, compared)
 
@@ -176,9 +176,9 @@ test_that("import_wq constructs 'tibble' as expected", {
                       save = TRUE)
 
   result <- result %>%
-    dplyr::arrange(date, det_id)
+    dplyr::arrange(date_time, det_id)
 
-  compared <- tibble::as_tibble(readRDS("testdata_import_wq.rds")) %>%
-    dplyr::arrange(date, det_id)
+  compared <- tibble::as_tibble(readRDS("testdata_import_wq_v2.rds")) %>%
+    dplyr::arrange(date_time, det_id)
   expect_equal(result, compared, ignore_attr = TRUE)
 })

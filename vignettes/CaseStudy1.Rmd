@@ -70,7 +70,7 @@ Install and load the other packages necessary for this case study:
 ```{r LibsFuncs, message=FALSE, warning=FALSE,}
 
 if(!require("pacman")) install.packages("pacman")
-pacman::p_load(knitr, DT, GGally, sf, ggfortify, plyr, rnrfa, lmerTest, leaflet)
+pacman::p_load(knitr, DT, sf, ggfortify, plyr, rnrfa, lmerTest, leaflet, scatterPlotMatrix)
 
 ## Set ggplot theme
 theme_set(theme_bw()) 
@@ -91,7 +91,7 @@ These id's are used below to download data from the Environment Agency's (EA) Ec
 ```{r load and tidy metadata}
 
 # Import metadata file containing site id's 
-cs1_metadata <- readxl::read_excel("data/CaseStudy1/cs1_metadata.xlsx", col_types = "text") %>%
+cs1_metadata <- readxl::read_excel("Data/CaseStudy1/cs1_metadata.xlsx", col_types = "text") %>%
   dplyr::rename(flow_site_id = reach_id) 
 
 # Get site lists, for use with functions 
@@ -398,6 +398,21 @@ cs1_wq_data <- hetoolkit::import_wq(sites = cs1_wqsites, dets = c(111, 180), sta
 
 ```
 
+```{r reformat water quality}
+
+# import_wq updated November 2025
+## Need to re-format outputs, so that it is compatible with workflow
+cs1_wq_data <- cs1_wq_data %>%
+  dplyr::rename(det_label = determinand) %>%
+  mutate(date = as.Date(date_time)) %>%
+  mutate(det_label = case_when(det_label == "Ammoniacal Nitrogen as N" 
+                                ~ "Ammonia(N)",
+                                det_label == "Orthophosphate, reactive as P"
+                                ~ "Orthophospht")) %>%
+  select(wq_site_id, date, det_label, det_id, result, unit)
+
+```
+
 ## Additional water quality data 
 
 The Water Quality Archive database only contains data from 2000 onwards, so below we manually load in 1990-1999 water quality data supplied by the Environment Agency and join it to our imported water quality dataset. 
@@ -406,8 +421,9 @@ The Water Quality Archive database only contains data from 2000 onwards, so belo
 
 cs1_additional_wq_data <- readRDS("Data/CaseStudy1/cs1_additional_wq.rds")
 
-cs1_wq_data <- rbind(cs1_wq_data, cs1_additional_wq_data) %>%
-   dplyr::mutate(year = lubridate::year(date))
+cs1_wq_data <- rbind(cs1_wq_data, 
+                     cs1_additional_wq_data %>% dplyr::select(wq_site_id, date, det_label, det_id, result, unit)) %>%
+   dplyr::mutate(year = lubridate::year(date)) 
 
 ```
 
@@ -501,7 +517,7 @@ cs1_wq_summary %>%
 # check distributions and correlations
 cs1_wq_summary %>%
   dplyr::select(mean_p, ammonium_90) %>%
-  ggpairs(lower = list(continuous = "smooth_loess"))
+  scatterPlotMatrix(distribType = 1, corrPlotType = "Text", width = 600, height = 600)
 
 ```
 
@@ -739,8 +755,8 @@ We use pairwise plots to identify highly correlated variables (that might need t
 
 # produce pairs plot
 cs1_he1 %>%
-  dplyr::select(Year, LTQ95RFR, ammonium_90, Q95z_lag0, Q95z_lag12, HMSRBB, LIFE_F_OE) %>%
-  GGally::ggpairs(lower = list(continuous = "smooth_loess"))
+  dplyr::select(LTQ95RFR, ammonium_90, Q95z_lag0, Q95z_lag12, HMSRBB, LIFE_F_OE) %>%
+  scatterPlotMatrix(distribType = 1, corrPlotType = "Text", width = 800, height = 600)
 
 ```
 

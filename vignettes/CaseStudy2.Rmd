@@ -43,7 +43,7 @@ This case study is optimised for viewing in Chrome.
 
 Install and load the HE Toolkit:
 
-```{r Install Hetoolkit, echo=TRUE, message=FALSE, warning=FALSE}
+```{r Install Hetoolkit, results=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
 
 #install.packages("remotes")
 library(remotes)
@@ -57,13 +57,13 @@ library(hetoolkit)
 
 Install and load the other packages necessary for this case study:
 
-```{r LibsFuncs, warning=FALSE}
+```{r LibsFuncs, results=FALSE, warning=FALSE}
 
 if(!require(pacman)) install.packages("pacman")
 pacman::p_load(knitr, DT)
 pacman::p_load(lmerTest, gamm4) # for modelling 
 pacman::p_load(geojsonio, leaflet, rmapshaper, sf) # for maps
-pacman::p_load(remotes, insight, RCurl, htmlTable, GGally, imputeTS, patchwork, ggfortify, plyr, rnrfa)
+pacman::p_load(remotes, insight, RCurl, htmlTable, gratia, imputeTS, patchwork, ggfortify, plyr, rnrfa)
 
 ## Set ggplot theme
 theme_set(theme_bw()) 
@@ -1187,34 +1187,34 @@ Similar to the linear models, we use `model_cv` to compare the two candidate GAM
 
 ```{r Model validation_gam, warning=FALSE, include = TRUE, results = 'hide'}
 
-my_control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000))
+# my_control = lmerControl(optimizer="bobyqa", optCtrl = list(maxfun = 10000))
 
 # Model 1
-cs2_cv_gam1 <- hetoolkit::model_cv(model = cs2_gam1,
-                               data = cs2_HE1,
-                               group = "biol_site_id",
-                               k = 5,
-                               r = 10, 
-                               control = my_control)
+# cs2_cv_gam1 <- hetoolkit::model_cv(model = cs2_gam1,
+#                               data = cs2_HE1,
+#                               group = "biol_site_id",
+#                               k = 5,
+#                               r = 10, 
+#                               control = my_control)
 
 # Model 2
-cs2_cv_gam2 <- hetoolkit::model_cv(model = cs2_gam2,
-                               data = cs2_HE1,
-                               group = "biol_site_id",
-                               k = 5,
-                               r = 10,
-                               control = my_control)
+# cs2_cv_gam2 <- hetoolkit::model_cv(model = cs2_gam2,
+#                               data = cs2_HE1,
+#                               group = "biol_site_id",
+#                               k = 5,
+#                               r = 10,
+#                               control = my_control)
 
 ```
 
 
 ```{r save_modelcv, warning=FALSE, include = FALSE}
 
-#saveRDS(cs2_cv_gam1, "vignettes/data/cs2_cv_gam1.RDS")
-#saveRDS(cs2_cv_gam2, "vignettes/data/cs2_cv_gam2.RDS")
+#saveRDS(cs2_cv_gam1, "data/cs2_cv_gam1.RDS")
+#saveRDS(cs2_cv_gam2, "data/cs2_cv_gam2.RDS")
 
-#cs2_cv_gam1 <- readRDS("vignettes/data/cs2_cv_gam1.RDS")
-#cs2_cv_gam2 <- readRDS("vignettes/data/cs2_cv_gam2.RDS")
+cs2_cv_gam1 <- readRDS("data/cs2_cv_gam1.RDS")
+cs2_cv_gam2 <- readRDS("data/cs2_cv_gam2.RDS")
 
 ```
 
@@ -1253,8 +1253,9 @@ The factor-smooth estimates showed a relatively large variance in the intercept 
 
 ```{r Final Summary_gam, warning = FALSE}
 
-viz.gam <- mgcViz::getViz(cs2_gam2)
-print(plot(viz.gam, allTerms = TRUE), pages = 1)
+gratia::draw(cs2_gam2, residuals = TRUE) & 
+  plot_annotation(caption = paste("Deviance explained:", round((summary(cs2_gam2)$dev)*100, digits = 1),"%"))
+
 summary(cs2_gam2)
 
 ```

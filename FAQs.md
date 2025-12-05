@@ -60,7 +60,8 @@ flow time series data, you should consult a local EA hydrologist.
 ### 5. Can the `hetoolkit` be used to download water quality data?
 
 Yes, the import_wq() function allows you to download data for
-determinands of interest from the EA’s Water Quality Archive.
+determinands of interest from the EA’s Water Quality Explorer
+(<https://environment.data.gov.uk/water-quality-beta>).
 
 </br>
 
@@ -105,7 +106,7 @@ ecological responses. The case study in this website’s article library
 ‘Macroinvertebrates in upland rivers’ illustrates how to undertake
 generalised additive modelling.
 
-other modelling approaches may be complementary or in specific cases
+Other modelling approaches may be complementary or in specific cases
 more suitable. These include hydraulic-habitat modelling and
 multivariate analyses of community composition. There is a case study on
 the latter (‘Diatoms’) in this website’s article library. Even for

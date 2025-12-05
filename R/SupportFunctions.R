@@ -835,3 +835,103 @@ test_if_dataframe <- function(x){
   }
 }
 
+############################# Fetch WQ data from Data Explorer ###################################
+
+fetch_wq_data <- function(sampling_point_id, initial_date_from, initial_date_to) {
+
+  cat(sprintf("\n*** Retrieving data for site %s ***\n",
+              sampling_point_id))
+
+  # 1. Build the request as follows:
+  # - Target the /data/observation endpoint
+  # - Put parameters in the URL Query
+  # - Use POST method
+  # - Do NOT attach a JSON body
+
+  BASE_URL_OBSERVATION <- "https://environment.data.gov.uk/water-quality/data/observation"
+  PER_PAGE_LIMIT <- 2500
+
+  req <- httr2::request(BASE_URL_OBSERVATION) |>
+    httr2::req_url_query(
+      pointNotation = sampling_point_id,
+      dateFrom = initial_date_from,
+      dateTo = initial_date_to,
+      limit = PER_PAGE_LIMIT,
+      complianceOnly = "false"
+    ) |>
+    httr2::req_method("POST") |>  # The key: POST method but params in URL
+    httr2::req_headers(
+      "Accept" = "text/csv",
+      "Accept-Crs" = "http://www.opengis.net/def/crs/EPSG/0/27700",
+      "CSV-Header" = "present",
+      "API-Version" = "1"
+    ) |>
+    # Add throttling
+    httr2::req_throttle(capacity = 75, fill_time_s = 60) |>
+    # Prevent stopping on non-fatal errors
+    httr2::req_error(is_error = function(resp) FALSE)
+
+  # 2. Perform iterative requests (Pagination)
+  resps <- tryCatch(
+    httr2::req_perform_iterative(
+      req,
+      next_req = httr2::iterate_with_link_url(rel = "next"),
+      max_reqs = Inf,
+      progress = FALSE
+    ),
+    error = function(e) {
+      cat(sprintf("Error during API request for point %s: %s\n", sampling_point_id, conditionMessage(e)))
+      return(NULL)
+    }
+  )
+
+  if (is.null(resps) || length(resps) == 0) {
+    cat(sprintf("❌ No data or API error for point %s.\n", sampling_point_id))
+    return(data.frame())
+  }
+
+  # 3. Parse CSV with EXPLICIT Character Types (To prevent NA values)
+  column_spec <- readr::cols(
+    .default = readr::col_double(),
+
+    # --- Core Identifiers ---
+    id = readr::col_character(),
+    phenomenonTime = readr::col_datetime(),
+    result = readr::col_character(),
+
+    # --- Metadata Columns (Force to Character) ---
+    `samplingPoint.notation` = readr::col_character(),
+    `samplingPoint.prefLabel` = readr::col_character(),
+    `samplingPoint.region` = readr::col_character(),
+    `samplingPoint.area` = readr::col_character(),
+    `samplingPoint.subArea` = readr::col_character(),
+    `samplingPoint.samplingPointStatus` = readr::col_character(),
+    `samplingPoint.samplingPointType` = readr::col_character(),
+    `samplingPurpose` = readr::col_character(),
+    `sampleMaterialType` = readr::col_character(),
+    `unit` = readr::col_character(),
+    `determinand.notation` = readr::col_character(),
+    `determinand.prefLabel` = readr::col_character()
+  )
+
+  all_data <- lapply(resps, function(r) {
+    # Check status to reveal any suppressed errors
+    status <- httr2::resp_status(r)
+    if (status == 200) {
+      return(readr::read_csv(
+        httr2::resp_body_string(r),
+        col_types = column_spec,
+        show_col_types = FALSE
+      ))
+    } else {
+      cat(sprintf("Skipping site with HTTP Status %d\n", status))
+      return(data.frame())
+    }
+  })
+
+  complete_data_point <- do.call(bind_rows, Filter(function(df) nrow(df) > 0, all_data))
+
+  cat(sprintf("\n--- Retrieval Complete for %s ---\n", sampling_point_id))
+  return(complete_data_point)
+}
+

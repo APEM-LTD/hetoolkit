@@ -3,8 +3,7 @@
 
 # hetoolkit
 
-<!-- badges: start -->
-<!-- badges: end -->
+<img src="EA_logo.jpg" style="float:right; height:200px;">
 
 ## Overview
 
@@ -12,51 +11,50 @@ The `hetoolkit` package comprises a collection of 23 functions for
 assembling, processing, visualising and modelling hydro-ecological data.
 These are:
 
--   `import_nrfa` for importing flow data from the National River Flow
-    Archive (NRFA);
--   `import_hde` for importing flow data from the Environment Agency
-    (EA) Hydrology Data Explorer (HDE);
--   `import_flowfiles` for importing flow data from local files;
--   `import_flow` for importing flow data from a mix of the above
-    sources;
--   `impute_flow` for infilling missing records in daily flow time
-    series for one or more sites (gauging stations) using either an
-    interpolation or an equipercentile method.
--   `import_inv` for importing macroinvertebrate sampling data from the
-    EA Ecology and Fish Data Explorer;
--   `import_env` for importing environmental base data from the EA
-    Ecology and Fish Data Explorer;
--   `import_rhs` for importing River Habitat Survey (RHS) data from the
-    EA’s Open Data portal;
--   `import_wq` for importing water quality data from the EA Water
-    Quality Archive database;
--   `import_inv_taxa` for importing taxonomic abundances from the EA
-    Ecology and Fish Data Explorer;
--   `predict_indices` for calculating expected scores for
-    macroinvertebrate indices using the RICT2 model (FBA 2020);
--   `calc_flowstats` and `calc_rfrstats` for calculating summary
-    statistics describing historical flow conditions;
--   `join_he` for joining the above datasets;
--   `plot_heatmap` for visualising and summarising gaps in time series
-    data;
--   `plot_hev` and `shiny_hev` for producing time series plots of
-    biology and flow data;
--   `plot_sitepca` for summarising environmental characteristics of
-    biological sampling sites;
--   `plot_rngflows` for visualising the range of flow conditions
-    experienced historically at a site;
--   `model_cv` and `model_logocv` for performing cross-validation on
-    linear mixed-effects models and hierarchical generalized additive
-    models;
--   `diag_lmer` for generating a variety of diagnostic plots for a
-    mixed-effects regression (lmer) model; and
--   `plot_predictions` for visualising the time series predictions from
-    a hydro-ecological model/
+- `import_nrfa` for importing flow data from the National River Flow
+  Archive (NRFA);
+- `import_hde` for importing flow data from the Environment Agency (EA)
+  Hydrology Data Explorer (HDE);
+- `import_flowfiles` for importing flow data from local files;
+- `import_flow` for importing flow data from a mix of the above sources;
+- `impute_flow` for infilling missing records in daily flow time series
+  for one or more sites (gauging stations) using either an interpolation
+  or an equipercentile method.
+- `import_inv` for importing macroinvertebrate sampling data from the EA
+  Ecology and Fish Data Explorer;
+- `import_env` for importing environmental base data from the EA Ecology
+  and Fish Data Explorer;
+- `import_rhs` for importing River Habitat Survey (RHS) data from the
+  EA’s Open Data portal;
+- `import_wq` for importing water quality data from the EA Water Quality
+  Explorer;
+- `import_inv_taxa` for importing taxonomic abundances from the EA
+  Ecology and Fish Data Explorer;
+- `predict_indices` for calculating expected scores for
+  macroinvertebrate indices using the RICT2 model (FBA 2020);
+- `calc_flowstats` and `calc_rfrstats` for calculating summary
+  statistics describing historical flow conditions;
+- `join_he` for joining the above datasets;
+- `plot_heatmap` for visualising and summarising gaps in time series
+  data;
+- `plot_hev` and `shiny_hev` for producing time series plots of biology
+  and flow data;
+- `plot_sitepca` for summarising environmental characteristics of
+  biological sampling sites;
+- `plot_rngflows` for visualising the range of flow conditions
+  experienced historically at a site;
+- `model_cv` and `model_logocv` for performing cross-validation on
+  linear mixed-effects models and hierarchical generalized additive
+  models;
+- `diag_lmer` for generating a variety of diagnostic plots for a
+  mixed-effects regression (lmer) model; and
+- `plot_predictions` for visualising the time series predictions from a
+  hydro-ecological model/
 
 The deprecated versions of three functions are retained for
 back-compatibility. These are:
 
--   `calc_flowstats_old`, `predict_indices_old` and `join_he_old`
+- `calc_flowstats_old`, `predict_indices_old` and `join_he_old`
 
 ## WORKFLOW
 
@@ -161,6 +159,12 @@ Minor update to predict_indices.</td>
 <td>Jan-2024</td>
 <td>Added new function import_inv_taxa.<br />
 Bug fix to import_rhs, minor update to import_wq.</td>
+</tr>
+<tr class="even">
+<td>2.1.3</td>
+<td>Dec-2025</td>
+<td>Updates to website.<br />
+Update to import_wq to ensure compatibility with new WQ data API.</td>
 </tr>
 </tbody>
 </table>

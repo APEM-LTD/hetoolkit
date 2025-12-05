@@ -1,5 +1,5 @@
 ---
-title: "Diatoms"
+title: "Gradient Forest"
 author: "Environment Agency"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -56,9 +56,9 @@ Install and load the other packages necessary for this case study:
 if(!require(pacman)) install.packages("pacman")
 pacman::p_load(knitr, DT, kableExtra, htmlTable) # for tables
 pacman::p_load(geojsonio, leaflet, rmapshaper, sf) # for maps
-pacman::p_load(ggplot2, GGally, gridExtra, ggplotify) # for plots
-pacman::p_load(remotes, insight, RCurl, imputeTS, patchwork, rnrfa, vegan) # misc
-pacman::p_load(plyr, tidyr, lubridate, stringr, magrittr, tibble) # tidyverse
+pacman::p_load(remotes, insight, RCurl, patchwork, rnrfa, vegan) # misc
+pacman::p_load(dplyr, tidyr, lubridate, stringr, magrittr, tibble) # tidyverse
+library(ggplot2) # plotting
 
 # Conditionally install gradientForest from github
 if ("gradientForest" %in% installed.packages() == FALSE) {

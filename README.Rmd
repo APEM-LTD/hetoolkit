@@ -30,7 +30,7 @@ The `hetoolkit` package comprises a collection of 23 functions for assembling, p
 * `import_inv` for importing macroinvertebrate sampling data from the EA Ecology and Fish Data Explorer;
 * `import_env` for importing environmental base data from the EA Ecology and Fish Data Explorer;
 * `import_rhs` for importing River Habitat Survey (RHS) data from the EA's Open Data portal;
-* `import_wq` for importing water quality data from the EA Water Quality Archive database;
+* `import_wq` for importing water quality data from the EA Water Quality Explorer;
 * `import_inv_taxa` for importing taxonomic abundances from the EA Ecology and Fish Data Explorer;
 * `predict_indices` for calculating expected scores for macroinvertebrate indices using the RICT2 model (FBA 2020);
 * `calc_flowstats` and `calc_rfrstats` for calculating summary statistics describing historical flow conditions;
@@ -104,6 +104,8 @@ Version | Date     | Details
                      Minor update to predict_indices.
 2.1.2   | Jan-2024 | Added new function import_inv_taxa.\
                      Bug fix to import_rhs, minor update to import_wq.
+2.1.3   | Dec-2025 | Updates to website.\
+                     Update to import_wq to ensure compatibility with new WQ data API.
 
 Full details of changes are listed on the [change log](https://apem-ltd.github.io/hetoolkit/news/index.html):
 

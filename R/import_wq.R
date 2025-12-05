@@ -59,7 +59,6 @@
 #' temp <-import_wq(source = "data/example_import_wq.csv", sites = "SW-60250424", save = FALSE)
 #' }
 
-
 import_wq <- function(source = NULL,
                       sites,
                       dets = "default",
@@ -125,11 +124,11 @@ import_wq <- function(source = NULL,
   }
 
   if((end_date > Sys.Date()) == TRUE) {
-    warning("End date is in the future. End date will be set to the current date")
+    warning("End date is in the future. End date has reverted to the current date")
   }
 
   if((as.Date(start_date) < as.Date("2000-01-01")) == TRUE) {
-    warning("Data not availble from the WQA database before year 2000")
+    warning("Data not available from the WQA database before year 2000")
   }
 
 
@@ -153,56 +152,24 @@ import_wq <- function(source = NULL,
     # Set 4-digit determinand codes
     det_list <- formatC(dets, width = 4, format = "d", flag = "0")
 
-    ## Build df and query for each site and start/end dates
+    # create empty list
+    all_points_data_list <- list()
 
-    df <- expand.grid(site = sites, start = start_date, end = end_date)
-    web.stub <- "https://environment.data.gov.uk/water-quality/data/observation"
-    df <- df |>
-      dplyr::mutate(query = paste0(web.stub,
-                                   "?dateFrom=", as.character(start_date),
-                                   "&dateTo=", as.character(end_date),
-                                   "&pointNotation=", site,
-                                   "&limit=2500")) |>
-      dplyr::select(query)
-
-    # create empty lists
-    req <- list()
-    req_paged <- list()
-    resps <- list()
-    all_pages <- list()
-
-    for (q in df$query){
-      # Set throttling to limit per minute requests to safely avoid exceeding API constraints (forbidden error)
-      req[[q]] <- httr2::request(q) |> httr2::req_throttle(capacity = 75, fill_time_s = 60) |>
-                                      httr2::req_headers("Accept" = "text/csv",
-                                                          "Accept-Crs" = "http://www.opengis.net/def/crs/EPSG/0/27700",
-                                                          "CSV-Header" = "present",
-                                                          "API-Version" = "1")
-
-      # API requests are now limited to 2500 records- to get whole datasets need to perform iterative requests, following `Link: rel="next"` automatically
-
-      req_paged[[q]] <- req[[q]] |>
-        httr2::req_url_query(limit = 2500) |> httr2::req_method("POST") |> httr2::req_error(is_error= \(resp) FALSE)
-
-      resps[[q]] <- httr2::req_perform_iterative(
-        req_paged[[q]],
-        next_req = httr2::iterate_with_link_url(rel = "next"),
-        max_reqs = Inf, progress = paste0(q, ":")
+    # run query
+    for (site_id in sites) {
+      point_data <- fetch_wq_data(
+        sampling_point_id = site_id,
+        initial_date_from = start_date,
+        initial_date_to = end_date
       )
 
-        # Remove requests with no data returned
-        resps[[q]] <- resps[[q]][lapply(resps[[q]], httr2::resp_status_desc) == "OK"]
-
-      # Parse and combine CSV pages
-      all_pages[[q]] <- lapply(resps[[q]], function(r) readr::read_csv(httr2::resp_body_string(r), show_col_types = FALSE))
-      # Drop empty pages, if any
-      all_pages[[q]] <- Filter(function(df) nrow(df) > 0, all_pages[[q]])
-
-      # Convert to df
-      complete_list <- unlist(all_pages, recursive = FALSE)
-      wq_metrics <- do.call("rbind", complete_list)
-
+      if (nrow(point_data) > 0) {
+        point_data <- point_data |> dplyr::mutate(SamplingPointID = site_id)
+        all_points_data_list <- append(all_points_data_list, list(point_data))
+      }
     }
+
+    wq_metrics <- bind_rows(all_points_data_list)
 
   }
 
@@ -219,10 +186,18 @@ import_wq <- function(source = NULL,
       wq_metrics <- readr::read_rds(source)
     }
 
+    ## Set default dets (if not specified by the user)
+    if ("default" %in% dets) {
+      dets <- c(61, 76, 77, 111, 116, 117, 118, 119, 162, 180, 9901, 9924, 19, 135, 6396)
+    }
+
+    # Set 4-digit determinand codes
+    det_list <- formatC(dets, width = 4, format = "d", flag = "0")
+
     # Check file has correct header names. Should match those coming from the database download.
     exp_names <- c("id", "samplingPoint.notation", "samplingPoint.prefLabel", "samplingPoint.easting", "samplingPoint.northing",
-                   "samplingPoint.region","samplingPoint.area","samplingPoint.subArea", "samplingPointStatus",
-                   "samplingPointType", "phenomenonTime", "samplingPurpose", "sampleMaterialType", "determinand.notation",
+                   "samplingPoint.region","samplingPoint.area","samplingPoint.subArea", "samplingPoint.samplingPointStatus",
+                   "samplingPoint.samplingPointType", "phenomenonTime", "samplingPurpose", "sampleMaterialType", "determinand.notation",
                    "determinand.prefLabel", "result", "unit")
     err_count = 0
 
@@ -244,8 +219,8 @@ import_wq <- function(source = NULL,
   # FORMAT/CALCULATIONS/FILTER
 
   # Check at least some data returned
-  if(is.null(wq_metrics) == TRUE) {
-    stop("No data returned for selected sites and dates; check site IDs are correct and periods of record coincide with specified date range")
+  if(nrow(wq_metrics) == 0) {
+    stop("No data returned for selected sites and dates; check site and determinand IDs are correct and periods of record coincide with specified date range")
   }
 
   # Rename columns
@@ -263,19 +238,15 @@ import_wq <- function(source = NULL,
   }
 
   # Sort out result variable: separate out qualifier, make numeric and shift character results to different column
-  # Can't use grepl("[0-9]",...) + parse_number as some descriptions contain numbers (e.g. 'heavy rain in last 24 hours') so use workaround
+  # Can't use grepl("[0-9]",...) + parse_number as some descriptive results also contain numbers (e.g. 'heavy rain in last 24 hours') so use workaround
   wq_metrics <- wq_metrics |> dplyr::mutate(qualifier = stringr::str_extract(result_char, "<"), result_char = stringr::str_replace(result_char, "([<])", ""))
 
-  if(is.character(wq_metrics$result_char) == TRUE){
-  wq_metrics <- wq_metrics |> dplyr::mutate(result = case_when(!unit == "Coded Result" | unit == "PRESENT/NOT FOUND" ~ suppressWarnings(as.numeric(result_char)),
+  wq_metrics <- wq_metrics |>
+    dplyr::mutate(result = case_when(!unit == "Coded Result" | unit == "PRESENT/NOT FOUND" ~ suppressWarnings(as.numeric(result_char)),
                                                                                                                 TRUE ~ NA),
                                        observation = case_when(unit == "Coded Result" | unit == "PRESENT/NOT FOUND" ~ readr::parse_character(result_char),
                                                                                                                TRUE ~ NA)) |>
-    dplyr:: select(-result_char)}
-
-  else if(is.character(wq_metrics$result_char) == FALSE){
-    wq_metrics <- wq_metrics |> dplyr::mutate(result = result_char, observation = NA) |> dplyr::select(-result_char)
-  }
+    dplyr:: select(-result_char)
 
 
   # Identify missing determinands
@@ -292,12 +263,14 @@ import_wq <- function(source = NULL,
   z <- y[!y %in% x]
   if(isFALSE(length(z) == 0)) {warning(paste0("Water quality site not found:", z, "\n"))}
 
+  # Summary message
+  cat("Total of", nrow(unique(wq_metrics)), "unique records retrieved", "\n")
+
   # SAVE A COPY TO DISK IN RDS FORMAT IF REQUIRED
   if(save == TRUE) {saveRDS(wq_metrics, paste0(getwd(), "/WQ_DATA_METRICS.rds"))}
 
   # RETURN
   return(tibble::as_tibble(wq_metrics))
-
 
   ### Function End
 }

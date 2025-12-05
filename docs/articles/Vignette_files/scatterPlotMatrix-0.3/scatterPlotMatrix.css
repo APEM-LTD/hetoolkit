@@ -1,0 +1,308 @@
+.mspDiv svg {
+  font: 0.8em sans-serif;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: block;
+  margin: auto;
+}
+
+.mspDiv {
+  position: relative;
+}
+
+.mspDiv .x.axis line,
+.mspDiv .y.axis line {
+    stroke: #ddd;
+}
+
+.mspDiv .x.axis path,
+.mspDiv .y.axis path {
+  stroke: #ddd;
+}
+
+.mspDiv .Header {
+  cursor: pointer;
+}
+
+.mspDiv .Header.input {
+  fill: rgb(7, 99, 7);
+}
+
+.mspDiv .Header.output {
+  fill: rgb(6, 89, 167);
+}
+  
+.mspDiv .Header.zAxis {
+  font-weight: bold;
+}
+
+.mspDiv .scatterlabel,
+.mspDiv .cslTitle {
+  font-size: 10px;
+}
+
+.mspDiv .scatterNumber {
+  font-size: 4em;
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+  fill: black;
+  display: none;
+}
+
+.mspDiv .scatterNumber.greyed {
+  fill: grey;
+}
+
+.mspDiv .naCorrNumber {
+  fill: grey;
+}
+
+.mspDiv .cpBorder {
+  fill: none;
+  stroke:none;
+  pointer-events: fill;
+}
+
+.mspDiv .cpNaBorder {
+  stroke: #ccc;
+  stroke-width: 0.5px;
+}
+
+.mspDiv .corrPlot circle {
+  stroke: #ccc;
+  pointer-events: fill;
+}
+
+.mspDiv .corrPlot circle.Root {
+  fill: none;
+}
+
+.mspDiv .hlGraph {
+  stroke: rgb(91, 91, 91) !important;
+  stroke-width: 4;
+}
+
+.mspDiv .corrPlot .hlGraph {
+  stroke-width: 2;
+}
+
+.mspDiv .corrPlot circle.Remaining {
+  display: none;
+  fill: none;
+}
+
+.mspDiv .controlDiv {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  align-content: center;
+  margin: 0.5em;
+  column-gap: 1em;
+}
+
+.mspDiv .visibilityDiv,
+.mspDiv .selectionDiv,
+.mspDiv .customDiv {
+  border-style: solid;
+  border-color: rgb(200, 200, 200);
+  border-width: 1px;
+  background-color: #FFF;
+  margin: 0.5em;
+}
+
+.mspDiv .visibilityDiv,
+.mspDiv .selectionDiv,
+.mspDiv .customDiv {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-content: start;
+  align-items: center;
+  grid-template-columns: auto;
+}
+
+.mspDiv .selectionLabel,
+.mspDiv .visibilityLabel,
+.mspDiv .customLabel {
+  grid-row: 1;
+  grid-column: 1;
+  align-self: center;
+  justify-self: center;
+  padding: 0.5em;
+  background-color: #EEE;
+}
+
+.mspDiv .selectionPad,
+.mspDiv .visibilityPad {
+  justify-self: center;
+  align-self: center;
+  margin: 1.3em;
+}
+
+.mspDiv .customDiv {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-content: start;
+  align-items: center;
+  grid-template-columns: auto;
+}
+
+.mspDiv .xParamDiv {
+  grid-row: 2;
+  grid-column: 1;
+  align-self: center;
+  justify-self: center;
+  margin: 0.1em;
+}
+
+.mspDiv .yParamDiv {
+  grid-row: 3;
+  grid-column: 1;
+  align-self: center;
+  justify-self: center;
+  margin: 0.1em;
+}
+
+.mspDiv .zParamDiv {
+  grid-row: 4;
+  grid-column: 1;
+  align-self: center;
+  justify-self: center;
+  margin: 0.1em;
+}
+
+.mspDiv.withoutWidgets .controlDiv {
+  display: none;
+}
+
+.mspDiv .colorScaleBar {
+  shape-rendering: crispEdges;
+}
+
+.mspDiv .continuousCslRect {
+  fill: none;
+  stroke: rgb(200, 200, 200);
+  stroke-width: 1px;
+}
+
+.mspDiv .continuousCslAxis line {
+  stroke: #999;
+}
+
+.mspDiv .continuousCslAxis path {
+  display: none;
+}
+
+.mspDiv .hlPoint {
+  stroke: black;
+}
+
+.mspDiv .mspTooltip {
+  display: none;
+  position: absolute;
+  font-size: .8em;
+  text-align: left;
+  border-style: none;
+  border-radius: 0.4em;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 0.4em;
+  pointer-events: none;
+}
+
+.mspDiv .mspTooltip .title {
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  color: red;
+}
+
+.mspDiv .mspTooltip .subTipDiv {
+  margin: 0.5em 0.5em 0em 0.5em;
+}
+
+.mspDiv .mspTooltip .strongValue {
+  font-weight: bold;
+}
+
+.mspDiv .mspTooltip .swatch {
+  padding-right: 1em;
+}
+
+.mspDiv .mspTooltip .axisName {
+  font-weight: bold;
+}
+
+.mspDiv .DistribRepSelect,
+.mspDiv .mouseModeSelect {
+  margin-left: 0.5em;
+}
+
+.mspDiv .distribGroup path,
+.mspDiv .violinGroup path {
+  stroke: none;
+}
+
+.mspDiv .regressionPlots path {
+  stroke-linejoin: round;
+  pointer-events: stroke;
+}
+
+.mspDiv .subLinearGroup path,
+.mspDiv .linearGroup path {
+  stroke-dasharray: 4;
+}
+
+.mspDiv .ver .cut path,
+.mspDiv .ver .cut rect {
+    opacity: 0.7;
+}
+
+.mspDiv .hor .cut path,
+.mspDiv .hor .cut rect {
+    opacity: 0.8;
+}
+
+.mspDiv .jitterZone {
+  stroke: black;
+  fill: #ccc;
+  opacity: 0.2;
+}
+
+.mspDiv .axisGroup line,
+.mspDiv .axisGroup path {
+    fill: none;
+    stroke: none;
+}
+
+.mspDiv .axisGroup text {
+  fill: black;
+  text-shadow: 0 1px 0 #D0D0D0, 1px 0 0 #D0D0D0, 0 -1px 0 #D0D0D0, -1px 0 0 #D0D0D0;
+}
+
+.mspDiv .brushDim .overlay {
+  cursor : pointer;
+  stroke: black;
+}
+
+.mspDiv .brushDim .selection {
+  fill: black;
+  stroke: none
+}
+
+.mspDiv .chainGroup path {
+  fill: none;
+  stroke: #333;
+  stroke-width: 2px;
+}
+
+.mspDiv .chainGroup rect {
+  fill: #444;
+  stroke: #333;
+  stroke-width: 2px;
+}
+  
+.mspDiv .chainGroup:hover rect {
+  fill: grey;
+}

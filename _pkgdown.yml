@@ -5,6 +5,7 @@ template:
 navbar:
   structure:
     left:  [reference, articles, Resources, updates, FAQs]
+    right: [search]
   components:
    Resources:
     text: Resources
@@ -15,4 +16,72 @@ navbar:
    FAQs:
     text: FAQs
     href: FAQs.md
-    right:  [search]
+
+home:
+  links:
+  - text: View source code on GitHub
+    href: https://github.com/APEM-LTD/hetoolkit
+  - text: Ecology Data Explorer
+    href: https://environment.data.gov.uk/ecology/explorer/
+  - text: Hydrology Data Explorer
+    href: https://environment.data.gov.uk/hydrology/explore
+  - text: WQ Data Explorer
+    href: https://environment.data.gov.uk/water-quality-beta
+
+reference:
+   - title: "Import functions"
+     desc: >
+       Functions for importing biology, flow, RHS and water quality data
+     contents:
+     - import_inv
+     - import_inv_taxa
+     - import_env
+     - import_flow
+     - import_hde
+     - import_nrfa
+     - import_flowfiles
+     - import_rhs
+     - import_wq
+   - title: "Processing functions"
+     desc: >
+       Functions for processing and joining biology, flow and other environmental data
+     contents:
+     - predict_indices
+     - predict_indices_old
+     - impute_flow
+     - calc_flowstats
+     - calc_flowstats_old
+     - calc_rfrstats
+     - join_he
+     - join_he_old
+   - title: "Plotting functions"
+     desc: >
+       Functions for data exploration and visualisation
+     contents:
+     - plot_heatmap
+     - plot_sitepca
+     - plot_rngflows
+     - plot_hev
+     - shiny_hev
+   - title: "Modelling functions"
+     desc: >
+       Functions for analysis and interpretation of HE models
+     contents:
+     - diag_lmer
+     - model_cv
+     - model_logocv
+     - plot_predictions
+
+articles:
+- title: Mixed modelling
+  navbar: MIXED MODELLING
+  contents:
+  - Vignette
+  - CaseStudy1
+  - CaseStudy2
+  - CaseStudy3
+- title: Other methods
+  navbar: OTHER METHODS
+  contents:
+  - CaseStudy4
+  - CaseStudy5

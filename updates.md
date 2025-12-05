@@ -25,3 +25,8 @@ Updates
     taxonomic data and modelling of species composition
   - Updates to ‘Resources’ tab with links to further references and
     related R packages
+- Dec-2025 - Package and website updates:
+  - Update to import_wq to ensure compatibility with new WQ data API
+  - Corresponding updates to website including the chalk stream case
+    studies
+  - Re-formatting of function index

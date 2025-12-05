@@ -63,10 +63,10 @@ library(hetoolkit)
 
 Install and load the other packages necessary for this case study:
 
-```{r LibsFuncs, echo=TRUE, warning=FALSE}
+```{r LibsFuncs, echo=TRUE, warning=FALSE, results=FALSE}
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(knitr, DT, GGally, sf, ggfortify, plyr, lmerTest)
+pacman::p_load(knitr, DT, scatterPlotMatrix, sf, ggfortify, plyr, lmerTest)
 
 ## Set ggplot theme
 theme_set(theme_bw()) 
@@ -219,11 +219,20 @@ Below, we use the `import_wq` function and our list of `wq_site_ids` to import w
 # Import water quality data from 2000 onwards
 cs3_wq <- hetoolkit::import_wq(sites = cs3_wq_site_id, start_date = "1993-01-01", end_date = "2022-12-31", dets = 180)
 
+# import_wq updated November 2025
+## Need to re-format outputs, so that it is compatible with workflow
+cs3_wq <- cs3_wq %>%
+  dplyr::rename(det_label = determinand) %>%
+  mutate(date = as.Date(date_time)) %>%
+  mutate(det_label = case_when(det_label == "Orthophosphate, reactive as P"
+                                ~ "Orthophospht")) %>%
+  select(wq_site_id, date, det_label, det_id, result, unit)
+
 # Import additional water quality data pre-2000
 cs3_additional_wq <- readRDS("Data/CaseStudy3/cs3_additional_wq.rds")
 
 # Join the two datasets 
-cs3_wq <- rbind(cs3_wq, cs3_additional_wq)
+cs3_wq <- rbind(cs3_wq, cs3_additional_wq %>% dplyr::select(wq_site_id, date, det_label, det_id, result, unit))
 
 # Create a year variable: 
 cs3_wq <- cs3_wq %>%
@@ -548,8 +557,8 @@ We use pairwise plots to identify highly correlated variables (that might need t
 
 # produce pairs plot
 cs3_he1 %>%
-  dplyr::select(year, LTQ95RFR, log10_mean_p, Q95z_lag0, Q95z_lag12, Q95z_lag24, RMHI, RMNI) %>%
-  GGally::ggpairs(lower = list(continuous = "smooth_loess"))
+  dplyr::select(LTQ95RFR, log10_mean_p, Q95z_lag0, Q95z_lag12, Q95z_lag24, RMHI, RMNI) %>%
+  scatterPlotMatrix(distribType = 1, corrPlotType = "Text", width = 750, height = 750)
 
 ```
 

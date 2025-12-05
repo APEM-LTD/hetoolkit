@@ -1,5 +1,5 @@
 ---
-title: "Climwin analysis"
+title: "Climwin"
 author: "Environment Agency / APEM Ltd"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:

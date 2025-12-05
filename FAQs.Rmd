@@ -38,7 +38,7 @@ In parts of the country covered by well-calibrated, EA-approved groundwater mode
 
 ### 5. Can the `hetoolkit` be used to download water quality data?
 
-Yes, the import_wq() function allows you to download data for determinands of interest from the EA's Water Quality Archive. 
+Yes, the import_wq() function allows you to download data for determinands of interest from the EA's Water Quality Explorer (https://environment.data.gov.uk/water-quality-beta). 
 
 </br>
 

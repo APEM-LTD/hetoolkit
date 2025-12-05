@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="index.html">hetoolkit</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,12 +24,15 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/A.Vignette.html">Vignette</a>
+    <h6 class="dropdown-header" data-toc-skip>MIXED MODELLING</h6>
+    <a class="dropdown-item" href="articles/Vignette.html">Vignette</a>
     <a class="dropdown-item" href="articles/CaseStudy1.html">Macroinvertebrates in chalk streams</a>
     <a class="dropdown-item" href="articles/CaseStudy2.html">Macroinvertebrates in upland rivers</a>
     <a class="dropdown-item" href="articles/CaseStudy3.html">Macrophytes in chalk streams</a>
-    <a class="dropdown-item" href="articles/CaseStudy4.html">Climwin analysis</a>
-    <a class="dropdown-item" href="articles/CaseStudy5.html">Diatoms</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>OTHER METHODS</h6>
+    <a class="dropdown-item" href="articles/CaseStudy4.html">Climwin</a>
+    <a class="dropdown-item" href="articles/CaseStudy5.html">Gradient Forest</a>
   </div>
 </li>
 <li class="nav-item">
@@ -81,7 +84,7 @@
 </div>
 <div class="section level3">
 <h3 id="id_5-can-the-hetoolkit-be-used-to-download-water-quality-data">5. Can the <code>hetoolkit</code> be used to download water quality data?<a class="anchor" aria-label="anchor" href="#id_5-can-the-hetoolkit-be-used-to-download-water-quality-data"></a></h3>
-<p>Yes, the import_wq() function allows you to download data for determinands of interest from the EA’s Water Quality Archive.</p>
+<p>Yes, the import_wq() function allows you to download data for determinands of interest from the EA’s Water Quality Explorer (<a href="https://environment.data.gov.uk/water-quality-beta" class="external-link uri">https://environment.data.gov.uk/water-quality-beta</a>).</p>
 <p></p>
 </div>
 <div class="section level3">
@@ -102,7 +105,7 @@
 <div class="section level3">
 <h3 id="id_9-what-range-of-ecological-modelling-tools-or-assessment-approaches-can-be-used">9. What range of ecological modelling tools or assessment approaches can be used?<a class="anchor" aria-label="anchor" href="#id_9-what-range-of-ecological-modelling-tools-or-assessment-approaches-can-be-used"></a></h3>
 <p>The toolkit primarily facilitates the building of mixed regression models using ‘pooled’ monitoring data. These can take the form of generalised linear models or generalised additive models. The latter, which may be abbreviated as GAMs, GAMMs or HGAMs, are more versatile as, among other things, they can capture both linear and nonlinear ecological responses. The case study in this website’s article library ‘Macroinvertebrates in upland rivers’ illustrates how to undertake generalised additive modelling.</p>
-<p>other modelling approaches may be complementary or in specific cases more suitable. These include hydraulic-habitat modelling and multivariate analyses of community composition. There is a case study on the latter (‘Diatoms’) in this website’s article library. Even for approaches not using mixed regression models the toolkit may still be useful for data collation and processing.</p>
+<p>Other modelling approaches may be complementary or in specific cases more suitable. These include hydraulic-habitat modelling and multivariate analyses of community composition. There is a case study on the latter (‘Diatoms’) in this website’s article library. Even for approaches not using mixed regression models the toolkit may still be useful for data collation and processing.</p>
 <p></p>
 </div>
 <div class="section level3">
