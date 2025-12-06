@@ -3,8 +3,8 @@
 
 # hetoolkit
 
-<img src="man/figures/EA_logo.jpg" style="float:top; height:55px;">
-<img src="man/figures/ApemLogo.png" style="float:right; height:45px;">
+<img src="./man/figures/EA_logo.png" style="float:top; height:55px;">
+<img src="./man/figures/ApemLogo.png" style="float:right; height:45px;">
 
 ## Overview
 

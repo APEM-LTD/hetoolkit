@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 
 # hetoolkit
 
-<!-- badges: start -->
-<!-- badges: end -->
+<img src="./man/figures/EA_logo.png" style="float:top; height:55px;">
+<img src="./man/figures/ApemLogo.png" style="float:right; height:45px;">
 
 ## Overview 
 
