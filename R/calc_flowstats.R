@@ -959,7 +959,7 @@ CreateFlowStats <- function(stats_data, long.data, station_data, original_data, 
   Qvals2<- Qvals %>%
     tidyr::spread(., key=parameter, value=value) %>%
     dplyr::select(-win_no)
-  colnames(Qvals2) <- c("site", "qLow", "qHigh")
+  colnames(Qvals2) <- c("site", "qHigh", "qLow")
   thres_dataQ <- dplyr::left_join(thres_data, Qvals2, by = "site")
 
   # calculate duration/events above q_low and q_high
@@ -1182,10 +1182,10 @@ zero_eventsDuration <- function(flow_data) {
 
   zeroEvents <- stats::na.omit(zeroEvents)  # remove NAs
   # find number of records
-  n_records <- length(zeroEvents$event)
+  n_records <- length(zeroEvents$Obs_0)
 
   # find number of events
-  n_events <- length(unique(zeroEvents$event))
+  n_events <- length(unique(zeroEvents$Obs_0))
 
   zeroEvents$yday <- lubridate::yday(zeroEvents$date)
 
