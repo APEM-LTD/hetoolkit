@@ -5,7 +5,7 @@ Updates
 
 # HE Toolkit
 
-## Recent updates to current version
+## Log of recent updates
 
 - Nov-2024 - Package updates:
   - Bug fix to calc_flowstats for computing Q values and BFI
@@ -30,3 +30,7 @@ Updates
   - Corresponding updates to website including the chalk stream case
     studies
   - Re-formatting of function index
+- Feb-2026 - Package updates:
+  - Bug fixes to calc_flowstats() affecting calculation of dry_n, dry_e,
+    low_n, high_n, the min_7day and min_30day stats and the long-term
+    (overall) max, mean and min stats

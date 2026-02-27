@@ -119,39 +119,39 @@
 #'
 #' @examples
 #' ## calculate flow statistics for a contiguous series of summer (April to September) and winter (October to March) time periods:
-#' calc_flowstats(data = flow_data,
-#'                win_start =  "1995-04-01",
-#'                win_width = "6 months",
-#'                win_step =  "6 months")
+#' # calc_flowstats(data = flow_data,
+#' #              win_start =  "1995-04-01",
+#' #              win_width = "6 months",
+#' #              win_step =  "6 months")
 #'
 #' ## calculate flow statistics for a non-contiguous series of summer (April to September) time periods:
-#' calc_flowstats(data = flow_data,
-#'                win_start =  "1995-04-01",
-#'                win_width = "6 months",
-#'                win_step =  "1 year")
-#'
+#' # calc_flowstats(data = flow_data,
+#' #                win_start =  "1995-04-01",
+#' #                win_width = "6 months",
+#' #                win_step =  "1 year")
+#' #
 #' ## calculate flow statistics for a series of overlapping 24 month time periods:
-#' calc_flowstats(data = flow_data,
-#'                win_start =  "1995-04-01",
-#'                win_width = "24 months",
-#'                win_step =  "1 month")
-#'
+#' # calc_flowstats(data = flow_data,
+#' #                win_start =  "1995-04-01",
+#' #                win_width = "24 months",
+#' #                win_step =  "1 month")
+#' #
 
 
 
 calc_flowstats <- function(data,
-                         site_col = "flow_site_id",
-                         date_col = "date",
-                         flow_col = "flow",
-                         imputed_col = NULL,
-                         win_start = "1995-04-01",
-                         win_width = "6 months",
-                         win_step = "6 months",
-                         date_range = NULL,
-                         q_low = 95,
-                         q_high = 70,
-                         scaling = FALSE,
-                         ref_col = NULL){
+                           site_col = "flow_site_id",
+                           date_col = "date",
+                           flow_col = "flow",
+                           imputed_col = NULL,
+                           win_start = "1995-04-01",
+                           win_width = "6 months",
+                           win_step = "6 months",
+                           date_range = NULL,
+                           q_low = 95,
+                           q_high = 70,
+                           scaling = FALSE,
+                           ref_col = NULL){
 
   if(is.data.frame(data) == FALSE){stop("Data frame not found")}
 
@@ -252,7 +252,7 @@ calc_flowstats <- function(data,
 
   if(length(duplicates) >= 1)
   { print(duplicates)
-   stop("Duplicate dates identified")}
+    stop("Duplicate dates identified")}
 
   # filter by date_range
   if(is.null(date_range) == FALSE){
@@ -283,13 +283,13 @@ calc_flowstats <- function(data,
   # if win_width is in months
   if(is.null(win_width) == FALSE && grepl("month", win_width) == TRUE){
     all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% months(width_no) - days(1),
-                                    win_no = 1:nrow(.))
+                                                win_no = 1:nrow(.))
   }
 
   # if win_width is in years
   if(is.null(win_width) == FALSE && grepl("year", win_width) == TRUE){
     all_dates <- expand_dates %>% dplyr::mutate(end_date = start_date %m+% lubridate::years(width_no) - days(1),
-                                         win_no = 1:nrow(.))
+                                                win_no = 1:nrow(.))
   }
 
   # assign full set of moving windows to each site
@@ -298,10 +298,10 @@ calc_flowstats <- function(data,
 
   all_win_dates <- win_dates %>% dplyr::rowwise() %>%
     dplyr::do(data.frame(site =.$site,
-                  date = seq(.$start_date, .$end_date, by="days"),
-                  win_no =.$win_no,
-                  win_start_date = .$start_date,
-                  win_end_date = .$end_date))
+                         date = seq(.$start_date, .$end_date, by="days"),
+                         win_no =.$win_no,
+                         win_start_date = .$start_date,
+                         win_end_date = .$end_date))
 
   # if scaling = TRUE, standardise flow data by the mean (for each site)
   if(scaling == TRUE){
@@ -310,7 +310,7 @@ calc_flowstats <- function(data,
       dplyr::mutate(mean_f = (mean(flow, na.rm = TRUE))) %>%
       dplyr::mutate(flow = flow / mean_f) %>%
       dplyr::select(-mean_f)
-    }
+  }
 
   # join window dates to flow data for CalcFlowStats
   my_data_cf <- dplyr::left_join(all_win_dates, data_1, by = c("site", "date"))
@@ -362,10 +362,10 @@ calc_flowstats <- function(data,
 
     # count imputed data
     count_imputed <- my_data %>%
-    dplyr::group_by(site, win_no) %>%
-    dplyr::count(., imputed) %>%
-    dplyr::rename(n_imputed = n,
-                  flow_site_id = site)
+      dplyr::group_by(site, win_no) %>%
+      dplyr::count(., imputed) %>%
+      dplyr::rename(n_imputed = n,
+                    flow_site_id = site)
 
     # add in count of imputed flow records
     df1 <- dplyr::left_join(df1, count_imputed, by = c("flow_site_id", "win_no")) %>%
@@ -373,7 +373,7 @@ calc_flowstats <- function(data,
       dplyr::select(-imputed) %>%
       dplyr::mutate(prop_imputed = (n_imputed/n_data))
 
-     # re-order cols
+    # re-order cols
     col_order <- c("flow_site_id", "win_no", "start_date", "end_date", "n_data", "n_missing", "n_total", "prop_missing", "n_imputed", "prop_imputed", "mean", "sd", "Q5", "Q10", "Q20", "Q25", "Q30", "Q50", "Q70", "Q75", "Q80", "Q90", "Q95", "Q99", "Q5z", "Q10z", "Q20z", "Q25z", "Q30z", "Q50z", "Q70z", "Q75z", "Q80z", "Q90z", "Q95z", "Q99z", "dry_n", "dry_e", "dry_start", "dry_end", "dry_mid", "low_n", "low_e", "low_start", "low_end", "low_mid", "low_magnitude", "low_severity", "high_n", "high_e", "high_start", "high_end", "high_mid", "e_above3xq50", "e_above5xq50", "e_above7xq50", "volume", "vol_z", "min", "min_z", "min_doy", "min_7day", "min_7day_z", "min_7day_doy", "min_30day", "min_30day_z", "min_30day_doy", "max", "max_z", "max_doy")
     df1 <- df1[, col_order]
   }
@@ -640,13 +640,13 @@ calc_flowstats <- function(data,
     df1_ALL$min_30day_z_ref <- (min_30day - min_day30mean_ref) / min_day30sd_ref
 
     df1_ALL <- df1_ALL %>%
-                dplyr::select(-Q5mean_ref, -Q5sd_ref, -Q10mean_ref, -Q10sd_ref, -Q20mean_ref,
-                              -Q20sd_ref, -Q25mean_ref, -Q25sd_ref, -Q30mean_ref, -Q30sd_ref,
-                              -Q50mean_ref, -Q50sd_ref, -Q70mean_ref, -Q70sd_ref, -Q75mean_ref,
-                              -Q75sd_ref, -Q80mean_ref, -Q80sd_ref, -Q90mean_ref, -Q90sd_ref,
-                              -Q95mean_ref, -Q95sd_ref,-Q99mean_ref, -Q99sd_ref, -minmean_ref,
-                              -minsd_ref, -maxmean_ref, -maxsd_ref, -volmean_ref, -volsd_ref,
-                              -min_day30mean_ref, -min_day30sd_ref, -min_day7mean_ref, -min_day7sd_ref)
+      dplyr::select(-Q5mean_ref, -Q5sd_ref, -Q10mean_ref, -Q10sd_ref, -Q20mean_ref,
+                    -Q20sd_ref, -Q25mean_ref, -Q25sd_ref, -Q30mean_ref, -Q30sd_ref,
+                    -Q50mean_ref, -Q50sd_ref, -Q70mean_ref, -Q70sd_ref, -Q75mean_ref,
+                    -Q75sd_ref, -Q80mean_ref, -Q80sd_ref, -Q90mean_ref, -Q90sd_ref,
+                    -Q95mean_ref, -Q95sd_ref,-Q99mean_ref, -Q99sd_ref, -minmean_ref,
+                    -minsd_ref, -maxmean_ref, -maxsd_ref, -volmean_ref, -volsd_ref,
+                    -min_day30mean_ref, -min_day30sd_ref, -min_day7mean_ref, -min_day7sd_ref)
 
 
     df1_ALL.1 <- df1_ALL %>%
@@ -724,7 +724,7 @@ calc_flowstats <- function(data,
                     max_z_ref = ifelse(n_data >= 3, max_z_ref, NA),
                     min_7day_z_ref = ifelse(n_data >= 90, min_7day_z_ref, NA),
                     min_30day_z_ref = ifelse(n_data >= 180, min_30day_z_ref, NA)
-                    )
+      )
 
     df1_ALL.1$win_no <- as.numeric(df1_ALL.1$win_no)
     df1_ALL.1 <- arrange(df1_ALL.1, flow_site_id, win_no)
@@ -761,85 +761,85 @@ CalcFlowStats <- function (flowts) {
   flowts <- flowts %>%
     dplyr::group_by(site, win_no) %>%
     dplyr::filter(!is.na(flow)) %>%
-      dplyr::summarise(n_data = length(flow),
-                       mean = mean(flow),
-                       sd = sd(flow),
-                       Q5 = quantile(flow, probs=0.95, na.rm=TRUE),
-                       Q10 = quantile(flow, probs=0.9, na.rm=TRUE),
-                       Q20 = quantile(flow, probs=0.8, na.rm=TRUE),
-                       Q25 = quantile(flow, probs=0.75, na.rm=TRUE),
-                       Q30 = quantile(flow, probs=0.7, na.rm=TRUE),
-                       Q50 = quantile(flow, probs=0.5,na.rm=TRUE),
-                       Q70 = quantile(flow, probs=0.3,na.rm=TRUE),
-                       Q75 = quantile(flow, probs=0.25, na.rm=TRUE),
-                       Q80 = quantile(flow, probs=0.2, na.rm=TRUE),
-                       Q90 = quantile(flow, probs=0.1,na.rm=TRUE),
-                       Q95 = quantile(flow, probs=0.05,na.rm=TRUE),
-                       Q99 = quantile(flow, probs=0.01,na.rm=TRUE),
-                       volume = sum(flow),
-                       min = min(flow, na.rm = TRUE),
-                       min_7day = min(zoo::rollmean(flow, 7), na.rm = TRUE),
-                       min_30day = min(zoo::rollmean(flow, 30), na.rm = TRUE),
-                       max = max(flow, na.rm = TRUE),
-                       e_above3xq50 = riisbiggs2(flow, Q50, 3),
-                       e_above5xq50 = riisbiggs2(flow, Q50, 5),
-                       e_above7xq50 = riisbiggs2(flow, Q50, 7)) %>%
-                       dplyr::ungroup() %>%
-                       dplyr::group_by(site) %>%
-                       dplyr::mutate(Q5mean = mean(Q5),
-                              Q10mean = mean(Q10),
-                              Q20mean = mean(Q20),
-                              Q25mean = mean(Q25),
-                              Q30mean = mean(Q30),
-                              Q50mean = mean(Q50),
-                              Q70mean = mean(Q70),
-                              Q75mean = mean(Q75),
-                              Q80mean = mean(Q80),
-                              Q90mean = mean(Q90),
-                              Q95mean = mean(Q95),
-                              Q99mean = mean(Q99),
-                              vol_mean = mean(volume),
-                              min_mean = mean(min),
-                              min_7day_mean = mean(min_7day),
-                              min_30day_mean = mean(min_30day),
-                              max_mean = mean(max),
-                              Q5sd = sd(Q5),
-                              Q10sd = sd(Q10),
-                              Q20sd = sd(Q20),
-                              Q25sd = sd(Q25),
-                              Q30sd = sd(Q30),
-                              Q50sd = sd(Q50),
-                              Q70sd = sd(Q70),
-                              Q75sd = sd(Q75),
-                              Q80sd = sd(Q80),
-                              Q90sd = sd(Q90),
-                              Q95sd = sd(Q95),
-                              Q99sd = sd(Q99),
-                              vol_sd = sd(volume),
-                              min_sd = sd(min),
-                              min_7day_sd = sd(min_7day),
-                              min_30day_sd = sd(min_30day),
-                              max_sd = sd(max),
-                              Q5z = (Q5-Q5mean)/Q5sd,
-                              Q10z = (Q10-Q10mean)/Q10sd,
-                              Q20z = (Q20-Q20mean)/Q20sd,
-                              Q25z = (Q25-Q25mean)/Q25sd,
-                              Q30z = (Q30-Q30mean)/Q30sd,
-                              Q50z = (Q50-Q50mean)/Q50sd,
-                              Q70z = (Q70-Q70mean)/Q70sd,
-                              Q75z = (Q75-Q75mean)/Q75sd,
-                              Q80z = (Q80-Q80mean)/Q80sd,
-                              Q90z = (Q90-Q90mean)/Q90sd,
-                              Q95z = (Q95-Q95mean)/Q95sd,
-                              Q99z = (Q99-Q99mean)/Q99sd,
-                              vol_z = (volume - vol_mean) / vol_sd,
-                              min_z = (min - min_mean) / min_sd,
-                              min_7day_z = (min_7day - min_7day_mean) / min_7day_sd,
-                              min_30day_z = (min_30day - min_30day_mean) / min_30day_sd,
-                              max_z = (max - max_mean) / max_sd) %>%
-                        dplyr::full_join(MISSING)
+    dplyr::summarise(n_data = length(flow),
+                     mean = mean(flow),
+                     sd = sd(flow),
+                     Q5 = quantile(flow, probs=0.95, na.rm=TRUE),
+                     Q10 = quantile(flow, probs=0.9, na.rm=TRUE),
+                     Q20 = quantile(flow, probs=0.8, na.rm=TRUE),
+                     Q25 = quantile(flow, probs=0.75, na.rm=TRUE),
+                     Q30 = quantile(flow, probs=0.7, na.rm=TRUE),
+                     Q50 = quantile(flow, probs=0.5,na.rm=TRUE),
+                     Q70 = quantile(flow, probs=0.3,na.rm=TRUE),
+                     Q75 = quantile(flow, probs=0.25, na.rm=TRUE),
+                     Q80 = quantile(flow, probs=0.2, na.rm=TRUE),
+                     Q90 = quantile(flow, probs=0.1,na.rm=TRUE),
+                     Q95 = quantile(flow, probs=0.05,na.rm=TRUE),
+                     Q99 = quantile(flow, probs=0.01,na.rm=TRUE),
+                     volume = sum(flow),
+                     min = min(flow, na.rm = TRUE),
+                     min_7day = min(zoo::rollapply(flow, 7, mean, partial = TRUE, na.rm = TRUE, fill = NA), na.rm = TRUE),
+                     min_30day = min(zoo::rollapply(flow, 30, mean, partial = TRUE, na.rm = TRUE, fill = NA), na.rm = TRUE),
+                     max = max(flow, na.rm = TRUE),
+                     e_above3xq50 = riisbiggs2(flow, Q50, 3),
+                     e_above5xq50 = riisbiggs2(flow, Q50, 5),
+                     e_above7xq50 = riisbiggs2(flow, Q50, 7)) %>%
+    dplyr::ungroup() %>%
+    dplyr::group_by(site) %>%
+    dplyr::mutate(Q5mean = mean(Q5),
+                  Q10mean = mean(Q10),
+                  Q20mean = mean(Q20),
+                  Q25mean = mean(Q25),
+                  Q30mean = mean(Q30),
+                  Q50mean = mean(Q50),
+                  Q70mean = mean(Q70),
+                  Q75mean = mean(Q75),
+                  Q80mean = mean(Q80),
+                  Q90mean = mean(Q90),
+                  Q95mean = mean(Q95),
+                  Q99mean = mean(Q99),
+                  vol_mean = mean(volume),
+                  min_mean = mean(min),
+                  min_7day_mean = mean(min_7day),
+                  min_30day_mean = mean(min_30day),
+                  max_mean = mean(max),
+                  Q5sd = sd(Q5),
+                  Q10sd = sd(Q10),
+                  Q20sd = sd(Q20),
+                  Q25sd = sd(Q25),
+                  Q30sd = sd(Q30),
+                  Q50sd = sd(Q50),
+                  Q70sd = sd(Q70),
+                  Q75sd = sd(Q75),
+                  Q80sd = sd(Q80),
+                  Q90sd = sd(Q90),
+                  Q95sd = sd(Q95),
+                  Q99sd = sd(Q99),
+                  vol_sd = sd(volume),
+                  min_sd = sd(min),
+                  min_7day_sd = sd(min_7day),
+                  min_30day_sd = sd(min_30day),
+                  max_sd = sd(max),
+                  Q5z = (Q5-Q5mean)/Q5sd,
+                  Q10z = (Q10-Q10mean)/Q10sd,
+                  Q20z = (Q20-Q20mean)/Q20sd,
+                  Q25z = (Q25-Q25mean)/Q25sd,
+                  Q30z = (Q30-Q30mean)/Q30sd,
+                  Q50z = (Q50-Q50mean)/Q50sd,
+                  Q70z = (Q70-Q70mean)/Q70sd,
+                  Q75z = (Q75-Q75mean)/Q75sd,
+                  Q80z = (Q80-Q80mean)/Q80sd,
+                  Q90z = (Q90-Q90mean)/Q90sd,
+                  Q95z = (Q95-Q95mean)/Q95sd,
+                  Q99z = (Q99-Q99mean)/Q99sd,
+                  vol_z = (volume - vol_mean) / vol_sd,
+                  min_z = (min - min_mean) / min_sd,
+                  min_7day_z = (min_7day - min_7day_mean) / min_7day_sd,
+                  min_30day_z = (min_30day - min_30day_mean) / min_30day_sd,
+                  max_z = (max - max_mean) / max_sd) %>%
+    dplyr::full_join(MISSING)
 
-    return(flowts)
+  return(flowts)
 
 }
 
@@ -898,18 +898,14 @@ CreateLongData <- function(flow.data, statsData) {
     dplyr::mutate(win_no = "Q_Annual")
 
   # create a long dataframe containing overall mean, min and max flows, an merge with above datasets
-  long_data <- QSTATS1 %>%
-    dplyr::filter(!is.na("Q30")) %>%
+  long_data <- flow_data %>%
+    dplyr::filter(!is.na(flow)) %>%
     # make dataframe long
-    tidyr::gather(-site, -win_no, key = stat, value = stat_value) %>%  # select just the stats we want
-    dplyr::filter(stat== "min"| stat== "max" | stat== "mean") %>%
-    dplyr::group_by(stat, site) %>%
+    dplyr::group_by(site) %>%
     # calculate the mean each statistic by site
-    dplyr::summarise(mean = mean(stat_value, na.rm=TRUE)) %>%
+    dplyr::summarise(mean = mean(flow), max = max(flow), min = min(flow)) %>%
     dplyr::ungroup() %>%
-    tidyr::gather(mean, key = id, value = value) %>%                   # gather mean and sd columns into a column with values and key column (ie mean or sd)
-    dplyr::rename(parameter = stat) %>%
-    dplyr::select(-id) %>%
+    tidyr::gather(-site, key = parameter, value = value) %>%  # gather mean and sd columns into a column with values and key column (ie mean or sd)
     dplyr::mutate(win_no = "Q_Annual") %>%
     dplyr::bind_rows(long_data1) %>%
     dplyr::bind_rows(bfi)  %>%
@@ -979,25 +975,25 @@ CreateFlowStats <- function(stats_data, long.data, station_data, original_data, 
   Durations <- dplyr::full_join(duration_above, duration_below, by=c("site", "win_no"))
 
   if(isTRUE(1 %in% diff.Date(data_1$date)) == TRUE){
-  # calculate min, max, min 7/30day rolling mean DOY
-  # min plus 7day_min
-  doy1 <- thres_data %>%
-    dplyr::group_by(site, win_no) %>%
-    dplyr::do(find_doy(.,  "low", 7))
-  colnames(doy1) <- c("site", "win_no", "min_doy", "min_7day_doy")
+    # calculate min, max, min 7/30day rolling mean DOY
+    # min plus 7day_min
+    doy1 <- thres_data %>%
+      dplyr::group_by(site, win_no) %>%
+      dplyr::do(find_doy(.,  "low", 7))
+    colnames(doy1) <- c("site", "win_no", "min_doy", "min_7day_doy")
 
-  # max plus 30day_min
-  doy2 <- thres_data %>%
-    dplyr::group_by(site, win_no) %>%
-    dplyr::do(find_doy(.,  "high", 30))
-  colnames(doy2) <- c("site", "win_no", "max_doy", "min_30day_doy")
-  minmax_doy <- dplyr::full_join(doy1, doy2, by=c("site", "win_no"))
+    # max plus 30day_min
+    doy2 <- thres_data %>%
+      dplyr::group_by(site, win_no) %>%
+      dplyr::do(find_doy(.,  "high", 30))
+    colnames(doy2) <- c("site", "win_no", "max_doy", "min_30day_doy")
+    minmax_doy <- dplyr::full_join(doy1, doy2, by=c("site", "win_no"))
   } else {
     minmax_doy <- thres_data %>% dplyr::group_by(site, win_no) %>%
       dplyr::summarise(min_doy = NA,
-                     min_7day_doy = NA,
-                     max_doy = NA,
-                     min_30day_doy = NA)
+                       min_7day_doy = NA,
+                       max_doy = NA,
+                       min_30day_doy = NA)
   }
 
   # Join QSTATS1 with Duration (dataframe with durations/events above/below)
@@ -1088,25 +1084,25 @@ find_eventDuration <- function(x, threshold ,type, pref) {
   # if n_events > 0, find start, end & mid dates, otherwise skip & assign NAs
   if(n_events > 0){
 
-      flowEvents$yday <- lubridate::yday(flowEvents$date)
+    flowEvents$yday <- lubridate::yday(flowEvents$date)
 
-      # first low/high flow day
-      n_start <- flowEvents %>% dplyr::arrange(date) %>% dplyr::slice(1)
-      n_start <- n_start$yday
+    # first low/high flow day
+    n_start <- flowEvents %>% dplyr::arrange(date) %>% dplyr::slice(1)
+    n_start <- n_start$yday
 
-      # last low/high flow day
-      n_end <- flowEvents %>% dplyr::arrange(date)
-      n_end <- utils::tail(n_end, n=1)
-      n_end <- n_end$yday
+    # last low/high flow day
+    n_end <- flowEvents %>% dplyr::arrange(date)
+    n_end <- utils::tail(n_end, n=1)
+    n_end <- n_end$yday
 
-      # average low flow day
-      conv <- 2*pi/365 ## doy -> radians
-      n_mid1 <- circ.mean(conv*(flowEvents$yday-1))/conv
-      n_mid <- round((n_mid1 + 365) %% 365,0)
+    # average low flow day
+    conv <- 2*pi/365 ## doy -> radians
+    n_mid1 <- circ.mean(conv*(flowEvents$yday-1))/conv
+    n_mid <- round((n_mid1 + 365) %% 365,0)
 
   } else {
 
-      n_start <- NA; n_end <- NA; n_mid <- NA
+    n_start <- NA; n_end <- NA; n_mid <- NA
 
   }
 
@@ -1114,11 +1110,11 @@ find_eventDuration <- function(x, threshold ,type, pref) {
 
   # calculate mean and cumulative deficit for low flow events
   if(type == "low" && n_events > 0){
-      flowEvents$deficit <- (threshold - flowEvents$flow)
-      mean_deficit <- mean(flowEvents$deficit, na.rm = TRUE)
-      cumulative_deficit <- sum(flowEvents$deficit, na.rm = TRUE)
+    flowEvents$deficit <- (threshold - flowEvents$flow)
+    mean_deficit <- mean(flowEvents$deficit, na.rm = TRUE)
+    cumulative_deficit <- sum(flowEvents$deficit, na.rm = TRUE)
 
-      find_eventDurations <- data.frame(n_records, n_events, n_start, n_end, n_mid, mean_deficit, cumulative_deficit)
+    find_eventDurations <- data.frame(n_records, n_events, n_start, n_end, n_mid, mean_deficit, cumulative_deficit)
   }
 
   return(find_eventDurations)
@@ -1275,14 +1271,24 @@ find_doy <- function(flow_data, type, nday) {
   ## find 7day or 30day rolling mean
   if(nday == 7){
 
-    if(length(x2) > 7) {
-    NAs <- c(NA, NA, NA, NA, NA, NA)
-    minNday <- data.frame(roll_mean = c(NAs, zoo::rollmean(x2$flow, 7)))
-    x2$roll_mean <- minNday$roll_mean
+    if(length(x2$flow) >= 7) {
+      minNday <- data.frame(roll_mean = zoo::rollapply(x2$flow, 7, mean, partial = TRUE, na.rm = TRUE))
+      x2$roll_mean <- minNday$roll_mean
+
+      # filter to find date of lowest mean flow
+      min1 <- min(x2$roll_mean, na.rm = TRUE)
+      low_flow <- x2 %>% dplyr::filter(roll_mean == min1) %>%
+        dplyr::arrange(date) %>% head(., n = 1)
+
+      # convert to DOY - mid point of 7day window
+      low_flow$yday <- lubridate::yday(low_flow$date - lubridate::days(3))
+
+      # first mean low flow day
+      min_day <- as.numeric(low_flow$yday)
 
     }
 
-    if(length(x2) < 7) {
+    if(length(x2$flow) < 7) {
 
       min_day <- NA
     }
@@ -1291,39 +1297,32 @@ find_doy <- function(flow_data, type, nday) {
 
   if(nday == 30){
 
-    if(length(x2) > 30) {
-    NAs <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
-    minNday <- data.frame(roll_mean = c(NAs, zoo::rollmean(x2$flow, 30)))
-    x2$roll_mean <- minNday$roll_mean
+    if(length(x2$flow) >= 30) {
+      minNday <- data.frame(roll_mean = zoo::rollapply(x2$flow, 30, mean, partial = TRUE, na.rm = TRUE))
+      x2$roll_mean <- minNday$roll_mean
+
+      # filter to find date of lowest mean flow
+      min1 <- min(x2$roll_mean, na.rm = TRUE)
+      low_flow <- x2 %>% dplyr::filter(roll_mean == min1) %>%
+        dplyr::arrange(date) %>% head(., n = 1)
+
+      # convert to DOY - mid point of 30-day window
+      low_flow$yday <- lubridate::yday(low_flow$date) - 14.5
+      if(isTRUE(-1 %in% sign(low_flow$yday)) == TRUE) {
+        low_flow$yday <- 365 - abs(low_flow$yday)
+      }
+
+      # first mean low flow day
+      min_day <- as.numeric(low_flow$yday)
+
     }
 
-    if(length(x2) < 30) {
+    if(length(x2$flow) < 30) {
 
       min_day <- NA
     }
 
   }
-
-    if(length(x2) > 7) {
-
-  # filter to find date of lowest mean flow
-  low_flow <- x2 %>% dplyr::filter(roll_mean == min(roll_mean, na.rm = TRUE)) %>%
-    dplyr::arrange(date) %>% head(., n = 1)
-
-  # convert to DOY
-  if(nday == 7){
-    low_flow$yday <- lubridate::yday(low_flow$date - lubridate::days(3))
-  }
-  if(nday == 30){
-    low_flow$yday <- lubridate::yday(low_flow$date) - 14.5
-    if(isTRUE(-1 %in% sign(low_flow$yday)) == TRUE) {
-      low_flow$yday <- 365 - abs(low_flow$yday)
-    }
-  }
-  # first mean low flow day
-  min_day <- as.numeric(low_flow$yday)
-
-    }
 
   # combine low/high flow DOY and 7/30day mean min flow DOY
   find_doy <- data.frame(m_day, min_day)
